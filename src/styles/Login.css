@@ -1,0 +1,13 @@
+.loginSignupTextField{
+    
+}
+
+.loginSignupTextField input{
+    height: 2rem;
+    padding: 14px;
+    font-size: 1.2rem;
+}
+
+.loginSignupBtn{
+    height: 3.5rem;
+}
