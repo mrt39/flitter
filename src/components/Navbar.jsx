@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from 'react';
+import * as Icon from 'react-bootstrap-icons';
 import '../styles/Navbar.css';
 import MuiAvatar from "../components/MuiAvatar.jsx";
 import LogoImg from "../assets/logo.png";

@@ -89,7 +89,7 @@ const postSchema = new mongoose.Schema ({
     /* store current date as miliseconds from epoch:
      https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date */
     type: String,
-    default: Date.now
+    default: new Date().toISOString()
   },
 
   message: {

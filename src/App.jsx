@@ -8,9 +8,9 @@ import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 
 //bootstrap styles
-/* import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css'; 
-import 'bootstrap/dist/js/bootstrap.bundle.min.js'; */
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 /* context created for theme (dark/light) */
 export const ThemeContext = createContext();
@@ -123,10 +123,10 @@ const App = () => {
   return (
 
       <div className='appContainer'>
-      <ThemeButton
+{/*       <ThemeButton
         theme={theme}
         setTheme={setTheme}
-      />
+      /> */}
       {currentUser ? 
       <Navbar 
       user={currentUser} 

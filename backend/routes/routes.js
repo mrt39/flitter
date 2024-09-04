@@ -76,6 +76,42 @@ router.post('/logout',  (req, res) => {
 });
 
 
+// get all posts to display 
+router.get("/getallposts", async (req, res) => {
+  try {
+    const allPosts = await Post.find();
+    res.send(allPosts);
+  } catch (err) {
+    res.send(err);
+  }
+})
+
+
+
+// post a new blog post through the admin panel 
+router.post("/submitPost", async (req, res) => {
+
+  try {
+    //submitting post available only if authenticated
+    if (req.isAuthenticated()){
+      const newPost = new Post({
+          from: req.body.from,
+          message: req.body.message,
+      });
+      const result = newPost.save();
+      res.send(result)
+      console.log("Post submitted successfully!")
+    } else{
+      res.status(401).json('Not authenticated!');
+    }
+
+  } catch (err) {
+      res.send(err);
+  }
+ 
+});
+
+
 
 
 module.exports = router

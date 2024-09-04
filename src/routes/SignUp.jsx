@@ -117,7 +117,7 @@ export default function SignUp() {
                 setSnackbarOpen(true)
               }else{
                 console.log("Successfully registered user!")
-                navigate("/findpeople"); 
+                navigate("/"); 
                 //reload the page, so it re-fetches the logged in user data
                 window.location.reload();
                 setSnackbarOpenCondition("successfulRegister")
