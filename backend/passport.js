@@ -78,10 +78,45 @@ userSchema.plugin(findOrCreate);
 const User = mongoose.models.users || mongoose.model("users", userSchema);
 
 
+
+
+//model for comments under posts
+
+const commentSchema = new mongoose.Schema ({
+  from: {type: [userSchema],        
+    unique: false,
+    required: true, 
+  },
+  toPostID: { //comment to the post, by the post's id
+    type: String,        
+    unique: false,
+    required: true, 
+  },
+  date: {
+    /* store current date as miliseconds from epoch:
+     https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date */
+    type: String,
+    default: Date.now
+  },
+  comment: {
+    type: String,
+    unique: false,
+    required: false,
+  },
+});
+
+//construct the model this way to prevent the "Cannot overwrite model once compiled" error.
+const Comment = mongoose.models.comments ||mongoose.model("comments", commentSchema);
+
+
+
+
+
 //model for posts
 
 const postSchema = new mongoose.Schema ({
-  from: {type: [userSchema],        
+  from: {
+    type: [userSchema],        
     unique: false,
     required: true, 
   },
@@ -105,11 +140,23 @@ const postSchema = new mongoose.Schema ({
     required: false,
   },
 
+  likedby: {
+    type: [userSchema],
+    unique: false,
+    required: false,
+  },
+
   likeCount: {
     type: Number,
     unique: false,
     required: true,
     default: 0
+  },
+
+  comments: {
+    type: [commentSchema],
+    unique: false,
+    required: false,
   },
 
   commentCount: {
@@ -125,38 +172,11 @@ const Post = mongoose.models.posts ||mongoose.model("posts", postSchema);
 
 
 
-//model for comments
-
-const commentSchema = new mongoose.Schema ({
-  from: {type: [userSchema],        
-    unique: false,
-    required: true, 
-  },
-  toPost: {type: [postSchema],        
-    unique: false,
-    required: true, 
-  },
-  date: {
-    /* store current date as miliseconds from epoch:
-     https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date */
-    type: String,
-    default: Date.now
-  },
-  comment: {
-    type: String,
-    unique: false,
-    required: false,
-  },
-});
-
-//construct the model this way to prevent the "Cannot overwrite model once compiled" error.
-const Comment = mongoose.models.comments ||mongoose.model("comments", commentSchema);
-
 
 
 //model for likes
 
-const likeSchema = new mongoose.Schema ({
+/* const likeSchema = new mongoose.Schema ({
   from: {type: [userSchema],        
     unique: false,
     required: true, 
@@ -168,7 +188,7 @@ const likeSchema = new mongoose.Schema ({
 });
 
 //construct the model this way to prevent the "Cannot overwrite model once compiled" error.
-const Like = mongoose.models.likes ||mongoose.model("likes", likeSchema);
+const Like = mongoose.models.likes ||mongoose.model("likes", likeSchema); */
 
 
 //model for followers
@@ -268,6 +288,6 @@ passport.deserializeUser((id, done) => {
 
 
 //exporting User and Message models and upload attribute in order to use them in routes.js 
-module.exports = {Follower, Like, Comment, Post, User, upload, passport}
+module.exports = {Follower, Comment, Post, User, upload, passport}
 
 

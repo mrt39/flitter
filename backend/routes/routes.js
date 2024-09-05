@@ -3,7 +3,7 @@ const router = require("express").Router();
 const fs = require('fs');
 const path = require('path');
 //grab the User model that's exported in passport.js
-const {Follower, Like, Comment, Post, User, upload, passport} = require( "../passport.js")
+const {Follower, Comment, Post, User, upload, passport} = require( "../passport.js")
 
 
 
@@ -110,7 +110,7 @@ router.get("/getallposts", async (req, res) => {
 
 
 
-// post a new blog post through the admin panel 
+// submit a new post 
 router.post("/submitPost", async (req, res) => {
 
   try {
@@ -123,6 +123,46 @@ router.post("/submitPost", async (req, res) => {
       const result = newPost.save();
       res.send(result)
       console.log("Post submitted successfully!")
+    } else{
+      res.status(401).json('Not authenticated!');
+    }
+
+  } catch (err) {
+      res.send(err);
+  }
+ 
+});
+
+//like a post 
+router.patch("/likePost", async (req, res) => {
+  console.log("clicked")
+  try {
+    //liking post available only if authenticated
+    if (req.isAuthenticated()){
+      const likedPost = await Post.findOne({_id: req.body.postID});
+      const likingUser = await User.findOne({_id: req.body.likedBy._id});
+     
+      console.log(likedPost.likedby.findIndex(u=>u._id.toString()===likingUser._id.toString()))
+      console.log(likedPost.likedby.findIndex(u=>u._id.toString()===likingUser._id.toString()) > -1)
+
+      //find if post is already liked by the user, if user is already in likedby array
+      //find via converting id objects to string because querying with id's doesn't work
+      const likingUserIndex = likedPost.likedby.findIndex(u=>u._id.toString()===likingUser._id.toString())
+
+      //post is already liked by the user
+      if (likingUserIndex > -1){
+        //substract 1 from the like count
+        likedPost.likeCount = likedPost.likeCount-1
+        //remove the user from likedby array
+        likedPost.likedby.splice(likingUserIndex, 1)
+      } else{
+        likedPost.likeCount = likedPost.likeCount+1
+        likedPost.likedby.push(likingUser)
+      }
+
+      const result = await likedPost.save();
+      console.log("Post liked successfully!")
+      res.send(result)
     } else{
       res.status(401).json('Not authenticated!');
     }
