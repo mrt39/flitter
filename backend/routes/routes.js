@@ -22,6 +22,9 @@ router.get("/login/success", (req, res) => {
   }
 });
 
+
+//google auth routes
+
 router.get('/auth/google/', 
   passport.authenticate('google', { scope: ['profile', 'email']}),
 );
@@ -37,6 +40,25 @@ router.get('/auth/google/callback',
     }
 
 });
+
+
+//twitter auth routes
+router.get('/auth/twitter',
+  passport.authenticate('twitter')
+);
+
+router.get('/auth/twitter/callback', 
+passport.authenticate('twitter', { failureRedirect: '/' }),
+function(req, res) {
+  if (req.isAuthenticated()){
+    res.redirect(CLIENT_URL);
+  }
+  else{
+      res.send(JSON.stringify("Twitter login failed!"))
+  }
+
+});
+
 
 router.post("/signup", function(req, res){
   User.register({name: req.body.name, email:req.body.email}, req.body.password, function(err){

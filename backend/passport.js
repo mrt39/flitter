@@ -1,6 +1,7 @@
 const passport = require("passport");
 //google auth
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const TwitterStrategy = require('passport-twitter');
 const LocalStrategy = require('passport-local').Strategy;
 //dayjs
 const dayjs = require('dayjs')
@@ -30,7 +31,7 @@ const userSchema = new mongoose.Schema ({
       type: String, 
       maxlength: 50, 
       unique: false,
-      required: true,
+      required: false,
     },
     name: { 
       type: String, 
@@ -227,6 +228,27 @@ async function(accessToken, refreshToken, profile, done) {
   }
   }
 ));
+
+//twitter strategy
+passport.use(new TwitterStrategy({
+  consumerKey: process.env.TWITTER_CONSUMER_KEY,
+  consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
+  callbackURL: SERVER_URL+"/auth/twitter/callback",
+},
+async function(accessToken, refreshToken, profile, done) {
+  const existingUser = await User.findOne({ googleId: profile.id });
+  //if the user exists with the same id, log in
+  if (existingUser) { 
+    done(null, existingUser);
+  //otherwise, create new user
+  } else {
+  const user = await new User({ googleId: profile.id, name: profile.username, picture: profile["photos"][0].value}).save();
+    done(null, user);
+  }
+  }
+));
+
+
 
 // Serialize User to session
 passport.serializeUser((user, done) => {
