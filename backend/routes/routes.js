@@ -112,7 +112,6 @@ router.get("/getallposts", async (req, res) => {
 
 // submit a new post 
 router.post("/submitPost", async (req, res) => {
-
   try {
     //submitting post available only if authenticated
     if (req.isAuthenticated()){
@@ -163,6 +162,39 @@ router.patch("/likePost", async (req, res) => {
       const result = await likedPost.save();
       console.log("Post liked successfully!")
       res.send(result)
+    } else{
+      res.status(401).json('Not authenticated!');
+    }
+
+  } catch (err) {
+      res.send(err);
+  }
+ 
+});
+
+// comment on a post 
+router.post("/sendCommentonPost", async (req, res) => {
+  try {
+    //commenting on a post is available only if authenticated
+    if (req.isAuthenticated()){
+
+      //find the post that is commented on
+      const commentedPost = await Post.findOne({_id: req.body.toPostID});
+
+      const newComment = new Comment({
+          from: req.body.from,
+          date: req.body.date,
+          toPostID: req.body.toPostID,
+          comment: req.body.comment,
+      });
+      //put the comment in the comments array of the post 
+      commentedPost.comments.push(newComment)
+      //increase the commentCount property by 1
+      commentedPost.commentCount += 1;  
+      //save the post
+      const result = commentedPost.save();
+      res.send(result)
+      console.log("Comment submitted successfully!")
     } else{
       res.status(401).json('Not authenticated!');
     }

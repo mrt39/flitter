@@ -174,21 +174,6 @@ const Post = mongoose.models.posts ||mongoose.model("posts", postSchema);
 
 
 
-//model for likes
-
-/* const likeSchema = new mongoose.Schema ({
-  from: {type: [userSchema],        
-    unique: false,
-    required: true, 
-  },
-  toPost: {type: [postSchema],        
-    unique: false,
-    required: true, 
-  },
-});
-
-//construct the model this way to prevent the "Cannot overwrite model once compiled" error.
-const Like = mongoose.models.likes ||mongoose.model("likes", likeSchema); */
 
 
 //model for followers
