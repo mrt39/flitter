@@ -7,14 +7,22 @@ import { Navigate, } from "react-router-dom";
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 
-//bootstrap styles
+/* //bootstrap styles
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css'; 
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
-/* context created for theme (dark/light) */
-export const ThemeContext = createContext();
 
+
+
+// context created for theme (dark/light) 
+export const ThemeContext = createContext(); */
+//----------------------MUI DARK THEME---------------------------
+//MUI DARK THEME
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import {Switch} from "@mui/material"
+//----------------------MUI DARK THEME END---------------------------
 
 export const UserContext = createContext({
   selectedPerson: (null),
@@ -32,6 +40,32 @@ const App = () => {
 
   const [theme, setTheme] = useState(savedTheme);
 
+
+
+
+  //----------------------MUI DARK THEME---------------------------
+    // state to manage the dark mode
+    const [toggleDarkMode, setToggleDarkMode] = useState(true);
+
+    // function to toggle the dark mode as true or false
+    const toggleDarkTheme = () => {
+      setToggleDarkMode(!toggleDarkMode);
+    };
+  
+    // applying the primary and secondary theme colors
+    const darkTheme = createTheme({
+      palette: {
+        mode: toggleDarkMode ? 'dark' : 'light', 
+        primary: {
+          main: '#90caf9',
+        },
+        secondary: {
+          main: '#131052',
+        },
+      },
+    });
+
+  //----------------------MUI DARK THEME END---------------------------
 
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -123,22 +157,35 @@ const App = () => {
   return (
 
       <div className='appContainer'>
-{/*       <ThemeButton
+      <ThemeButton
         theme={theme}
         setTheme={setTheme}
-      /> */}
-      {currentUser ? 
-      <Navbar 
-      user={currentUser} 
-      setCurrentUser={setCurrentUser}
       />
-      : <Navigate to="/login" /> } 
-      <UserContext.Provider value={{ currentUser, theme }}>
-        {/* "context" is how you pass props to Outlet: https://reactrouter.com/en/main/hooks/use-outlet-context */}
-        <Outlet  context={[snackbarOpenCondition, setSnackbarOpenCondition, snackbarOpen, setSnackbarOpen, setCurrentUser, profileUpdated, setProfileUpdated]} /> 
-      </UserContext.Provider>
 
-    </div>
+      {/* ---------------------------------- MUI DARK THEME START ---------------------------------- */}
+      <ThemeProvider theme={darkTheme}>
+      <CssBaseline />
+
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <h2>Toggle Dark mode</h2>
+        <Switch checked={toggleDarkMode} onChange={toggleDarkTheme} />
+      </div>
+
+      {/* ---------------------------------- MUI DARK THEME END ---------------------------------- */}
+
+          {currentUser ? 
+          <Navbar 
+          user={currentUser} 
+          setCurrentUser={setCurrentUser}
+          />
+          : <Navigate to="/login" /> } 
+          <UserContext.Provider value={{ currentUser, theme }}>
+            {/* "context" is how you pass props to Outlet: https://reactrouter.com/en/main/hooks/use-outlet-context */}
+            <Outlet  context={[snackbarOpenCondition, setSnackbarOpenCondition, snackbarOpen, setSnackbarOpen, setCurrentUser, profileUpdated, setProfileUpdated]} /> 
+          </UserContext.Provider>
+      </ThemeProvider>
+
+      </div>
 
 
   );

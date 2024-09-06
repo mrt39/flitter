@@ -32,6 +32,10 @@ export default function Login() {
       window.open(import.meta.env.VITE_BACKEND_URL+"/auth/google", "_self");
   }
 
+  function handleTwitterClick () {
+    window.open(import.meta.env.VITE_BACKEND_URL+"/auth/twitter", "_self");
+}
+
   function handleDemoSigninClick(){
     setLoginData({email:"demoacc@demoacc.com" , password: import.meta.env.VITE_DEMOACC_PW})
     setClickedLogin(true)
@@ -159,6 +163,17 @@ export default function Login() {
               sx={{ mt: 3, mb: 2 }}
             >
               Sign In With Google
+            </Button>
+
+            <Button
+            id="twitterSignInBtn"
+              type="button"
+              onClick={handleTwitterClick}
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Sign In With Twitter
             </Button>
 
             <Button

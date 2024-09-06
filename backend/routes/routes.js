@@ -117,6 +117,7 @@ router.post("/submitPost", async (req, res) => {
     if (req.isAuthenticated()){
       const newPost = new Post({
           from: req.body.from,
+          date: req.body.date,
           message: req.body.message,
       });
       const result = newPost.save();
@@ -134,7 +135,6 @@ router.post("/submitPost", async (req, res) => {
 
 //like a post 
 router.patch("/likePost", async (req, res) => {
-  console.log("clicked")
   try {
     //liking post available only if authenticated
     if (req.isAuthenticated()){

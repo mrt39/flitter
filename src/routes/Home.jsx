@@ -1,8 +1,10 @@
 import { useState, useEffect, useContext } from 'react';
 import '../styles/Home.css'
+import CommentForm from "../components/CommentForm.jsx";
 import { UserContext } from '../App.jsx';
 import { clean } from 'profanity-cleaner';
 import dayjs from 'dayjs';
+import { CircularProgress, Alert } from '@mui/material';
 
 
 
@@ -14,6 +16,8 @@ function Home() {
 
   const [pressedSubmitPost, setPressedSubmitPost] = useState(false)
   const [value, setValue] = useState()
+  const [likepostID, setLikePostID] = useState("")
+  const [pressedLikePost, setPressedLikePost] = useState(false)
   const [allPosts, setAllPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -30,8 +34,46 @@ function Home() {
   }
 
 
+  function handleLike(postID){
+    setLikePostID(postID)
+    /* setPressedLikePost(true) */
+    sortDate()
+  }
 
 
+
+  //useffect for liking posts
+    useEffect(() => {
+      async function likePost() {
+        await fetch(import.meta.env.VITE_BACKEND_URL+'/likePost', {
+          method: "PATCH",
+          // storing date as isostring to make the reading easier later
+          body: JSON.stringify({ postID: likepostID, likedBy: currentUser}), 
+          headers: {
+              'Content-Type': 'application/json',
+              "Access-Control-Allow-Origin": "*",
+          },
+          credentials:"include" //required for sending the cookie data-authorization check
+      })
+        .then(async result => {
+          if (result.ok){
+            await result.json();
+            console.log("Liked Post!")
+            setPressedLikePost(false)
+          } else{
+            throw new Error(result)
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          setPressedLikePost(false)
+        }); 
+      }
+      //only trigger when comment is posted
+      if (pressedLikePost ===true){
+        likePost();
+      } 
+    }, [pressedLikePost]);
 
 
 
@@ -67,16 +109,7 @@ function Home() {
     }, []); 
 
 
-
-
-
-
-
-
-
-
-
-  //useeffect to handle sending comments on blog posts
+  //useeffect to handle submitting blog posts
   useEffect(() => {
     async function submitPost() {
       //on submit, clean the words with the profanity cleaner package
@@ -85,13 +118,13 @@ function Home() {
 
       await fetch(import.meta.env.VITE_BACKEND_URL+'/submitPost', {
         method: "post",
-        // storing date as isostring to make the reading easier later
+        // store date as isostring to make the reading easier later
         body: JSON.stringify({ from: currentUser, date: new Date().toISOString(), message: filteredPostMessage}), 
         headers: {
             'Content-Type': 'application/json',
             "Access-Control-Allow-Origin": "*",
         },
-        credentials:"include" //required for sending the cookie data
+        credentials:"include" //required for sending the cookie data-authorization check
     })
       .then(async result => {
         if (result.ok){
@@ -112,6 +145,20 @@ function Home() {
       submitPost();
     } 
   }, [pressedSubmitPost]);
+
+
+
+  if (loading) {
+    return <CircularProgress />;
+  }
+
+
+
+  if (error) {
+    return <Alert severity="error">{error}</Alert>;
+  }
+
+
 
 
   return (
@@ -137,9 +184,28 @@ function Home() {
         <li key={post._id}>
             <h3>{post.from[0].name}</h3>
             <p>{post.message}</p>
-            <p>{dayjs(new Date(post.date)).format('MMM D, H:mm ')}</p>
+            <p>{dayjs(new Date(post.date)).format('MMM D, H:mm')}</p>
+            {/* <p>{dayjs(post.date).format('MMMM D, YYYY h:mm A')}</p> */}
+            <button onClick={()=>handleLike(post._id)}>Like Post</button>
             <p>Likes: {post.likeCount}</p>
+            <CommentForm 
+             postID={post._id}
+            />
             <p>Comments: {post.commentCount}</p>
+            <br />
+            <p>Comment Section of This post:</p>
+            <ul>
+              {/* if exists, post the comments of this post */}
+            {post.comments ?
+            post.comments.map((comment) => (
+            <li key={comment.id}>
+              <p>{comment.comment}</p>
+              <p>{comment.date}</p>
+              <h4>{comment.from[0].name}</h4>
+            </li>
+            ))
+            :""}
+            </ul>
             <br /> <br /> <br />
         </li>
         ))}
