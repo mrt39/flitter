@@ -113,7 +113,7 @@ const App = () => {
   }, []); 
 
 
-/*   // change the user data from the stored user data in the session, to the actual user data in the db 
+  // change the user data from the stored user data in the session, to the actual user data in the db 
   useEffect(() => {
     const getUserOnUpdate = () => {
       fetch(import.meta.env.VITE_BACKEND_URL+'/profile/' + currentUser["_id"], {
@@ -140,7 +140,7 @@ const App = () => {
     getUserOnUpdate();
     }
   // when first fetch is complete or profile is updated, update the currentUser state 
-  }, [profileUpdated, firstTimeLoading]);  */
+  }, [profileUpdated, firstTimeLoading]); 
 
 
 

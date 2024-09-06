@@ -1,0 +1,11 @@
+.appContainer > .MuiBox-root{
+    overflow-y: auto;
+}
+
+.MuiTypography-root{
+    font-family: Helvetica Neue,Segoe UI,Helvetica,Arial,sans-serif !important;
+}
+
+.MuiInputBase-root{
+    font-family: Helvetica Neue,Segoe UI,Helvetica,Arial,sans-serif !important;
+}

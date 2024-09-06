@@ -206,6 +206,42 @@ router.post("/sendCommentonPost", async (req, res) => {
 });
 
 
+//Edit user profile
+router.patch("/editprofile/:userid", async (req, res) => {
+  
+  const userid = req.params.userid // access URL variable
+  const user = await User.findOne({_id: userid});
+
+  console.log(req.body.name + " is the new name for this user: " + user.name)
+  try {
+    user.name= req.body.name
+    user.email= req.body.email
+    user.bio= req.body.bio
+   
+    const result = await user.save();
+    res.send(result)
+
+} catch (err) {
+    res.send(err);
+}
+
+});
+
+//get a user's info
+router.get("/profile/:userid", async (req, res) => {
+
+  const userID = req.params.userid // access URL variable
+
+  try {
+    const user = await User.find({_id: userID});
+    console.log("changed value of the user: " + user)
+    res.send(user);
+
+  } catch (err) {
+    res.send(err);
+  }
+  })
+
 
 
 module.exports = router
