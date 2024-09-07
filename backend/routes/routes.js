@@ -371,6 +371,111 @@ router.post("/followUser", async (req, res) => {
 
 
 
+/*----------------------------- IMAGES------------------------------------- */
+
+const cloudinary = require('cloudinary').v2;
+
+// Cloudinary Configuration
+cloudinary.config({ 
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME, 
+  api_key: process.env.CLOUDINARY_API_KEY, 
+  api_secret: process.env.CLOUDINARY_API_SECRET 
+});
+
+//tap into "upload", which we import from passport.js
+//this is a middleware function that will accept the image data from the client side form data as long as it's called image (which is exactly what we called it in the react app formData.append("image", file))
+router.post('/uploadprofilepic/:userid',  upload.single('image'),  async (req, res) => {
+
+  //req.file.buffer to access the image data that's stored in the memory. we have stored it into memory in multer config in passport.js 
+  const b64 = Buffer.from(req.file.buffer).toString("base64");
+  //make data readable/usable
+  let dataURI = "data:" + req.file.mimetype + ";base64," + b64;
+
+  const imageName = req.file.filename 
+  const userid = req.params.userid 
+  const user = await User.findOne({_id: userid});
+
+  try {
+     // Upload the image to cloudinary
+     const uploadResult = await cloudinary.uploader
+     .upload(
+         dataURI, //image file to upload
+         {
+             public_id: imageName,
+         } 
+     )
+     .catch((error) => {
+         console.log(error);
+     });
+    //change the db based on upload url
+    user.uploadedpic= uploadResult.secure_url
+    const result = await user.save();
+    console.log("image saved! filename: " +req.file.filename)
+    res.send(result)
+
+  }catch (err) {
+    res.send(err);
+  }
+
+});
+
+//image sent in message input
+router.post("/imagesent", upload.single('image'), async (req, res) => {
+
+  //req.file.buffer to access the image data that's stored in the memory. we have stored it into memory in multer config in passport.js 
+  const b64 = Buffer.from(req.file.buffer).toString("base64");
+  //make data readable/usable
+  let dataURI = "data:" + req.file.mimetype + ";base64," + b64;
+
+  const imageName = req.file.filename 
+  const msgFrom = JSON.parse(req.body.from).currentUser
+  const date = JSON.parse(req.body.date)
+
+  try {
+    if (req.isAuthenticated){
+      // Upload the image to cloudinary
+      const uploadResult = await cloudinary.uploader
+      .upload(
+          dataURI, //image file to upload
+          {
+              public_id: imageName,
+          } 
+      )
+      .catch((error) => {
+          console.log(error);
+      });
+
+      //save the image url to db
+      const newMessage = new Post({
+          from: msgFrom,
+          date: date,
+          image: uploadResult.secure_url,
+      });
+      const result = newMessage.save();
+      console.log("Image uploaded successfully!")
+      res.send(result)
+    } else{
+      res.send(JSON.stringify("Not authenticated!"));
+    }
+
+  } catch (err) {
+      res.send(err);
+  }
+ 
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
 module.exports = router
 
 
