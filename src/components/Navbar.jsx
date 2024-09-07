@@ -5,6 +5,9 @@ import * as Icon from 'react-bootstrap-icons';
 import '../styles/Navbar.css';
 import MuiAvatar from "../components/MuiAvatar.jsx";
 import LogoImg from "../assets/logo.png";
+//imports for generating the url path for routing 
+import slugify from 'slugify';
+
 
 
 const Navbar = ({user, setCurrentUser}) => {
@@ -18,6 +21,20 @@ const Navbar = ({user, setCurrentUser}) => {
   useEffect(() => {
     setcurrentRoute(location.pathname)
   }, [location]); // Only re-run the effect if count changes
+
+
+  //handle generating the url path for routing to /profile/:slug
+  function handleProfileRouting(){
+    //slugify the username, e.g:"john-doe"
+    const slug = slugify(user.name, { lower: true }); 
+    // Convert the user ID to a number and then encode it in Base36
+    const base36 = parseInt(user._id, 16).toString(36);
+    // Truncate to 8 characters to make it even shorter
+    const shortenedId = base36.substring(0, 7);
+    //combine both to create the profile path for the selected user to route to
+    const profilePath = `/profile/${slug}-${shortenedId}`
+    return profilePath
+  }
 
 
   function handleSignOut(){
@@ -56,14 +73,14 @@ const Navbar = ({user, setCurrentUser}) => {
           </div>
         </li>
       </Link>
-        <Link to="/profile">
-        <li>
+        <Link  to={handleProfileRouting()}  >
+        <li >
           <div href="#" className={(currentRoute==="/profile"? "active" :"") + " nav-link py-3 border-bottom rounded-0"} title="Profile" data-bs-placement="right">
             <Icon.PersonCircle  className="bi pe-none" width="24" height="24" aria-label="Profile"/>
           </div>
         </li>
       </Link>
-      <Link to="/findpeople">
+      <Link to="/profileedit">
         <li>
           <div href="#" className={(currentRoute==="/findpeople"? "active" :"") + " nav-link py-3 border-bottom rounded-0"}  title="Find People!"  data-bs-placement="right">
           <Icon.PeopleFill  className="bi pe-none" width="24" height="24" role="img" aria-label="Find People!"/>

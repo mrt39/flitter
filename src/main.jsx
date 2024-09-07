@@ -7,6 +7,7 @@ import Login from './routes/Login.jsx';
 import SignUp from './routes/SignUp.jsx';
 import Home from './routes/Home.jsx';
 import Profile from './routes/Profile.jsx';
+import ProfileEdit from './routes/ProfileEdit.jsx';
 
 
 
@@ -20,7 +21,8 @@ const router = createBrowserRouter([
       { index: true, element: <Home/> }, 
       { path: "login", element: <Login />},
       { path: "signup", element: <SignUp />},
-      { path: "profile", element: <Profile />},
+      { path: "profile/:slugID", element: <Profile /> },
+      { path: "profileedit", element: <ProfileEdit />},
     ], 
   },
 

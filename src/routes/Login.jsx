@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { Link as RouterLink } from "react-router-dom";
 import { useState, useEffect, useContext  } from 'react';
-/* import { UserContext } from '../App.jsx'; */
+import { UserContext } from '../App.jsx';
 import { useOutletContext, Navigate } from "react-router-dom";
 import '../styles/Login.css'
 import Avatar from '@mui/material/Avatar';
@@ -20,7 +20,7 @@ export default function Login() {
 
 
   // Passing the UserContext defined in app.jsx
-  /* const { currentUser, selectedPerson, setSelectedPerson } = useContext(UserContext); */ 
+  const { currentUser, selectedPerson, setSelectedPerson } = useContext(UserContext); 
 
   const [snackbarOpenCondition, setSnackbarOpenCondition, snackbarOpen, setSnackbarOpen] = useOutletContext();
 
@@ -101,8 +101,8 @@ export default function Login() {
 
   return (
   <>
-{/*     {currentUser? <Navigate to="/" />
-    : ""} */}
+    {currentUser? <Navigate to="/" />
+    : ""}
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box

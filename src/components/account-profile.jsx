@@ -9,7 +9,7 @@ import { useOutletContext } from "react-router-dom";
 import "../styles/Account-Profile.css"
 import MuiAvatar from "./MuiAvatar";
 import Snackbar from "./Snackbar.jsx"
-import createHash from "node:crypto"
+
 
 export const AccountProfile = ({user, setProfileUpdated}) => {
 
@@ -38,26 +38,8 @@ function handleChange(event){
 }
 
 function submitImg(){
-
-  /* setImgSubmitted(true) */
-
-
-  // Example usage
-  const email = 'your-email@example.com';
-  const size = 200; // Optional size parameter
-  const gravatarUrl = getGravatarUrl(email, size);
-  console.log('Gravatar URL:', gravatarUrl);
+  setImgSubmitted(true)
 }
-
-function getGravatarUrl(email, size = 80) {
-  const trimmedEmail = email.trim().toLowerCase();
-  /* const hash = crypto.createHash('sha256').update(trimmedEmail).digest('hex'); */
-  const hash = createHash('sha256');
-  const digestedhash = hash.digest('hex')
-  return `https://www.gravatar.com/avatar/${digestedhash}?s=${size}&d=identicon`;
-}
-
-
 
 //effect for handling uploading image
 useEffect(() => {
@@ -145,4 +127,5 @@ return (
 </Card>
 )
 };
+
 

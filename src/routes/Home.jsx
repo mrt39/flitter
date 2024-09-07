@@ -1,18 +1,20 @@
 import { useState, useEffect, useContext } from 'react';
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import '../styles/Home.css'
 import CommentForm from "../components/CommentForm.jsx";
 import { UserContext } from '../App.jsx';
 import { clean } from 'profanity-cleaner';
 import dayjs from 'dayjs';
 import { CircularProgress, Alert } from '@mui/material';
-
+//imports for generating the url path for routing 
+import slugify from 'slugify';
 
 
 
 function Home() {
 
   //Pass the UserContext defined in app.jsx
-  const { currentUser, selectedPerson, setSelectedPerson } = useContext(UserContext); 
+  const { currentUser, selectedUser, setSelectedUser } = useContext(UserContext); 
 
   const [pressedSubmitPost, setPressedSubmitPost] = useState(false)
   const [value, setValue] = useState()
@@ -22,6 +24,7 @@ function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const navigate = useNavigate(); 
 
 
   function handleChange(event){
@@ -36,8 +39,6 @@ function Home() {
 
   function handleLike(postID){
     setLikePostID(postID)
-    /* setPressedLikePost(true) */
-    sortDate()
   }
 
 
@@ -148,6 +149,35 @@ function Home() {
 
 
 
+  //handle generating the url path for routing to /profile/:slug
+  function handleProfileRouting(clickedOnUser){
+
+    setSelectedUser(clickedOnUser)
+
+    console.log(selectedUser)
+
+    //slugify the username, e.g:"john-doe"
+    const slug = slugify(clickedOnUser.name, { lower: true }); 
+    // Convert the user ID to a number and then encode it in Base36
+    const base36 = parseInt(clickedOnUser._id, 16).toString(36);
+    // Truncate to 8 characters to make it even shorter
+    const shortenedId = base36.substring(0, 7);
+    //combine both to create the profile path for the selected user to route to
+    const profilePath = `/profile/${slug}-${shortenedId}`
+    
+    navigate(profilePath); // Route to the profile path
+  }
+
+
+
+
+
+
+
+
+
+
+
   if (loading) {
     return <CircularProgress />;
   }
@@ -179,10 +209,18 @@ function Home() {
         <input type="submit" value="Submit" />
       </form>
 
+      <br /><br />
+      <h2>
+       ALL POSTS
+      </h2>
       <ul>
       {allPosts.map((post) => (
         <li key={post._id}>
-            <h3>{post.from[0].name}</h3>
+            <Link onClick={() => handleProfileRouting(post.from[0])}>
+              <h3>
+                {post.from[0].name}
+              </h3>
+            </Link>
             <p>{post.message}</p>
             <p>{dayjs(new Date(post.date)).format('MMM D, H:mm')}</p>
             {/* <p>{dayjs(post.date).format('MMMM D, YYYY h:mm A')}</p> */}

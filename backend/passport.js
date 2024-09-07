@@ -6,6 +6,9 @@ const LocalStrategy = require('passport-local').Strategy;
 //dayjs
 const dayjs = require('dayjs')
 
+// for generating random short ID for users 
+const ShortUniqueId = require('short-unique-id');
+
 /* MONGOOSE */
 const mongoose = require("mongoose");
 const passportLocalMongoose = require("passport-local-mongoose")
@@ -32,6 +35,11 @@ const userSchema = new mongoose.Schema ({
       maxlength: 50, 
       unique: false,
       required: false,
+    },
+    shortId: { 
+      type: String,  
+      unique: false,
+      required: true,
     },
     name: { 
       type: String, 
@@ -67,6 +75,29 @@ const userSchema = new mongoose.Schema ({
       unique: false,
       required: false,
       maxlength: 100
+  },
+
+  followingtheseID: 
+  {type: String,
+    unique: false,
+    required: false, 
+  },
+  followingCount: {
+    type: Number,
+    unique: false,
+    required: true,
+    default: 0
+  },
+  followedbytheseID: 
+  {type: String,        
+    unique: false,
+    required: false, 
+  },
+  followerCount: {
+    type: Number,
+    unique: false,
+    required: true,
+    default: 0
   },
 });
 
@@ -173,10 +204,6 @@ const Post = mongoose.models.posts ||mongoose.model("posts", postSchema);
 
 
 
-
-
-
-
 //model for followers
 
 const followerSchema = new mongoose.Schema ({
@@ -184,11 +211,13 @@ const followerSchema = new mongoose.Schema ({
     unique: false,
     required: true, 
   },
-  following: {type: [userSchema],        
+  following: 
+  {type: [userSchema],        
     unique: false,
     required: true, 
   },
-  followedby: {type: [userSchema],        
+  followedby: 
+  {type: [userSchema],        
     unique: false,
     required: true, 
   },

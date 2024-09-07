@@ -25,9 +25,9 @@ import {Switch} from "@mui/material"
 //----------------------MUI DARK THEME END---------------------------
 
 export const UserContext = createContext({
-  selectedPerson: (null),
+  selectedUser: (null),
   currentUser: (null),
-  setSelectedPerson: () => {},
+  setSelectedUser: () => {},
 });
 
 
@@ -68,6 +68,8 @@ const App = () => {
   //----------------------MUI DARK THEME END---------------------------
 
   const [currentUser, setCurrentUser] = useState(null);
+  //selected user for displaying their profile
+  const [selectedUser, setSelectedUser] = useState();
   const [loading, setLoading] = useState(true);
   //first time loading
   const [firstTimeLoading, setFirstTimeLoading] = useState(true);
@@ -179,7 +181,7 @@ const App = () => {
           setCurrentUser={setCurrentUser}
           />
           : <Navigate to="/login" /> } 
-          <UserContext.Provider value={{ currentUser, theme }}>
+          <UserContext.Provider value={{ currentUser, selectedUser, setSelectedUser, theme }}>
             {/* "context" is how you pass props to Outlet: https://reactrouter.com/en/main/hooks/use-outlet-context */}
             <Outlet  context={[snackbarOpenCondition, setSnackbarOpenCondition, snackbarOpen, setSnackbarOpen, setCurrentUser, profileUpdated, setProfileUpdated]} /> 
           </UserContext.Provider>

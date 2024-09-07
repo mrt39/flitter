@@ -7,7 +7,7 @@ const CommentForm = ({postID}) => {
 
 
   //Pass the UserContext defined in app.jsx
-  const { currentUser, selectedPerson, setSelectedPerson } = useContext(UserContext); 
+  const { currentUser, selectedUser, setSelectedUser } = useContext(UserContext); 
 
 
 

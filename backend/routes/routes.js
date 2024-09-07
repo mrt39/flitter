@@ -2,6 +2,8 @@ const router = require("express").Router();
 //node file system module
 const fs = require('fs');
 const path = require('path');
+// for generating random short ID for users 
+const ShortUniqueId = require('short-unique-id');
 //grab the User model that's exported in passport.js
 const {Follower, Comment, Post, User, upload, passport} = require( "../passport.js")
 
@@ -61,7 +63,11 @@ function(req, res) {
 
 
 router.post("/signup", function(req, res){
-  User.register({name: req.body.name, email:req.body.email}, req.body.password, function(err){
+  // Generate a short unique ID
+  const { randomUUID } = new ShortUniqueId({ length: 10 });
+  const randomShortId= randomUUID();
+
+  User.register({name: req.body.name, email:req.body.email, shortId:randomShortId}, req.body.password, function(err){
     if(err){
         console.log(err);
         res.send(JSON.stringify(err))
