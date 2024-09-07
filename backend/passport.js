@@ -258,7 +258,11 @@ async function(accessToken, refreshToken, profile, done) {
     done(null, existingUser);
   //otherwise, create new user
   } else {
-  const user = await new User({ googleId: profile.id, name: profile.displayName, picture: profile["_json"].picture, email: profile["_json"].email  }).save();
+  // Generate a short unique ID
+  const { randomUUID } = new ShortUniqueId({ length: 8 });
+  const randomShortId= randomUUID();
+
+  const user = await new User({ googleId: profile.id, name: profile.displayName, shortId:randomShortId, picture: profile["_json"].picture, email: profile["_json"].email  }).save();
     done(null, user);
   }
   }
@@ -277,7 +281,11 @@ async function(accessToken, refreshToken, profile, done) {
     done(null, existingUser);
   //otherwise, create new user
   } else {
-  const user = await new User({ googleId: profile.id, name: profile.username, picture: profile["photos"][0].value}).save();
+  // Generate a short unique ID
+  const { randomUUID } = new ShortUniqueId({ length: 8 });
+  const randomShortId= randomUUID();
+
+  const user = await new User({ googleId: profile.id, name: profile.username, shortId:randomShortId, picture: profile["photos"][0].value}).save();
     done(null, user);
   }
   }

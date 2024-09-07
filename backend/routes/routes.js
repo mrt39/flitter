@@ -64,7 +64,7 @@ function(req, res) {
 
 router.post("/signup", function(req, res){
   // Generate a short unique ID
-  const { randomUUID } = new ShortUniqueId({ length: 10 });
+  const { randomUUID } = new ShortUniqueId({ length: 8 });
   const randomShortId= randomUUID();
 
   User.register({name: req.body.name, email:req.body.email, shortId:randomShortId}, req.body.password, function(err){

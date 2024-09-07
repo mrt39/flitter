@@ -151,31 +151,14 @@ function Home() {
 
   //handle generating the url path for routing to /profile/:slug
   function handleProfileRouting(clickedOnUser){
-
     setSelectedUser(clickedOnUser)
-
-    console.log(selectedUser)
-
     //slugify the username, e.g:"john-doe"
     const slug = slugify(clickedOnUser.name, { lower: true }); 
-    // Convert the user ID to a number and then encode it in Base36
-    const base36 = parseInt(clickedOnUser._id, 16).toString(36);
-    // Truncate to 8 characters to make it even shorter
-    const shortenedId = base36.substring(0, 7);
-    //combine both to create the profile path for the selected user to route to
-    const profilePath = `/profile/${slug}-${shortenedId}`
-    
-    navigate(profilePath); // Route to the profile path
+    //combine slug with usershortID to create the unique profile path for the selected user to route to
+    const profilePath = `/profile/${slug}-${clickedOnUser.shortId}`
+    // Route to the profile path
+    navigate(profilePath); 
   }
-
-
-
-
-
-
-
-
-
 
 
   if (loading) {

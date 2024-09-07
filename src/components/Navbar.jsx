@@ -27,12 +27,8 @@ const Navbar = ({user, setCurrentUser}) => {
   function handleProfileRouting(){
     //slugify the username, e.g:"john-doe"
     const slug = slugify(user.name, { lower: true }); 
-    // Convert the user ID to a number and then encode it in Base36
-    const base36 = parseInt(user._id, 16).toString(36);
-    // Truncate to 8 characters to make it even shorter
-    const shortenedId = base36.substring(0, 7);
-    //combine both to create the profile path for the selected user to route to
-    const profilePath = `/profile/${slug}-${shortenedId}`
+    //combine slug with usershortID to create the unique profile path for the selected user to route to
+    const profilePath = `/profile/${slug}-${user.shortId}`
     return profilePath
   }
 
