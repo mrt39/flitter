@@ -9,9 +9,6 @@ import "../styles/Profile.css"
 
 
 
-import ShortUniqueId from 'short-unique-id';
-
-
 
 
 const Profile = () => {

@@ -57,7 +57,7 @@ async function changeProfileImage() {
     })
     .then(async result =>{
       if (result.ok){
-      let response = await result.json();
+      await result.json();
       console.log("Image uploaded");
       setUploadedImg(null);
       setImgSubmitted(false);

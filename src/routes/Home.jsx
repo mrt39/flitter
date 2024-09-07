@@ -1,13 +1,17 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useRef, useContext } from 'react'
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useOutletContext } from "react-router-dom";
 import '../styles/Home.css'
 import CommentForm from "../components/CommentForm.jsx";
+import FileInputPopover from "../components/Popover.jsx"
+import Snackbar from "../components/Snackbar.jsx"
 import { UserContext } from '../App.jsx';
 import { clean } from 'profanity-cleaner';
 import dayjs from 'dayjs';
 import { CircularProgress, Alert } from '@mui/material';
 //imports for generating the url path for routing 
 import slugify from 'slugify';
+
 
 
 
@@ -149,6 +153,10 @@ function Home() {
 
 
 
+
+
+
+
   //handle generating the url path for routing to /profile/:slug
   function handleProfileRouting(clickedOnUser){
     setSelectedUser(clickedOnUser)
@@ -159,6 +167,134 @@ function Home() {
     // Route to the profile path
     navigate(profilePath); 
   }
+
+
+
+
+
+
+
+  /* ---------------IMAGE UPLOAD FUNCTIONALITY--------------- */
+
+  const [snackbarOpenCondition, setSnackbarOpenCondition, snackbarOpen, setSnackbarOpen] = useOutletContext();
+
+
+
+
+  
+  //use ref to be able to select an element within a function (for displaying popover)
+  const fileInputRef = useRef(null)
+  //anchor for popover
+  const [popOveranchorEl, setPopOverAnchorEl] = useState(null);
+
+  const [imageFile, setimageFile] = useState();
+  //trigger when user selects an image
+  const [imageSelected, setimageSelected] = useState(false);
+  //user presses "send" after selecting the image
+  const [imgSubmitted, setImgSubmitted] = useState(false);
+
+    //when the attachment icon is clicked, click on the hidden input (type=file) element
+    function handleAttachmentClick(){
+      fileInputRef.current.click()
+    }
+
+  //when user selects an image and changes the value of the input, change the state 
+  function handleFileInputChange(event){
+    const selectedFile = event.target.files;
+    //check the filetype to ensure it's an image. throw error if it isn't
+    if (selectedFile[0]["type"] != "image/x-png" && selectedFile[0]["type"] != "image/png" && selectedFile[0]["type"] != "image/jpeg") {
+      console.error("Only image files can be attached!")
+      setSnackbarOpenCondition("notAnImage")
+      setSnackbarOpen(true)
+      return
+      //if image size is > 1mb, throw error
+    }else if(selectedFile[0]["size"] > 1048576){
+      console.error("Image size is too big!")
+      setSnackbarOpenCondition("sizeTooBig")
+      setSnackbarOpen(true)
+      return
+    }else{
+    setimageSelected(true)
+    setimageFile(selectedFile[0]);
+    }
+  }
+
+  //when an image is selected, activate the popover
+  useEffect(() => {
+    //only trigger if an image is selected
+    if (imageSelected){
+    /* select the attachment button next to the message input box and make it the anchor for the popover to be displayed over */
+    const attachmentIcon = document.querySelector('#sendAnImgButton')
+    setPopOverAnchorEl(attachmentIcon)
+    }
+  }, [imageSelected]);
+
+  //function for sending the image
+  function handleImgSendBtn(){
+      setImgSubmitted(true);
+  }
+
+  //effect for handling posting the image
+  useEffect(() => {
+    async function sendImage() {
+
+      const formData = new FormData();
+      formData.append("image", imageFile);
+      formData.append("from", JSON.stringify({currentUser}) );
+      formData.append("date", JSON.stringify(new Date().toISOString()) );
+      
+      await fetch(
+        import.meta.env.VITE_BACKEND_URL+'/imagesent', {
+            method: "post",
+            //if imageFile exists, send imageFile  
+            body: formData, 
+            headers: {
+                "Access-Control-Allow-Origin": "*",
+            },
+            credentials:"include" //required for sending the cookie data
+        })
+        .then(async result => {
+          if(result.ok){
+            await result.json()
+            console.log("Image sent");
+            setimageFile("");
+            setImgSubmitted(false);
+          } else{
+            throw new Error(result);
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    }
+    //only trigger when message is sent
+    if (imgSubmitted ===true){
+      sendImage();
+    } 
+  }, [imgSubmitted]);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
   if (loading) {
@@ -191,8 +327,36 @@ function Home() {
         </label>
         <input type="submit" value="Submit" />
       </form>
-
       <br /><br />
+      <br /><br />
+
+
+
+
+
+      <button id="sendAnImgButton" onClick={handleAttachmentClick}>
+        Send An Image!
+      </button>
+      <input ref={fileInputRef} type='file' name='fileInput' accept="image/*" className='fileInputMessageBox'
+        onChange={handleFileInputChange}
+        />
+        <FileInputPopover
+        popOveranchorEl={popOveranchorEl}
+        imgSubmitted={imgSubmitted}
+        setPopOverAnchorEl={setPopOverAnchorEl}
+        setimageSelected={setimageSelected}
+        handleImgSendBtn={handleImgSendBtn}
+        />
+        <Snackbar
+        snackbarOpenCondition={snackbarOpenCondition}
+        snackbarOpen={snackbarOpen}
+        setSnackbarOpen={setSnackbarOpen}
+      />
+
+
+
+
+      <br /><br /> <br /><br /> <br /><br />
       <h2>
        ALL POSTS
       </h2>
@@ -204,7 +368,16 @@ function Home() {
                 {post.from[0].name}
               </h3>
             </Link>
-            <p>{post.message}</p>
+            {post.message? 
+              <p>
+                {post.message}
+              </p>
+            :""}
+            {post.image? 
+              <p>
+                <img className="msgBoxImg1" src={post.image} alt="image" />
+              </p>
+            :""}
             <p>{dayjs(new Date(post.date)).format('MMM D, H:mm')}</p>
             {/* <p>{dayjs(post.date).format('MMMM D, YYYY h:mm A')}</p> */}
             <button onClick={()=>handleLike(post._id)}>Like Post</button>
