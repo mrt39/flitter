@@ -147,9 +147,6 @@ router.patch("/likePost", async (req, res) => {
       const likedPost = await Post.findOne({_id: req.body.postID});
       const likingUser = await User.findOne({_id: req.body.likedBy._id});
      
-      console.log(likedPost.likedby.findIndex(u=>u._id.toString()===likingUser._id.toString()))
-      console.log(likedPost.likedby.findIndex(u=>u._id.toString()===likingUser._id.toString()) > -1)
-
       //find if post is already liked by the user, if user is already in likedby array
       //find via converting id objects to string because querying with id's doesn't work
       const likingUserIndex = likedPost.likedby.findIndex(u=>u._id.toString()===likingUser._id.toString())
@@ -233,20 +230,144 @@ router.patch("/editprofile/:userid", async (req, res) => {
 
 });
 
-//get a user's info
+//get a user's info based on their id
 router.get("/profile/:userid", async (req, res) => {
 
   const userID = req.params.userid // access URL variable
 
   try {
     const user = await User.find({_id: userID});
-    console.log("changed value of the user: " + user)
     res.send(user);
 
   } catch (err) {
     res.send(err);
   }
-  })
+})
+
+//get a user's info based on their short id
+router.get("/profile-shortId/:shortId", async (req, res) => {
+
+  const shortId = req.params.shortId // access URL variable
+
+  try {
+    const user = await User.find({shortId: shortId});
+    res.send(user);
+
+  } catch (err) {
+    res.send(err);
+  }
+})
+
+
+
+// follow and unfollow a user 
+router.post("/followUser", async (req, res) => {
+  try {
+    //only available if authenticated
+    if (req.isAuthenticated()){
+      //find the user that clicked on follow and the one that's being followed
+      const fromUser = await User.findOne({_id: req.body.fromUser._id});
+      const toUser = await User.findOne({_id: req.body.toUser._id});
+
+      //if already followed, unfollow
+      if(fromUser.followingtheseID.includes(toUser._id)){
+        //decrease the followingCount property of the user that clicked on follow by 1
+        fromUser.followingCount -= 1;  
+        //find index via converting id objects to string because querying with id's doesn't work
+        const likingUserIndex = fromUser.followingtheseID.findIndex(u=>u.toString()===toUser._id.toString())
+        //remove it from the likingUserIndex array.
+        fromUser.followingtheseID.splice(likingUserIndex, 1)
+        //save the user that clicked on follow
+        await fromUser.save();
+
+        //decrease the followerCount property of the user that clicked on follow by 1
+        toUser.followerCount -= 1;  
+        //find index via converting id objects to string because querying with id's doesn't work
+        const likedUserIndex = toUser.followedbytheseID.findIndex(u=>u.toString()===fromUser._id.toString())
+        //remove it from the likingUserIndex array.
+        toUser.followedbytheseID.splice(likedUserIndex, 1)
+        //save the user that clicked on follow
+        await toUser.save();
+      //if not following, follow
+      }else { 
+        //increase the followingCount property of the user that clicked on follow by 1
+        fromUser.followingCount += 1;  
+        //push the id of the followed user to the followingtheseID property of the user that clicked on follow
+        await fromUser.followingtheseID.push(toUser._id)
+        //save the user that clicked on follow
+        await fromUser.save();
+
+        //increase the followerCount property of the followed user 
+        toUser.followerCount += 1;  
+        //push the id of user that clicked on follow to the followedbytheseID property of the followed user
+        await toUser.followedbytheseID.push(fromUser._id)
+        //save the followed user
+        await toUser.save();
+      }
+
+      /* ------------------------HANDLING THE Follower MODEL in db----------------------- */
+
+      //get the current user and followed user in the Follower model,
+      const fromUserFollowerModel = await Follower.findOne({user: {$elemMatch: {_id: req.body.fromUser._id}}})
+      const toUserFollowerModel = await Follower.findOne({user: {$elemMatch: {_id: req.body.toUser._id}}})
+
+      //if the current user exists in the follower model, update
+      if(fromUserFollowerModel)
+      {
+          //find if user is already followed by the user, if user is already in following array
+          //find via converting id objects to string because querying with id's doesn't work
+          const fromUserIndex = fromUserFollowerModel.following.findIndex(u=>u._id.toString()===toUser._id.toString())
+
+          //already following this user, unfollow 
+          if (fromUserIndex > -1){
+            fromUserFollowerModel.following.splice(fromUserIndex, 1)
+            //save the user that clicked on follow
+            await fromUserFollowerModel.save();
+          }else {
+            await fromUserFollowerModel.following.push(toUser) 
+            await fromUserFollowerModel.save()
+          }
+      } else { //if the user does not exist, create it
+        const newFollower = new Follower({
+          user: fromUser,
+          following: toUser,
+        });
+        await newFollower.save();
+      }
+
+      //if the followed user exists in the follower model, update
+      if(toUserFollowerModel)
+      {
+          //find if user is already followed by the user, if user is already in followedby array
+          //find via converting id objects to string because querying with id's doesn't work
+          const toUserIndex = toUserFollowerModel.followedby.findIndex(u=>u._id.toString()===fromUser._id.toString())
+          //already followed by this user, unfollow 
+          if (toUserIndex > -1){
+            toUserFollowerModel.followedby.splice(toUserIndex, 1)
+            //save the followed user
+            await toUserFollowerModel.save();
+          }else {
+            await toUserFollowerModel.followedby.push(fromUser) 
+            await toUserFollowerModel.save()
+          }
+      } else { //if the followed user does not exist, create it
+        const newFollower = new Follower({
+          user: toUser,
+          followedby: fromUser,
+        });
+        await newFollower.save();
+      }
+      
+      console.log("Handled follow/unfollow successfully!")
+    } else{
+      res.status(401).json('Not authenticated!');
+    }
+
+  } catch (err) {
+      res.send(err);
+  }
+ 
+});
 
 
 

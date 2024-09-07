@@ -76,9 +76,9 @@ const userSchema = new mongoose.Schema ({
       required: false,
       maxlength: 100
   },
-
   followingtheseID: 
-  {type: String,
+  {
+    type: [String],
     unique: false,
     required: false, 
   },
@@ -89,7 +89,8 @@ const userSchema = new mongoose.Schema ({
     default: 0
   },
   followedbytheseID: 
-  {type: String,        
+  {
+    type: [String],        
     unique: false,
     required: false, 
   },
@@ -214,12 +215,12 @@ const followerSchema = new mongoose.Schema ({
   following: 
   {type: [userSchema],        
     unique: false,
-    required: true, 
+    required: false, 
   },
   followedby: 
   {type: [userSchema],        
     unique: false,
-    required: true, 
+    required: false, 
   },
 });
 
