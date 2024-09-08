@@ -115,7 +115,8 @@ const User = mongoose.models.users || mongoose.model("users", userSchema);
 //model for comments under posts
 
 const commentSchema = new mongoose.Schema ({
-  from: {type: [userSchema],        
+  from: {
+    type: [userSchema],        
     unique: false,
     required: true, 
   },

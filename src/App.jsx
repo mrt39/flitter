@@ -80,6 +80,55 @@ const App = () => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarOpenCondition, setSnackbarOpenCondition] = useState();
 
+  //all posts
+  const [allPosts, setAllPosts] = useState([]);
+
+
+
+
+  //handle liking the posts
+  const [likepostID, setLikePostID] = useState("")
+  const [pressedLikePost, setPressedLikePost] = useState(false)
+
+  function handleLike(postID){
+    setLikePostID(postID)
+    setPressedLikePost(true)
+  }
+
+   //useffect for liking posts
+   useEffect(() => {
+    async function likePost() {
+      await fetch(import.meta.env.VITE_BACKEND_URL+'/likePost', {
+        method: "PATCH",
+        // storing date as isostring to make the reading easier later
+        body: JSON.stringify({ postID: likepostID, likedBy: currentUser}), 
+        headers: {
+            'Content-Type': 'application/json',
+            "Access-Control-Allow-Origin": "*",
+        },
+        credentials:"include" //required for sending the cookie data-authorization check
+    })
+      .then(async result => {
+        if (result.ok){
+          await result.json();
+          console.log("Liked Post!")
+          setPressedLikePost(false)
+        } else{
+          throw new Error(result)
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        setPressedLikePost(false)
+      }); 
+    }
+    //only trigger when comment is posted
+    if (pressedLikePost ===true){
+      likePost();
+    } 
+  }, [pressedLikePost]);
+
+
 
   /* get the user data when logged in, also checks if the user is logged in after each refresh*/
   useEffect(() => {
@@ -183,7 +232,7 @@ const App = () => {
           : <Navigate to="/login" /> } 
           <UserContext.Provider value={{ currentUser, selectedUser, setSelectedUser, theme }}>
             {/* "context" is how you pass props to Outlet: https://reactrouter.com/en/main/hooks/use-outlet-context */}
-            <Outlet  context={[snackbarOpenCondition, setSnackbarOpenCondition, snackbarOpen, setSnackbarOpen, setCurrentUser, profileUpdated, setProfileUpdated]} /> 
+            <Outlet  context={[snackbarOpenCondition, setSnackbarOpenCondition, snackbarOpen, setSnackbarOpen, setCurrentUser, profileUpdated, setProfileUpdated, allPosts, setAllPosts, handleLike]} /> 
           </UserContext.Provider>
       </ThemeProvider>
 

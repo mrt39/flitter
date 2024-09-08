@@ -16,7 +16,6 @@
     "@mui/material": "^6.0.2",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
-    "crypto-js": "^4.2.0",
     "dayjs": "^1.11.13",
     "profanity-cleaner": "^0.0.3",
     "react": "^18.3.1",

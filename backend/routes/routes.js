@@ -214,15 +214,81 @@ router.patch("/editprofile/:userid", async (req, res) => {
   
   const userid = req.params.userid // access URL variable
   const user = await User.findOne({_id: userid});
+  const newName = req.body.name
+  const newEmail = req.body.email
+  const bio = req.body.bio
 
   console.log(req.body.name + " is the new name for this user: " + user.name)
   try {
-    user.name= req.body.name
-    user.email= req.body.email
-    user.bio= req.body.bio
+    user.name= newName
+    user.email= newEmail
+    user.bio= bio
    
-    const result = await user.save();
-    res.send(result)
+    await user.save();
+    
+
+    /* TODO - go to all other models where we store users, and change their name in all the instances that they appear */
+    //namely: posts (from field and comments field) followerschema (user field, following field, followedby field)
+    //update all Post model instances where "from" field has this user
+    await Post.updateMany({from: {$elemMatch: {_id: userid}}}, 
+      {
+        $set: {
+            "from.$.name": newName,
+            "from.$.email": newEmail,
+            "from.$.bio": bio,
+         }
+      }
+    );
+    //update all Post model instances where "comments" field has this user
+    const postsWithUserComments = await Post.find({
+      "comments.from._id": userid
+    });
+
+    postsWithUserComments.forEach(async (post) => {
+      post.comments.forEach(comment => {
+        comment.from.forEach(user => {
+          if (user._id.toString() === userid.toString()) {
+            // Update the fields
+            user.name = newName;
+            user.email = newEmail;
+            user.bio = bio;
+          }
+        });
+      });
+      await post.save();
+    });
+
+
+    //update all Follower model instances where "user" field, "following" field or "followed" field has this user
+    const updateFollowers = await Follower.updateMany(
+      {
+        $or: [ // $or condition allows the query to look in all three arrays (user, following, followedby).
+          { "user._id": userid },
+          { "following._id": userid },
+          { "followedby._id": userid }
+        ]
+      },
+      {
+        $set: {
+          "user.$[elem].name": newName,
+          "user.$[elem].email": newEmail,
+          "user.$[elem].bio": bio,
+          "following.$[elem].name": newName,
+          "following.$[elem].email": newEmail,
+          "following.$[elem].bio": bio,
+          "followedby.$[elem].name": newName,
+          "followedby.$[elem].email": newEmail,
+          "followedby.$[elem].bio": bio
+        }
+      },
+      {
+        arrayFilters: [{ "elem._id": userid }] // Update only the elements that match the user id
+      }
+    );
+
+
+
+    res.send(updateFollowers)
 
 } catch (err) {
     res.send(err);

@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef, useContext } from 'react'
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useOutletContext } from "react-router-dom";
+import { Link, useLocation, useOutletContext, useNavigate } from "react-router-dom";
 import '../styles/Home.css'
 import CommentForm from "../components/CommentForm.jsx";
 import FileInputPopover from "../components/Popover.jsx"
@@ -17,16 +16,17 @@ import slugify from 'slugify';
 
 function Home() {
 
+  const [snackbarOpenCondition, setSnackbarOpenCondition, snackbarOpen, setSnackbarOpen, setCurrentUser, profileUpdated, setProfileUpdated, allPosts, setAllPosts, handleLike, pressedLikePost ] = useOutletContext();
+
   //Pass the UserContext defined in app.jsx
   const { currentUser, selectedUser, setSelectedUser } = useContext(UserContext); 
 
   const [pressedSubmitPost, setPressedSubmitPost] = useState(false)
   const [value, setValue] = useState()
-  const [likepostID, setLikePostID] = useState("")
-  const [pressedLikePost, setPressedLikePost] = useState(false)
-  const [allPosts, setAllPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  //user presses "send" after selecting the image
+  const [imgSubmitted, setImgSubmitted] = useState(false);
 
   const navigate = useNavigate(); 
 
@@ -41,44 +41,9 @@ function Home() {
   }
 
 
-  function handleLike(postID){
-    setLikePostID(postID)
-  }
 
 
-
-  //useffect for liking posts
-    useEffect(() => {
-      async function likePost() {
-        await fetch(import.meta.env.VITE_BACKEND_URL+'/likePost', {
-          method: "PATCH",
-          // storing date as isostring to make the reading easier later
-          body: JSON.stringify({ postID: likepostID, likedBy: currentUser}), 
-          headers: {
-              'Content-Type': 'application/json',
-              "Access-Control-Allow-Origin": "*",
-          },
-          credentials:"include" //required for sending the cookie data-authorization check
-      })
-        .then(async result => {
-          if (result.ok){
-            await result.json();
-            console.log("Liked Post!")
-            setPressedLikePost(false)
-          } else{
-            throw new Error(result)
-          }
-        })
-        .catch(error => {
-          console.error('Error:', error);
-          setPressedLikePost(false)
-        }); 
-      }
-      //only trigger when comment is posted
-      if (pressedLikePost ===true){
-        likePost();
-      } 
-    }, [pressedLikePost]);
+ 
 
 
 
@@ -111,7 +76,7 @@ function Home() {
       });
     };
     getMessages();
-    }, []); 
+    }, [pressedSubmitPost, imgSubmitted]); 
 
 
   //useeffect to handle submitting blog posts
@@ -176,8 +141,6 @@ function Home() {
 
   /* ---------------IMAGE UPLOAD FUNCTIONALITY--------------- */
 
-  const [snackbarOpenCondition, setSnackbarOpenCondition, snackbarOpen, setSnackbarOpen] = useOutletContext();
-
 
 
 
@@ -190,8 +153,7 @@ function Home() {
   const [imageFile, setimageFile] = useState();
   //trigger when user selects an image
   const [imageSelected, setimageSelected] = useState(false);
-  //user presses "send" after selecting the image
-  const [imgSubmitted, setImgSubmitted] = useState(false);
+
 
     //when the attachment icon is clicked, click on the hidden input (type=file) element
     function handleAttachmentClick(){
