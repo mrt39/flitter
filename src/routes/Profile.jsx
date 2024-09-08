@@ -8,6 +8,7 @@ import { Card, CardContent, Typography, Button, Avatar } from '@mui/material';
 import { CircularProgress, Alert } from '@mui/material';
 import "../styles/Profile.css"
 import CommentForm from "../components/CommentForm.jsx";
+import UserCardProfile from "../components/UserCardProfile.jsx";
 
 
 
@@ -131,35 +132,12 @@ const Profile = () => {
   return (
     <>
     <div className="profileContainer">
-      <Card sx={{ maxWidth: 345, textAlign: 'center', width: "20rem", height: "20%", marginTop: "2rem" }}>
-        <Avatar
-          alt={selectedUser.name}
-          src={selectedUser.picture? selectedUser.picture : selectedUser.uploadedpic}
-          sx={{ width: 80, height: 80, margin: 'auto', mt: 2 }}
-        />
-        <CardContent>
-          <Typography variant="h5" component="div">
-            {selectedUser.name}
-          </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
-            {selectedUser.bio}
-          </Typography>
-          {/* don't display the follow button if the logged in user is displaying their own profile */}
-          {currentUser._id === selectedUser._id
-          ? ""
-          : 
-          <Button
-            variant="contained"
-            color="primary"
-            sx={{ mt: 2 }}
-            onClick={handleFollow}
-          >
-            Follow
-          </Button>
-          }
-        </CardContent>
-      </Card>
-    </div>
+      
+      <UserCardProfile
+      currentUser = {currentUser}
+      selectedUser = {selectedUser}
+      handleFollow = {handleFollow}
+      />
 
     <br /><br /> <br /><br /> <br /><br />
       <h2>
@@ -214,7 +192,8 @@ const Profile = () => {
         null
         ))}
       </ul>
-    
+
+    </div>
     </>
 
 
