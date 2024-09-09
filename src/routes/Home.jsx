@@ -16,19 +16,20 @@ import slugify from 'slugify';
 
 function Home() {
 
-  const [snackbarOpenCondition, setSnackbarOpenCondition, snackbarOpen, setSnackbarOpen, setCurrentUser, profileUpdated, setProfileUpdated, allPosts, setAllPosts, handleLike, pressedLikePost ] = useOutletContext();
+  const [snackbarOpenCondition, setSnackbarOpenCondition, snackbarOpen, setSnackbarOpen, setCurrentUser, profileUpdated, setProfileUpdated, allPosts, setAllPosts, handleLike, pressedLikePost, imgSubmitted, setImgSubmitted, pressedSubmitPost, setPressedSubmitPost ] = useOutletContext();
 
   //Pass the UserContext defined in app.jsx
   const { currentUser, selectedUser, setSelectedUser } = useContext(UserContext); 
 
-  const [pressedSubmitPost, setPressedSubmitPost] = useState(false)
+
+  //value in the form for submitting posts
   const [value, setValue] = useState()
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  //user presses "send" after selecting the image
-  const [imgSubmitted, setImgSubmitted] = useState(false);
+
 
   const navigate = useNavigate(); 
+
+
 
 
   function handleChange(event){
@@ -40,43 +41,6 @@ function Home() {
     setPressedSubmitPost(true);
   }
 
-
-
-
- 
-
-
-
-
-
-
-  //fetch for getting data of all posts
-  useEffect(() => {
-    const getMessages = () => {
-      fetch(import.meta.env.VITE_BACKEND_URL+'/getallposts', {
-      method: 'GET',
-      })
-      .then(response => {
-          if (response.ok) {
-          return response.json(); // Parse JSON when the response is successful
-          }
-          throw new Error('Network response was not ok.');
-      })
-      .then(data => {
-          //sort data by dates, descending order
-          data.sort((post1,post2) => (post1.date < post2.date) ? 1 : ((post2.date < post1.date) ? -1 : 0))
-          console.log(data)
-          setAllPosts(data)
-          setLoading(false)
-      })
-      .catch(error => {
-          setError(error.message);
-          console.error('Error:', error);
-          setLoading(false)
-      });
-    };
-    getMessages();
-    }, [pressedSubmitPost, imgSubmitted]); 
 
 
   //useeffect to handle submitting blog posts
@@ -110,7 +74,7 @@ function Home() {
         setPressedSubmitPost(false)
       }); 
     }
-    //only trigger when comment is posted
+    //only trigger when post is submitted
     if (pressedSubmitPost ===true){
       submitPost();
     } 
@@ -255,13 +219,6 @@ function Home() {
 
 
 
-
-
-
-
-  if (loading) {
-    return <CircularProgress />;
-  }
 
 
 

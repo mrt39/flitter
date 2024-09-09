@@ -436,6 +436,23 @@ router.post("/followUser", async (req, res) => {
 });
 
 
+//get the follower info of user based on their  short id
+router.get("/followers/:shortid", async (req, res) => {
+
+  const shortId = req.params.shortid // access URL variable
+
+  try {
+    const followerData = await Follower.find({user: {$elemMatch: {shortId: shortId}}});
+    res.send(followerData);
+
+  } catch (err) {
+    res.send(err);
+  }
+})
+
+
+
+
 
 /*----------------------------- IMAGES------------------------------------- */
 

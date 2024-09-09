@@ -9,36 +9,35 @@ import { CircularProgress, Alert } from '@mui/material';
 import "../styles/Profile.css"
 import CommentForm from "../components/CommentForm.jsx";
 import UserCardProfile from "../components/UserCardProfile.jsx";
-
+//imports for generating the url path for routing 
+import slugify from 'slugify';
 
 
 
 
 const Profile = () => {
 
-  const [snackbarOpenCondition, setSnackbarOpenCondition, snackbarOpen, setSnackbarOpen, setCurrentUser, profileUpdated, setProfileUpdated, allPosts, setAllPosts, handleLike ] = useOutletContext();
+  const [snackbarOpenCondition, setSnackbarOpenCondition, snackbarOpen, setSnackbarOpen, setCurrentUser, profileUpdated, setProfileUpdated, allPosts, setAllPosts, handleLike, pressedLikePost, imgSubmitted, setImgSubmitted, pressedSubmitPost, setPressedSubmitPost ] = useOutletContext();
   // Pass the UserContext defined in app.jsx
   const { currentUser, selectedUser, setSelectedUser } = useContext(UserContext); 
-
   const [loading, setLoading] = useState(true);
-  const [pressedFollow, setPressedFollow] = useState(false)
   const [error, setError] = useState(null);
-
 
   const navigate = useNavigate(); 
 
 
-  //get the last 8 characters of current url (which is the assigned shortid for the selectedUser)
-  const location = useLocation();
-  // Get the pathname from the location object
-  const currentPath = location.pathname;
-  // Extract the last 8 characters
-  const last8Chars = currentPath.slice(-8);
+    //get the last 8 characters of current url (which is the assigned shortid for the selectedUser)
+    const location = useLocation();
+    // Get the pathname from the location object
+    const currentPath = location.pathname;
+    // Extract the last 8 characters
+    const last8Chars = currentPath.slice(-8);
+
 
   //need to make a profile call because the selectedUser state will empty once the user refreshes the page
   //fetch for getting data of the user, based on their shortId
   useEffect(() => {
-    const getMessages = () => {
+    const getUserData = () => {
       fetch(import.meta.env.VITE_BACKEND_URL+'/profile-shortId/'+last8Chars, {
       method: 'GET',
       })
@@ -59,15 +58,13 @@ const Profile = () => {
           console.error('Error:', error);
       });
     };
-    getMessages();
-    }, []); 
+    getUserData();
+    }, []);
 
 
 
-  //function for handling follow
-  function handleFollow(){
-    setPressedFollow(true)
-  }
+
+
 
   //handle generating the url path for routing to /profile/:slug
   function handleProfileRouting(clickedOnUser){
@@ -79,42 +76,6 @@ const Profile = () => {
     // Route to the profile path
     navigate(profilePath); 
   }
-
-  //useEffect for handling follow
-    //useeffect to handle submitting blog posts
-    useEffect(() => {
-      async function followUser() { 
-        await fetch(import.meta.env.VITE_BACKEND_URL+'/followUser', {
-          method: "post",
-          body: JSON.stringify({ fromUser: currentUser, toUser: selectedUser}), 
-          headers: {
-              'Content-Type': 'application/json',
-              "Access-Control-Allow-Origin": "*",
-          },
-          credentials:"include" //required for sending the cookie data-authorization check
-      })
-        .then(async result => {
-          if (result.ok){
-            await result.json();
-            console.log("Followed Succesfully!")
-            setPressedFollow(false)
-          } else{
-            throw new Error(result)
-          }
-        })
-        .catch(error => {
-          console.error('Error:', error);
-          setPressedFollow(false)
-        }); 
-      }
-      //only trigger when comment is posted
-      if (pressedFollow ===true){
-        followUser();
-      } 
-    }, [pressedFollow]);
-
-
-
 
 
 
@@ -136,7 +97,7 @@ const Profile = () => {
       <UserCardProfile
       currentUser = {currentUser}
       selectedUser = {selectedUser}
-      handleFollow = {handleFollow}
+      setSelectedUser = {setSelectedUser}
       />
 
     <br /><br /> <br /><br /> <br /><br />

@@ -8,6 +8,7 @@ import SignUp from './routes/SignUp.jsx';
 import Home from './routes/Home.jsx';
 import Profile from './routes/Profile.jsx';
 import ProfileEdit from './routes/ProfileEdit.jsx';
+import Followers from './routes/Followers.jsx';
 
 
 
@@ -21,8 +22,16 @@ const router = createBrowserRouter([
       { index: true, element: <Home/> }, 
       { path: "login", element: <Login />},
       { path: "signup", element: <SignUp />},
-      { path: "profile/:slugID", element: <Profile /> },
+      { path: "profile/:slugID", 
+        element: <Profile /> ,
+/*         children: [
+          { path: "following", element: <Followers />},
+          { path: "followedby", element: <Followers />},
+        ] */
+      },
       { path: "profileedit", element: <ProfileEdit />},
+      { path: "profile/:slugID/following", element: <Followers />},
+      { path: "profile/:slugID/followers", element: <Followers />},
     ], 
   },
 

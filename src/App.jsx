@@ -5,7 +5,8 @@ import './styles/App.css'
 import { useEffect, useState, createContext} from "react";
 import { Navigate, } from "react-router-dom";
 import Box from '@mui/material/Box';
-import CircularProgress from '@mui/material/CircularProgress';
+import { CircularProgress, Alert } from '@mui/material';
+
 
 /* //bootstrap styles
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -70,6 +71,8 @@ const App = () => {
   const [currentUser, setCurrentUser] = useState(null);
   //selected user for displaying their profile
   const [selectedUser, setSelectedUser] = useState();
+
+  const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   //first time loading
   const [firstTimeLoading, setFirstTimeLoading] = useState(true);
@@ -84,12 +87,110 @@ const App = () => {
   const [allPosts, setAllPosts] = useState([]);
 
 
-
-
   //handle liking the posts
   const [likepostID, setLikePostID] = useState("")
   const [pressedLikePost, setPressedLikePost] = useState(false)
 
+  //user presses "send" after selecting the image
+  const [imgSubmitted, setImgSubmitted] = useState(false);
+  const [pressedSubmitPost, setPressedSubmitPost] = useState(false)
+
+
+  // get the user data when logged in, also checks if the user is logged in after each refresh
+  useEffect(() => {
+    const getUser = () => {
+      fetch(import.meta.env.VITE_BACKEND_URL+'/login/success', {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Credentials": true,
+          "Access-Control-Allow-Origin": "*",
+        },
+      })
+        .then(response => {
+          if (response.ok) {
+            return response.json(); // Parse JSON when the response is successful
+          }
+          throw new Error('Network response was not ok.');
+        })
+        .then(data => {
+          setCurrentUser(data)
+          setLoading(false); // Set loading to false once the data is received
+          setFirstTimeLoading(false);
+        })
+        .catch(error => {
+            setLoading(false); // Set loading to false once the data is received
+            console.error('Error:', error)});
+    };
+    //only call when it's the first time loading
+    if(firstTimeLoading){
+    getUser();
+    }
+  }, []); 
+
+
+  //upon user editing his profile, change the user data from the stored user data in the session, to the actual user data in the db 
+  useEffect(() => {
+    const getUserOnUpdate = () => {
+      fetch(import.meta.env.VITE_BACKEND_URL+'/profile/' + currentUser["_id"], {
+        method: 'GET',
+      })
+        .then(response => {
+          if (response.ok) {
+            return response.json(); // Parse JSON when the response is successful
+          }
+          throw new Error('Network response was not ok.');
+        })
+        .then(data => {
+          setCurrentUser(data[0])
+          setLoading(false); // Set loading to false once the data is received
+          setProfileUpdated(false)
+        })
+        .catch(error => {
+          setLoading(false); // Set loading to false once the data is received
+          console.error('Error:', error)});
+          setProfileUpdated(false)
+    };
+  // only call after the first fetch request is complete 
+    if(firstTimeLoading===false){
+    getUserOnUpdate();
+    }
+  // when first fetch is complete or profile is updated, update the currentUser state 
+  }, [profileUpdated, firstTimeLoading]); 
+
+
+    //fetch for getting data of all posts
+    useEffect(() => {
+      const getMessages = () => {
+        fetch(import.meta.env.VITE_BACKEND_URL+'/getallposts', {
+        method: 'GET',
+        })
+        .then(response => {
+            if (response.ok) {
+            return response.json(); // Parse JSON when the response is successful
+            }
+            throw new Error('Network response was not ok.');
+        })
+        .then(data => {
+            //sort data by dates, descending order
+            data.sort((post1,post2) => (post1.date < post2.date) ? 1 : ((post2.date < post1.date) ? -1 : 0))
+            console.log(data)
+            setAllPosts(data)
+            setLoading(false)
+        })
+        .catch(error => {
+            setError(error.message);
+            console.error('Error:', error);
+            setLoading(false)
+        });
+      };
+      getMessages();
+      }, [pressedSubmitPost, imgSubmitted, pressedLikePost ]); 
+
+
+      
+      
   function handleLike(postID){
     setLikePostID(postID)
     setPressedLikePost(true)
@@ -130,70 +231,9 @@ const App = () => {
 
 
 
-  /* get the user data when logged in, also checks if the user is logged in after each refresh*/
-  useEffect(() => {
-    const getUser = () => {
-      fetch(import.meta.env.VITE_BACKEND_URL+'/login/success', {
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Credentials": true,
-          "Access-Control-Allow-Origin": "*",
-        },
-      })
-        .then(response => {
-          if (response.ok) {
-            return response.json(); // Parse JSON when the response is successful
-          }
-          throw new Error('Network response was not ok.');
-        })
-        .then(data => {
-          setCurrentUser(data)
-          setLoading(false); // Set loading to false once the data is received
-          setFirstTimeLoading(false);
-        })
-        .catch(error => {
-            setLoading(false); // Set loading to false once the data is received
-            console.error('Error:', error)});
-    };
-    //only call when it's the first time loading
-    if(firstTimeLoading){
-    getUser();
-    }
-  }, []); 
 
 
-  // change the user data from the stored user data in the session, to the actual user data in the db 
-  useEffect(() => {
-    const getUserOnUpdate = () => {
-      fetch(import.meta.env.VITE_BACKEND_URL+'/profile/' + currentUser["_id"], {
-        method: 'GET',
-      })
-        .then(response => {
-          if (response.ok) {
-            return response.json(); // Parse JSON when the response is successful
-          }
-          throw new Error('Network response was not ok.');
-        })
-        .then(data => {
-          setCurrentUser(data[0])
-          setLoading(false); // Set loading to false once the data is received
-          setProfileUpdated(false)
-        })
-        .catch(error => {
-          setLoading(false); // Set loading to false once the data is received
-          console.error('Error:', error)});
-          setProfileUpdated(false)
-    };
-  // only call after the first fetch request is complete 
-    if(firstTimeLoading===false){
-    getUserOnUpdate();
-    }
-  // when first fetch is complete or profile is updated, update the currentUser state 
-  }, [profileUpdated, firstTimeLoading]); 
-
-
+  
 
   if (loading) {
     return (
@@ -203,6 +243,11 @@ const App = () => {
         </Box>
       </div>
     )
+  }
+
+  
+  if (error) {
+    return <Alert severity="error">{error}</Alert>;
   }
 
   return (
@@ -232,7 +277,7 @@ const App = () => {
           : <Navigate to="/login" /> } 
           <UserContext.Provider value={{ currentUser, selectedUser, setSelectedUser, theme }}>
             {/* "context" is how you pass props to Outlet: https://reactrouter.com/en/main/hooks/use-outlet-context */}
-            <Outlet  context={[snackbarOpenCondition, setSnackbarOpenCondition, snackbarOpen, setSnackbarOpen, setCurrentUser, profileUpdated, setProfileUpdated, allPosts, setAllPosts, handleLike]} /> 
+            <Outlet  context={[snackbarOpenCondition, setSnackbarOpenCondition, snackbarOpen, setSnackbarOpen, setCurrentUser, profileUpdated, setProfileUpdated, allPosts, setAllPosts, handleLike, pressedLikePost, imgSubmitted, setImgSubmitted, pressedSubmitPost, setPressedSubmitPost]} /> 
           </UserContext.Provider>
       </ThemeProvider>
 

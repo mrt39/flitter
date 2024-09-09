@@ -1,12 +1,77 @@
 /* eslint-disable react/prop-types */
-import React from 'react';
+import { useState, useContext, useEffect } from 'react'
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Card, CardContent, Typography, Button, Avatar } from '@mui/material';
+import { CircularProgress, Alert } from '@mui/material';
 import "../styles/Profile.css"
+//imports for generating the url path for routing 
+import slugify from 'slugify';
+
+
+
+const UserCardProfile = ({currentUser, selectedUser, setSelectedUser}) => {
+
+
+   const [pressedFollow, setPressedFollow] = useState(false)
+
+
+    
+   const navigate = useNavigate(); 
+
+  //handle generating the url path for routing to /profile/:slug/followers
+  function handleFollowersRouting(string){
+    //slugify the username, e.g:"john-doe"
+    const slug = slugify(selectedUser.name, { lower: true }); 
+    //combine slug with usershortID to create the unique profile path for the selected user to route to
+    const profilePath = `/profile/${slug}-${selectedUser.shortId}/${string}`
+    // Route to the profile path
+    navigate(profilePath); 
+  }
 
 
 
 
-const UserCardProfile = ({currentUser, selectedUser, handleFollow}) => {
+    
+  //function for handling follow
+  function handleFollow(){
+    setPressedFollow(true)
+  }
+  
+
+  //useEffect for handling follow
+    useEffect(() => {
+      async function followUser() { 
+        await fetch(import.meta.env.VITE_BACKEND_URL+'/followUser', {
+          method: "post",
+          body: JSON.stringify({ fromUser: currentUser, toUser: selectedUser}), 
+          headers: {
+              'Content-Type': 'application/json',
+              "Access-Control-Allow-Origin": "*",
+          },
+          credentials:"include" //required for sending the cookie data-authorization check
+      })
+        .then(async result => {
+          if (result.ok){
+            await result.json();
+            console.log("Followed Succesfully!")
+            setPressedFollow(false)
+          } else{
+            throw new Error(result)
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          setPressedFollow(false)
+        }); 
+      }
+      //only trigger when followed
+      if (pressedFollow ===true){
+        followUser();
+      } 
+    }, [pressedFollow]);
+
+
+
 
    
   return (
@@ -24,12 +89,16 @@ const UserCardProfile = ({currentUser, selectedUser, handleFollow}) => {
             <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
                 {selectedUser.bio}
             </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
-                Followers: {selectedUser.followerCount}
-            </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
-                Following: {selectedUser.followingCount}
-            </Typography>
+            <Link onClick={() => handleFollowersRouting("followers")}>
+                <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
+                    Followers: {selectedUser.followerCount}
+                </Typography>
+            </Link>
+            <Link onClick={() => handleFollowersRouting("following")}>
+                <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
+                    Following: {selectedUser.followingCount}
+                </Typography>
+            </Link>
             {/* don't display the follow button if the logged in user is displaying their own profile */}
             {currentUser._id === selectedUser._id
             ? ""
