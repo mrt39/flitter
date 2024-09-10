@@ -4,7 +4,7 @@ import { UserContext } from '../App.jsx';
 import { clean } from 'profanity-cleaner';
 import '../styles/CommentForm.css'
 
-const CommentForm = ({postID}) => {
+const CommentForm = ({postID, clickedPostComment, setClickedPostComment}) => {
 
 
   //Pass the UserContext defined in app.jsx
@@ -14,8 +14,8 @@ const CommentForm = ({postID}) => {
 
 
   const [showForm, setShowForm] = useState(false); // State to toggle form visibility
-  const [value, setValue] = useState()
-  const [clickedPostComment, setClickedPostComment] = useState(false);
+  const [value, setValue] = useState("")
+/*   const [clickedPostComment, setClickedPostComment] = useState(false); */
 
   const handleCommentClick = () => {
     setShowForm(!showForm); // Toggle form visibility

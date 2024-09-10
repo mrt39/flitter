@@ -6,12 +6,6 @@ import { CircularProgress, Alert } from '@mui/material';
 //import for generating the url path for routing 
 import slugify from 'slugify';
 
-// Sample user data for followers
-const followers = [
-  { id: 1, name: 'John Doe', avatarUrl: 'https://via.placeholder.com/50', bio: 'Web developer and tech enthusiast' },
-  { id: 2, name: 'Jane Smith', avatarUrl: 'https://via.placeholder.com/50', bio: 'Designer and artist' },
-  { id: 3, name: 'Alex Johnson', avatarUrl: 'https://via.placeholder.com/50', bio: 'Full-stack developer' },
-];
 
 const Followers = () => {
 

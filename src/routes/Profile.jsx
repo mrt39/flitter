@@ -13,7 +13,7 @@ import PostsDisplay from '../components/PostsDisplay.jsx';
 
 const Profile = () => {
 
-  const [snackbarOpenCondition, setSnackbarOpenCondition, snackbarOpen, setSnackbarOpen, setCurrentUser, profileUpdated, setProfileUpdated, allPosts, setAllPosts, handleLike, pressedLikePost, imgSubmitted, setImgSubmitted, pressedSubmitPost, setPressedSubmitPost ] = useOutletContext();
+  const [snackbarOpenCondition, setSnackbarOpenCondition, snackbarOpen, setSnackbarOpen, setCurrentUser, profileUpdated, setProfileUpdated, allPosts, setAllPosts, handleLike, pressedLikePost, imgSubmitted, setImgSubmitted, pressedSubmitPost, setPressedSubmitPost, clickedPostComment, setClickedPostComment ] = useOutletContext();
   // Pass the UserContext defined in app.jsx
   const { currentUser, selectedUser, setSelectedUser } = useContext(UserContext); 
   const [loading, setLoading] = useState(true);
@@ -90,9 +90,6 @@ const Profile = () => {
 
     <br /><br /> <br /><br /> <br /><br />
     <PostsDisplay
-      allPosts = {allPosts}
-      setSelectedUser = {setSelectedUser}
-      handleLike = {handleLike}
       fromThisUser = {selectedUser} //instead of displaying all posts, display the posts only from this user
       />
 

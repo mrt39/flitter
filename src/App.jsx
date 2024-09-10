@@ -86,10 +86,12 @@ const App = () => {
   //all posts
   const [allPosts, setAllPosts] = useState([]);
 
-
   //handle liking the posts
   const [likepostID, setLikePostID] = useState("")
   const [pressedLikePost, setPressedLikePost] = useState(false)
+
+  //handle commenting on the posts
+  const [clickedPostComment, setClickedPostComment] = useState(false);
 
   //user presses "send" after selecting the image
   const [imgSubmitted, setImgSubmitted] = useState(false);
@@ -130,7 +132,7 @@ const App = () => {
   }, []); 
 
 
-  //upon user editing his profile, change the user data from the stored user data in the session, to the actual user data in the db 
+  //upon user editing their profile, change the user data from the stored user data in the session, to the actual user data in the db 
   useEffect(() => {
     const getUserOnUpdate = () => {
       fetch(import.meta.env.VITE_BACKEND_URL+'/profile/' + currentUser["_id"], {
@@ -186,7 +188,7 @@ const App = () => {
         });
       };
       getMessages();
-      }, [pressedSubmitPost, imgSubmitted, pressedLikePost ]); 
+      }, [pressedSubmitPost, imgSubmitted, pressedLikePost, clickedPostComment]); 
 
 
       
@@ -277,7 +279,7 @@ const App = () => {
           : <Navigate to="/login" /> } 
           <UserContext.Provider value={{ currentUser, selectedUser, setSelectedUser, theme }}>
             {/* "context" is how you pass props to Outlet: https://reactrouter.com/en/main/hooks/use-outlet-context */}
-            <Outlet  context={[snackbarOpenCondition, setSnackbarOpenCondition, snackbarOpen, setSnackbarOpen, setCurrentUser, profileUpdated, setProfileUpdated, allPosts, setAllPosts, handleLike, pressedLikePost, imgSubmitted, setImgSubmitted, pressedSubmitPost, setPressedSubmitPost]} /> 
+            <Outlet  context={[snackbarOpenCondition, setSnackbarOpenCondition, snackbarOpen, setSnackbarOpen, setCurrentUser, profileUpdated, setProfileUpdated, allPosts, setAllPosts, handleLike, pressedLikePost, imgSubmitted, setImgSubmitted, pressedSubmitPost, setPressedSubmitPost, clickedPostComment, setClickedPostComment]} /> 
           </UserContext.Provider>
       </ThemeProvider>
 

@@ -1,20 +1,25 @@
 /* eslint-disable react/prop-types */
-import { Link,  useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { Link, useOutletContext, useNavigate } from "react-router-dom";
 import dayjs from 'dayjs';
 import CommentForm from "../components/CommentForm.jsx";
 import CommentsDisplay from "../components/CommentsDisplay.jsx";
+import { UserContext } from '../App.jsx';
 //imports for generating the url path for routing 
 import slugify from 'slugify';
 
 
 
-const PostsDisplay = ({allPosts, setSelectedUser, handleLike, fromThisUser}) => {
+const PostsDisplay = ({fromThisUser}) => {
+
+
+  const [snackbarOpenCondition, setSnackbarOpenCondition, snackbarOpen, setSnackbarOpen, setCurrentUser, profileUpdated, setProfileUpdated, allPosts, setAllPosts, handleLike, pressedLikePost, imgSubmitted, setImgSubmitted, pressedSubmitPost, setPressedSubmitPost, clickedPostComment, setClickedPostComment ] = useOutletContext();
+
+  //Pass the UserContext defined in app.jsx
+  const { currentUser, selectedUser, setSelectedUser } = useContext(UserContext); 
 
 
   const navigate = useNavigate(); 
-
-
-  
 
   //handle generating the url path for routing to /profile/:slug
   function handleProfileRouting(clickedOnUser){
@@ -28,9 +33,6 @@ const PostsDisplay = ({allPosts, setSelectedUser, handleLike, fromThisUser}) => 
   }
 
 
-
-
-   
   return (
     <ul>
       {allPosts && allPosts.length > 0 ? (
@@ -57,7 +59,10 @@ const PostsDisplay = ({allPosts, setSelectedUser, handleLike, fromThisUser}) => 
                 <button onClick={() => handleLike(post._id)}>Like Post</button>
                 <p>Likes: {post.likeCount}</p>
 
-                <CommentForm postID={post._id} />
+                <CommentForm postID={post._id} 
+                  clickedPostComment={clickedPostComment} 
+                  setClickedPostComment={setClickedPostComment} 
+                />
                 <p>Comments: {post.commentCount}</p>
 
                 <br />
@@ -88,7 +93,11 @@ const PostsDisplay = ({allPosts, setSelectedUser, handleLike, fromThisUser}) => 
               <button onClick={() => handleLike(post._id)}>Like Post</button>
               <p>Likes: {post.likeCount}</p>
 
-              <CommentForm postID={post._id} />
+              <CommentForm 
+              postID={post._id} 
+              clickedPostComment={clickedPostComment} 
+              setClickedPostComment={setClickedPostComment} 
+              />
               <p>Comments: {post.commentCount}</p>
 
               <br />
