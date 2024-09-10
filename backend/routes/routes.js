@@ -423,14 +423,18 @@ router.post("/followUser", async (req, res) => {
         });
         await newFollower.save();
       }
-      
+
       console.log("Handled follow/unfollow successfully!")
+      // Send a success response with a message and status code, at the end of the operation
+      res.status(200).json({
+        message: "Follow/unfollow operation completed successfully"
+      });      
     } else{
       res.status(401).json('Not authenticated!');
     }
 
   } catch (err) {
-      res.send(err);
+      res.status(500).json({ message: "An error occurred", error: err.message });
   }
  
 });

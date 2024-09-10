@@ -1,15 +1,16 @@
+/* eslint-disable react/prop-types */
 import { useState, useEffect, useRef, useContext } from 'react'
 import { Link, useLocation, useOutletContext, useNavigate } from "react-router-dom";
 import '../styles/Home.css'
-import CommentForm from "../components/CommentForm.jsx";
 import FileInputPopover from "../components/Popover.jsx"
 import Snackbar from "../components/Snackbar.jsx"
 import { UserContext } from '../App.jsx';
 import { clean } from 'profanity-cleaner';
 import dayjs from 'dayjs';
 import { CircularProgress, Alert } from '@mui/material';
-//imports for generating the url path for routing 
+//import for generating the url path for routing 
 import slugify from 'slugify';
+import PostsDisplay from '../components/PostsDisplay.jsx';
 
 
 
@@ -83,19 +84,6 @@ function Home() {
 
 
 
-
-
-
-  //handle generating the url path for routing to /profile/:slug
-  function handleProfileRouting(clickedOnUser){
-    setSelectedUser(clickedOnUser)
-    //slugify the username, e.g:"john-doe"
-    const slug = slugify(clickedOnUser.name, { lower: true }); 
-    //combine slug with usershortID to create the unique profile path for the selected user to route to
-    const profilePath = `/profile/${slug}-${clickedOnUser.shortId}`
-    // Route to the profile path
-    navigate(profilePath); 
-  }
 
 
 
@@ -276,53 +264,11 @@ function Home() {
 
 
       <br /><br /> <br /><br /> <br /><br />
-      <h2>
-       ALL POSTS
-      </h2>
-      <ul>
-      {allPosts.map((post) => (
-        <li key={post._id}>
-            <Link onClick={() => handleProfileRouting(post.from[0])}>
-              <h3>
-                {post.from[0].name}
-              </h3>
-            </Link>
-            {post.message? 
-              <p>
-                {post.message}
-              </p>
-            :""}
-            {post.image? 
-              <p>
-                <img className="msgBoxImg1" src={post.image} alt="image" />
-              </p>
-            :""}
-            <p>{dayjs(new Date(post.date)).format('MMM D, H:mm')}</p>
-            {/* <p>{dayjs(post.date).format('MMMM D, YYYY h:mm A')}</p> */}
-            <button onClick={()=>handleLike(post._id)}>Like Post</button>
-            <p>Likes: {post.likeCount}</p>
-            <CommentForm 
-             postID={post._id}
-            />
-            <p>Comments: {post.commentCount}</p>
-            <br />
-            <p>Comment Section of This post:</p>
-            <ul>
-              {/* if exists, post the comments of this post */}
-            {post.comments ?
-            post.comments.map((comment) => (
-            <li key={comment.id}>
-              <p>{comment.comment}</p>
-              <p>{comment.date}</p>
-              <h4>{comment.from[0].name}</h4>
-            </li>
-            ))
-            :""}
-            </ul>
-            <br /> <br /> <br />
-        </li>
-        ))}
-      </ul>
+      <PostsDisplay
+      allPosts = {allPosts}
+      setSelectedUser = {setSelectedUser}
+      handleLike = {handleLike}
+      />
 
 
     </div>

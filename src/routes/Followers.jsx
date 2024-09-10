@@ -1,9 +1,10 @@
 import { useState, useContext, useEffect } from 'react'
-import { useLocation } from "react-router-dom";
+import { useOutletContext, useLocation, Link, useNavigate} from "react-router-dom";
 import { UserContext } from '../App.jsx';
 import { Avatar, List, ListItem, ListItemAvatar, ListItemText, Typography, Paper } from '@mui/material';
 import { CircularProgress, Alert } from '@mui/material';
-
+//import for generating the url path for routing 
+import slugify from 'slugify';
 
 // Sample user data for followers
 const followers = [
@@ -32,39 +33,54 @@ const Followers = () => {
 
 
 
-  //get whether it's /following or /followers path and store it in currentPath state
-useEffect(() => {
-    setCurrentPath(path.slice(-9));
-    }, []); 
+    //get whether it's /following or /followers path and store it in currentPath state
+    useEffect(() => {
+        setCurrentPath(path.slice(-9));
+        }, []); 
 
 
-  
+    
 
-//fetch for getting the follower data of the user, based on their id
-useEffect(() => {
-    const getFollowerData = () => {
-        fetch(import.meta.env.VITE_BACKEND_URL+'/followers/'+shortID, {
-        method: 'GET',
-        })
-        .then(response => {
-            if (response.ok) {
-            return response.json(); // Parse JSON when the response is successful
-            }
-            throw new Error('Network response was not ok.');
-        })
-        .then(data => {
-            setFollowerData(data[0])
-            console.log(data[0])
-            setLoading(false)
-        })
-        .catch(error => {
-            setError(error.message);
-            setLoading(false)
-            console.error('Error:', error);
-        });
-    };
-    getFollowerData();
-    }, []); 
+    //fetch for getting the follower data of the user, based on their id
+    useEffect(() => {
+        const getFollowerData = () => {
+            fetch(import.meta.env.VITE_BACKEND_URL+'/followers/'+shortID, {
+            method: 'GET',
+            })
+            .then(response => {
+                if (response.ok) {
+                return response.json(); // Parse JSON when the response is successful
+                }
+                throw new Error('Network response was not ok.');
+            })
+            .then(data => {
+                setFollowerData(data[0])
+                console.log(data[0])
+                setLoading(false)
+            })
+            .catch(error => {
+                setError(error.message);
+                setLoading(false)
+                console.error('Error:', error);
+            });
+        };
+        getFollowerData();
+        }, []); 
+
+
+    
+    const navigate = useNavigate(); 
+
+    //handle generating the url path for routing to /profile/:slug
+    function handleProfileRouting(clickedOnUser){
+        setSelectedUser(clickedOnUser)
+        //slugify the username, e.g:"john-doe"
+        const slug = slugify(clickedOnUser.name, { lower: true }); 
+        //combine slug with usershortID to create the unique profile path for the selected user to route to
+        const profilePath = `/profile/${slug}-${clickedOnUser.shortId}`
+        // Route to the profile path
+        navigate(profilePath); 
+    }
 
 
 if (loading) {
@@ -90,26 +106,34 @@ if (loading) {
       {currentPath==="following"
         ? 
             followerData.following.map((follower) => (
-                <ListItem key={follower.id}>
+                <ListItem key={follower._id}>
                 <ListItemAvatar>
                     <Avatar alt={follower.name} src={follower.uploadedpic? follower.uploadedpic : follower.picture} />
                 </ListItemAvatar>
                 <ListItemText
-                    primary={follower.name}
+                    primary={
+                        <Link onClick={() => handleProfileRouting(follower)} style={{ textDecoration: 'none', color: 'inherit' }}>
+                        <h3>{follower.name}</h3>
+                        </Link>
+                    }
                     secondary={follower.bio}
                 />
             </ListItem>
             ))
         :
             followerData.followedby.map((follower) => (
-                <ListItem key={follower.id}>
+                <ListItem key={follower._id}>
                 <ListItemAvatar>
-                    <Avatar alt={follower.name} src={follower.avatarUrl} />
+                <Avatar alt={follower.name} src={follower.uploadedpic? follower.uploadedpic : follower.picture} />
                 </ListItemAvatar>
                 <ListItemText
-                    primary={follower.name}
+                    primary={
+                        <Link onClick={() => handleProfileRouting(follower)} style={{ textDecoration: 'none', color: 'inherit' }}>
+                        <h3>{follower.name}</h3>
+                        </Link>
+                    }
                     secondary={follower.bio}
-                />
+                    />
             </ListItem>
             ))
         }

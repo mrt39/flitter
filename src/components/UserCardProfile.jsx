@@ -9,10 +9,10 @@ import slugify from 'slugify';
 
 
 
-const UserCardProfile = ({currentUser, selectedUser, setSelectedUser}) => {
+const UserCardProfile = ({currentUser, selectedUser, setSelectedUser, pressedFollow, setPressedFollow}) => {
 
 
-   const [pressedFollow, setPressedFollow] = useState(false)
+  const [loading, setLoading] = useState(false)
 
 
     
@@ -28,13 +28,10 @@ const UserCardProfile = ({currentUser, selectedUser, setSelectedUser}) => {
     navigate(profilePath); 
   }
 
-
-
-
     
-  //function for handling follow
   function handleFollow(){
-    setPressedFollow(true)
+    setLoading(true)
+    setPressedFollow(true);
   }
   
 
@@ -53,8 +50,9 @@ const UserCardProfile = ({currentUser, selectedUser, setSelectedUser}) => {
         .then(async result => {
           if (result.ok){
             await result.json();
-            console.log("Followed Succesfully!")
+            console.log("Followed/Unfollowed Succesfully!")
             setPressedFollow(false)
+            setLoading(false)
           } else{
             throw new Error(result)
           }
@@ -62,6 +60,7 @@ const UserCardProfile = ({currentUser, selectedUser, setSelectedUser}) => {
         .catch(error => {
           console.error('Error:', error);
           setPressedFollow(false)
+          setLoading(false)
         }); 
       }
       //only trigger when followed
@@ -104,6 +103,7 @@ const UserCardProfile = ({currentUser, selectedUser, setSelectedUser}) => {
             ? ""
             : 
             <Button
+                disabled={loading? true : false}
                 variant="contained"
                 color="primary"
                 sx={{ mt: 2 }}

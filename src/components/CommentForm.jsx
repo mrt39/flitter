@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useContext } from "react";
+/* eslint-disable react/prop-types */
+import { useState, useEffect, useContext } from "react";
 import { UserContext } from '../App.jsx';
 import { clean } from 'profanity-cleaner';
 import '../styles/CommentForm.css'
