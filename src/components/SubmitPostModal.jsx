@@ -1,42 +1,54 @@
 /* eslint-disable react/prop-types */
 import { useState, useEffect, useRef, useContext } from 'react'
-import '../styles/Home.css'
+import { UserContext, AppStatesContext } from '../App.jsx';
 import FileInputPopover from "../components/Popover.jsx"
 import Snackbar from "../components/Snackbar.jsx"
-import { UserContext, AppStatesContext } from '../App.jsx';
+import Backdrop from '@mui/material/Backdrop';
+import Box from '@mui/material/Box';
+import { Alert } from '@mui/material';
+import Modal from '@mui/material/Modal';
+import Fade from '@mui/material/Fade';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
 import { clean } from 'profanity-cleaner';
-import { CircularProgress, Alert } from '@mui/material';
-import PostsDisplay from '../components/PostsDisplay.jsx';
-import SubmitPostModal from '../components/SubmitPostModal.jsx';
 
 
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
+
+export default function SubmitPostModal({currentUser}) {
+
+    const { snackbarOpenCondition, setSnackbarOpenCondition, snackbarOpen, setSnackbarOpen, imgSubmitted, setImgSubmitted, pressedSubmitPost, setPressedSubmitPost, } = useContext(AppStatesContext); 
 
 
-
-function Home() {
-
-  //Pass the UserContext defined in app.jsx
-  const { currentUser} = useContext(UserContext); 
-
-  const { snackbarOpenCondition, setSnackbarOpenCondition, snackbarOpen, setSnackbarOpen, imgSubmitted, setImgSubmitted, pressedSubmitPost, setPressedSubmitPost, } = useContext(AppStatesContext); 
+    //modal states
+    const [open, setOpen] = useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
 
 
+    //value in the form for submitting posts
+    const [value, setValue] = useState("")
+    const [error, setError] = useState(null);
 
-  //value in the form for submitting posts
-  const [value, setValue] = useState()
-  const [error, setError] = useState(null);
-
-
-
-  function handleChange(event){
-    setValue(event.target.value)
-  }
-
-  function handleSubmit(event){
-    event.preventDefault();
-    setPressedSubmitPost(true);
-  }
-
+  
+    function handleChange(event){
+      setValue(event.target.value)
+    }
+  
+    function handleSubmit(event){
+      event.preventDefault();
+      setPressedSubmitPost(true);
+    }
 
 
   //useeffect to handle submitting blog posts
@@ -82,11 +94,7 @@ function Home() {
 
 
 
-
-
-
-
-  /* ---------------IMAGE UPLOAD FUNCTIONALITY--------------- */
+   /* ---------------IMAGE UPLOAD FUNCTIONALITY--------------- */
 
 
 
@@ -205,6 +213,7 @@ function Home() {
 
 
 
+
   if (error) {
     return <Alert severity="error">{error}</Alert>;
   }
@@ -212,62 +221,85 @@ function Home() {
 
 
 
+
+
   return (
-    <>
-    <div className='homeContainer'>
-
-      <h1>
-       THIS IS HOMEPAGE
-      </h1>
-
-
-
-      <form onSubmit={handleSubmit}>
-        <label>
-          Send a Post:
-          <textarea value={value} onChange={handleChange} />
-        </label>
-        <input type="submit" value="Submit" />
-      </form>
-      <br /><br />
-      <br /><br />
-
-      <h3>send a post modal:</h3>
-      {/* <SubmitPostModal/> */}
+    <div>
+      <Button onClick={handleOpen}>SUBMIT POST</Button>
+      <Modal
+        aria-labelledby="transition-modal-title"
+        aria-describedby="transition-modal-description"
+        open={open}
+        onClose={handleClose}
+        closeAfterTransition
+        slots={{ backdrop: Backdrop }}
+        slotProps={{
+          backdrop: {
+            timeout: 500,
+          },
+        }}
+      >
+        <Fade in={open}>
+          <Box sx={style}>
 
 
 
 
-      <button id="sendAnImgButton" onClick={handleAttachmentClick}>
-        Send An Image!
-      </button>
-      <input ref={fileInputRef} type='file' name='fileInput' accept="image/*" className='fileInputMessageBox'
-        onChange={handleFileInputChange}
-        />
+
+
+
+
+
+
+
+        <form onSubmit={handleSubmit}>
+            <label>
+            Send a Post:
+            <textarea value={value} onChange={handleChange} />
+            </label>
+            <input type="submit" value="Submit" />
+        </form>
+        <br /><br />
+        <br /><br />
+
+        <button id="sendAnImgButton" onClick={handleAttachmentClick}>
+            Send An Image!
+        </button>
+        <input ref={fileInputRef} type='file' name='fileInput' accept="image/*" className='fileInputMessageBox'
+            onChange={handleFileInputChange}
+            />
         <FileInputPopover
-        popOveranchorEl={popOveranchorEl}
-        imgSubmitted={imgSubmitted}
-        setPopOverAnchorEl={setPopOverAnchorEl}
-        setimageSelected={setimageSelected}
-        handleImgSendBtn={handleImgSendBtn}
+            popOveranchorEl={popOveranchorEl}
+            imgSubmitted={imgSubmitted}
+            setPopOverAnchorEl={setPopOverAnchorEl}
+            setimageSelected={setimageSelected}
+            handleImgSendBtn={handleImgSendBtn}
         />
         <Snackbar
-        snackbarOpenCondition={snackbarOpenCondition}
-        snackbarOpen={snackbarOpen}
-        setSnackbarOpen={setSnackbarOpen}
-      />
+            snackbarOpenCondition={snackbarOpenCondition}
+            snackbarOpen={snackbarOpen}
+            setSnackbarOpen={setSnackbarOpen}
+        />
 
 
 
 
-      <br /><br /> <br /><br /> <br /><br />
-      <PostsDisplay
-      />
 
 
+
+
+
+
+
+
+
+
+
+
+
+          </Box>
+        </Fade>
+      </Modal>
     </div>
-    </>
-  )
+  );
 }
-
-export default Home

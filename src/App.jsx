@@ -87,7 +87,7 @@ const App = () => {
 
   //snackbar states
   const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarOpenCondition, setSnackbarOpenCondition] = useState();
+  const [snackbarOpenCondition, setSnackbarOpenCondition] = useState("");
 
   //all posts
   const [allPosts, setAllPosts] = useState([]);
@@ -206,22 +206,27 @@ const App = () => {
 
       {/* ---------------------------------- MUI DARK THEME END ---------------------------------- */}
 
-          {currentUser ? 
-          <Navbar 
-          user={currentUser} 
-          setCurrentUser={setCurrentUser}
-          />
-          : <Navigate to="/login" /> } 
-          <UserContext.Provider value={{ currentUser, setCurrentUser, selectedUser, setSelectedUser}}>
-          <AppStatesContext.Provider value={{ 
+        <AppStatesContext.Provider value={{ 
             allPosts, setAllPosts, snackbarOpen, setSnackbarOpen, 
             snackbarOpenCondition, setSnackbarOpenCondition, 
             profileUpdated, setProfileUpdated, imgSubmitted, setImgSubmitted, 
             pressedSubmitPost, setPressedSubmitPost 
           }}>
+          {currentUser ? 
+            <Navbar 
+            user={currentUser} 
+            setCurrentUser={setCurrentUser}
+
+            />
+          : <Navigate to="/login" /> } 
+
+          <UserContext.Provider value={{ currentUser, setCurrentUser, selectedUser, setSelectedUser}}>
+
             <Outlet /> 
-          </AppStatesContext.Provider>
+            
           </UserContext.Provider>
+
+        </AppStatesContext.Provider>
 
       </ThemeProvider>
 

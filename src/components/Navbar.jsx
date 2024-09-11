@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import * as Icon from 'react-bootstrap-icons';
 import '../styles/Navbar.css';
 import MuiAvatar from "../components/MuiAvatar.jsx";
+import SubmitPostModal from "../components/SubmitPostModal.jsx";
 import LogoImg from "../assets/logo.png";
 //imports for generating the url path for routing 
 import slugify from 'slugify';
@@ -95,6 +96,11 @@ const Navbar = ({user, setCurrentUser}) => {
         <ul className="dropdown-menu text-small shadow">
           <li><a className="dropdown-item" href="#" onClick={handleSignOut}>Sign out</a></li>
         </ul>
+
+        <SubmitPostModal
+        currentUser = {user}
+        />
+        
       </div>
     </div>
   </>
