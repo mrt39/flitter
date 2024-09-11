@@ -6,9 +6,9 @@ import '../styles/CommentForm.css'
 
 const CommentForm = ({postID, clickedPostComment, setClickedPostComment}) => {
 
-
+  
   //Pass the UserContext defined in app.jsx
-  const { currentUser, selectedUser, setSelectedUser } = useContext(UserContext); 
+  const { currentUser} = useContext(UserContext); 
 
 
 

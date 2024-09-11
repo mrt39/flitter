@@ -1,10 +1,11 @@
 /* eslint-disable react/prop-types */
 import { useContext } from "react";
-import { Link, useOutletContext, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import dayjs from 'dayjs';
 import CommentForm from "../components/CommentForm.jsx";
 import CommentsDisplay from "../components/CommentsDisplay.jsx";
-import { UserContext } from '../App.jsx';
+import { UserContext, AppStatesContext } from '../App.jsx';
+
 //imports for generating the url path for routing 
 import slugify from 'slugify';
 
@@ -13,10 +14,11 @@ import slugify from 'slugify';
 const PostsDisplay = ({fromThisUser}) => {
 
 
-  const [snackbarOpenCondition, setSnackbarOpenCondition, snackbarOpen, setSnackbarOpen, setCurrentUser, profileUpdated, setProfileUpdated, allPosts, setAllPosts, handleLike, pressedLikePost, imgSubmitted, setImgSubmitted, pressedSubmitPost, setPressedSubmitPost, clickedPostComment, setClickedPostComment ] = useOutletContext();
 
   //Pass the UserContext defined in app.jsx
-  const { currentUser, selectedUser, setSelectedUser } = useContext(UserContext); 
+  const { setSelectedUser } = useContext(UserContext); 
+
+  const { allPosts, clickedPostComment, setClickedPostComment, handleLike } = useContext(AppStatesContext); 
 
 
   const navigate = useNavigate(); 

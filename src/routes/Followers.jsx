@@ -1,7 +1,8 @@
+/* eslint-disable react/prop-types */
 import { useState, useContext, useEffect } from 'react'
-import { useOutletContext, useLocation, Link, useNavigate} from "react-router-dom";
+import { useLocation, Link, useNavigate} from "react-router-dom";
 import { UserContext } from '../App.jsx';
-import { Avatar, List, ListItem, ListItemAvatar, ListItemText, Typography, Paper } from '@mui/material';
+import { Avatar, ListItem, ListItemAvatar, ListItemText, Typography, Paper } from '@mui/material';
 import { CircularProgress, Alert } from '@mui/material';
 //import for generating the url path for routing 
 import slugify from 'slugify';
@@ -10,7 +11,7 @@ import slugify from 'slugify';
 const Followers = () => {
 
   // Pass the UserContext defined in app.jsx
-  const { currentUser, selectedUser, setSelectedUser } = useContext(UserContext); 
+  const { setSelectedUser } = useContext(UserContext); 
 
 
   const [loading, setLoading] = useState(true);
@@ -99,37 +100,42 @@ if (loading) {
       </Typography>
       {currentPath==="following"
         ? 
-            followerData.following.map((follower) => (
-                <ListItem key={follower._id}>
-                <ListItemAvatar>
-                    <Avatar alt={follower.name} src={follower.uploadedpic? follower.uploadedpic : follower.picture} />
-                </ListItemAvatar>
-                <ListItemText
-                    primary={
-                        <Link onClick={() => handleProfileRouting(follower)} style={{ textDecoration: 'none', color: 'inherit' }}>
-                        <h3>{follower.name}</h3>
-                        </Link>
-                    }
-                    secondary={follower.bio}
-                />
-            </ListItem>
-            ))
-        :
-            followerData.followedby.map((follower) => (
-                <ListItem key={follower._id}>
-                <ListItemAvatar>
-                <Avatar alt={follower.name} src={follower.uploadedpic? follower.uploadedpic : follower.picture} />
-                </ListItemAvatar>
-                <ListItemText
-                    primary={
-                        <Link onClick={() => handleProfileRouting(follower)} style={{ textDecoration: 'none', color: 'inherit' }}>
-                        <h3>{follower.name}</h3>
-                        </Link>
-                    }
-                    secondary={follower.bio}
+            followerData.following.length>0?
+                followerData.following.map((follower) => (
+                    <ListItem key={follower._id}>
+                    <ListItemAvatar>
+                        <Avatar alt={follower.name} src={follower.uploadedpic? follower.uploadedpic : follower.picture} />
+                    </ListItemAvatar>
+                    <ListItemText
+                        primary={
+                            <Link onClick={() => handleProfileRouting(follower)} style={{ textDecoration: 'none', color: 'inherit' }}>
+                            <h3>{follower.name}</h3>
+                            </Link>
+                        }
+                        secondary={follower.bio}
                     />
-            </ListItem>
-            ))
+                </ListItem>
+                ))
+                
+            : <p>This user isn't following anyone.</p>
+        :
+            followerData.followedby.length>0?
+                followerData.followedby.map((follower) => (
+                    <ListItem key={follower._id}>
+                    <ListItemAvatar>
+                    <Avatar alt={follower.name} src={follower.uploadedpic? follower.uploadedpic : follower.picture} />
+                    </ListItemAvatar>
+                    <ListItemText
+                        primary={
+                            <Link onClick={() => handleProfileRouting(follower)} style={{ textDecoration: 'none', color: 'inherit' }}>
+                            <h3>{follower.name}</h3>
+                            </Link>
+                        }
+                        secondary={follower.bio}
+                        />
+                </ListItem>
+                ))
+            : <p>This user isn't followed by anyone.</p>
         }
 
     </Paper>

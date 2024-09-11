@@ -25,11 +25,17 @@ import CssBaseline from "@mui/material/CssBaseline";
 import {Switch} from "@mui/material"
 //----------------------MUI DARK THEME END---------------------------
 
+
+//context for carrying user related states
 export const UserContext = createContext({
-  selectedUser: (null),
   currentUser: (null),
+  setCurrentUser: () => {},
+  selectedUser: (null),
   setSelectedUser: () => {},
 });
+
+//context for carrying all the other app states 
+export const AppStatesContext = createContext();
 
 
 
@@ -277,10 +283,17 @@ const App = () => {
           setCurrentUser={setCurrentUser}
           />
           : <Navigate to="/login" /> } 
-          <UserContext.Provider value={{ currentUser, selectedUser, setSelectedUser, theme }}>
-            {/* "context" is how you pass props to Outlet: https://reactrouter.com/en/main/hooks/use-outlet-context */}
-            <Outlet  context={[snackbarOpenCondition, setSnackbarOpenCondition, snackbarOpen, setSnackbarOpen, setCurrentUser, profileUpdated, setProfileUpdated, allPosts, setAllPosts, handleLike, pressedLikePost, imgSubmitted, setImgSubmitted, pressedSubmitPost, setPressedSubmitPost, clickedPostComment, setClickedPostComment]} /> 
+          <UserContext.Provider value={{ currentUser, setCurrentUser, selectedUser, setSelectedUser}}>
+          <AppStatesContext.Provider value={{ 
+            allPosts, setAllPosts, clickedPostComment, setClickedPostComment, 
+            handleLike, snackbarOpen, setSnackbarOpen, snackbarOpenCondition, setSnackbarOpenCondition, 
+            profileUpdated, setProfileUpdated, pressedLikePost, imgSubmitted, setImgSubmitted, 
+            pressedSubmitPost, setPressedSubmitPost 
+          }}>
+            <Outlet /> 
+          </AppStatesContext.Provider>
           </UserContext.Provider>
+
       </ThemeProvider>
 
       </div>

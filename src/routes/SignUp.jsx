@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
-import { Link as RouterLink, useNavigate, Navigate, useOutletContext } from "react-router-dom";
+import { Link as RouterLink, useNavigate} from "react-router-dom";
 import { useState, useEffect, useContext } from 'react'
-/* import { UserContext } from '../App.jsx'; */
+import { AppStatesContext } from '../App.jsx';
 import '../styles/SignUp.css'
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -21,11 +21,7 @@ export default function SignUp() {
 
   const navigate = useNavigate(); 
 
-  // Passing the UserContext defined in app.jsx
-/*   const { currentUser, selectedPerson, setSelectedPerson } = useContext(UserContext);  */
-
-  const [snackbarOpenCondition, setSnackbarOpenCondition, snackbarOpen, setSnackbarOpen] = useOutletContext();
-
+  const {snackbarOpenCondition, setSnackbarOpenCondition, snackbarOpen, setSnackbarOpen } = useContext(AppStatesContext); 
 
   const [submitted, setSubmitted] = useState(false);
   const [signUpData, setSignUpData] = useState({ });

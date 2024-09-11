@@ -4,16 +4,16 @@ import {
   Card,
   CardActions,
 } from '@mui/material';
-import { useState, useEffect } from 'react';
-import { useOutletContext } from "react-router-dom";
+import { useState, useEffect, useContext } from 'react';
+import { AppStatesContext } from '../App.jsx';
 import "../styles/Account-Profile.css"
 import MuiAvatar from "./MuiAvatar";
-import Snackbar from "./Snackbar.jsx"
 
 
 export const AccountProfile = ({user, setProfileUpdated}) => {
 
-const [snackbarOpenCondition, setSnackbarOpenCondition, snackbarOpen, setSnackbarOpen] = useOutletContext();
+const { setSnackbarOpenCondition, setSnackbarOpen } = useContext(AppStatesContext); 
+
 
 const [uploadedImg, setUploadedImg] = useState();
 const [imgSubmitted, setImgSubmitted] = useState(false);

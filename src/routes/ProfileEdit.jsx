@@ -1,7 +1,6 @@
 /* eslint-disable react/prop-types */
-import { useOutletContext} from "react-router-dom";
 import { useState, useContext } from 'react'
-import { UserContext } from '../App.jsx';
+import { UserContext, AppStatesContext } from '../App.jsx';
 import { Box, Container, Stack, Typography} from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import { AccountProfile } from '../components/account-profile.jsx';
@@ -14,9 +13,10 @@ import "../styles/ProfileEdit.css"
 
 const ProfileEdit = () => {
 
-  const [snackbarOpenCondition, setSnackbarOpenCondition, snackbarOpen, setSnackbarOpen, setCurrentUser, profileUpdated, setProfileUpdated] = useOutletContext();
+ const { snackbarOpenCondition, setSnackbarOpenCondition, snackbarOpen, setSnackbarOpen, setCurrentUser, profileUpdated, setProfileUpdated } = useContext(AppStatesContext); 
+
   // Pass the UserContext defined in app.jsx
-  const { currentUser, selectedUser, setSelectedUser } = useContext(UserContext); 
+  const { currentUser} = useContext(UserContext); 
 
   //check if the e-mail address user puts is invalid
   const [invalidEmail, setInvalidEmail] = useState(false); 

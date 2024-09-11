@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { Link as RouterLink } from "react-router-dom";
 import { useState, useEffect, useContext  } from 'react';
-import { UserContext } from '../App.jsx';
+import { UserContext, AppStatesContext } from '../App.jsx';
 import { useOutletContext, Navigate } from "react-router-dom";
 import '../styles/Login.css'
 import Avatar from '@mui/material/Avatar';
@@ -20,9 +20,10 @@ export default function Login() {
 
 
   // Passing the UserContext defined in app.jsx
-  const { currentUser, selectedPerson, setSelectedPerson } = useContext(UserContext); 
+  const { currentUser} = useContext(UserContext); 
 
-  const [snackbarOpenCondition, setSnackbarOpenCondition, snackbarOpen, setSnackbarOpen] = useOutletContext();
+  const {snackbarOpenCondition, setSnackbarOpenCondition, snackbarOpen, setSnackbarOpen } = useContext(AppStatesContext); 
+
 
 
   const [clickedLogin, setClickedLogin] = useState(false);

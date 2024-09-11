@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
-import { useOutletContext, useLocation} from "react-router-dom";
+import { useLocation} from "react-router-dom";
 import { useState, useContext, useEffect } from 'react'
-import { UserContext } from '../App.jsx';
+import { UserContext} from '../App.jsx';
 import { CircularProgress, Alert } from '@mui/material';
 import "../styles/Profile.css"
 import UserCardProfile from "../components/UserCardProfile.jsx";
@@ -13,8 +13,7 @@ import PostsDisplay from '../components/PostsDisplay.jsx';
 
 const Profile = () => {
 
-  const [snackbarOpenCondition, setSnackbarOpenCondition, snackbarOpen, setSnackbarOpen, setCurrentUser, profileUpdated, setProfileUpdated, allPosts, setAllPosts, handleLike, pressedLikePost, imgSubmitted, setImgSubmitted, pressedSubmitPost, setPressedSubmitPost, clickedPostComment, setClickedPostComment ] = useOutletContext();
-  // Pass the UserContext defined in app.jsx
+  // Pass the UserContext defined in app.js
   const { currentUser, selectedUser, setSelectedUser } = useContext(UserContext); 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);

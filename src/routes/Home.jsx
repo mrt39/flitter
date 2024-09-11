@@ -1,15 +1,11 @@
 /* eslint-disable react/prop-types */
 import { useState, useEffect, useRef, useContext } from 'react'
-import { Link, useLocation, useOutletContext, useNavigate } from "react-router-dom";
 import '../styles/Home.css'
 import FileInputPopover from "../components/Popover.jsx"
 import Snackbar from "../components/Snackbar.jsx"
-import { UserContext } from '../App.jsx';
+import { UserContext, AppStatesContext } from '../App.jsx';
 import { clean } from 'profanity-cleaner';
-import dayjs from 'dayjs';
 import { CircularProgress, Alert } from '@mui/material';
-//import for generating the url path for routing 
-import slugify from 'slugify';
 import PostsDisplay from '../components/PostsDisplay.jsx';
 
 
@@ -17,19 +13,16 @@ import PostsDisplay from '../components/PostsDisplay.jsx';
 
 function Home() {
 
-  const [snackbarOpenCondition, setSnackbarOpenCondition, snackbarOpen, setSnackbarOpen, setCurrentUser, profileUpdated, setProfileUpdated, allPosts, setAllPosts, handleLike, pressedLikePost, imgSubmitted, setImgSubmitted, pressedSubmitPost, setPressedSubmitPost, clickedPostComment, setClickedPostComment ] = useOutletContext();
-
   //Pass the UserContext defined in app.jsx
-  const { currentUser, selectedUser, setSelectedUser } = useContext(UserContext); 
+  const { currentUser} = useContext(UserContext); 
+
+  const { snackbarOpenCondition, setSnackbarOpenCondition, snackbarOpen, setSnackbarOpen, imgSubmitted, setImgSubmitted, pressedSubmitPost, setPressedSubmitPost, } = useContext(AppStatesContext); 
+
 
 
   //value in the form for submitting posts
   const [value, setValue] = useState()
   const [error, setError] = useState(null);
-
-
-  const navigate = useNavigate(); 
-
 
 
 
