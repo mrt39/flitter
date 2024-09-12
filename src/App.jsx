@@ -96,8 +96,12 @@ const App = () => {
 
 
   //user presses "send" after selecting the image
-  const [imgSubmitted, setImgSubmitted] = useState(false);
-  const [pressedSubmitPost, setPressedSubmitPost] = useState(false)
+  const [imgSubmittedNavbar, setImgSubmittedNavbar] = useState(false);
+  const [imgSubmittedHomePage, setImgSubmittedHomePage] = useState(false);
+  //seperate the conditional "send a post" states for the navbar submit form and homepage submit form, so that submitting from one doesn't trigger the other
+  const [pressedSubmitPostHome, setPressedSubmitPostHome] = useState(false)
+  const [pressedSubmitPostNavbar, setPressedSubmitPostNavbar] = useState(false)
+  const [isSubmittingPost, setisSubmittingPost] = useState(false); // Track if a submission is already in progress
 
 
   // get the user data when logged in, also checks if the user is logged in after each refresh
@@ -209,8 +213,10 @@ const App = () => {
         <AppStatesContext.Provider value={{ 
             allPosts, setAllPosts, snackbarOpen, setSnackbarOpen, 
             snackbarOpenCondition, setSnackbarOpenCondition, 
-            profileUpdated, setProfileUpdated, imgSubmitted, setImgSubmitted, 
-            pressedSubmitPost, setPressedSubmitPost 
+            profileUpdated, setProfileUpdated, imgSubmittedNavbar, setImgSubmittedNavbar,
+            imgSubmittedHomePage, setImgSubmittedHomePage, 
+            pressedSubmitPostHome, setPressedSubmitPostHome, pressedSubmitPostNavbar, 
+            setPressedSubmitPostNavbar, isSubmittingPost, setisSubmittingPost
           }}>
           {currentUser ? 
             <Navbar 

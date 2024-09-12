@@ -14,12 +14,10 @@ import slugify from 'slugify';
 
 const PostsDisplay = ({fromThisUser}) => {
 
-
-
   //Pass the UserContext defined in app.jsx
   const { currentUser, setSelectedUser } = useContext(UserContext); 
 
-  const { allPosts, setAllPosts, pressedSubmitPost, imgSubmitted } = useContext(AppStatesContext); 
+  const { allPosts, setAllPosts, pressedSubmitPostHome, pressedSubmitPostNavbar, imgSubmittedNavbar, imgSubmittedHomePage } = useContext(AppStatesContext); 
 
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -74,7 +72,7 @@ const PostsDisplay = ({fromThisUser}) => {
       });
     };
     getMessages();
-    }, [pressedSubmitPost, imgSubmitted, pressedLikePost, clickedPostComment]); 
+    }, [pressedSubmitPostHome, pressedSubmitPostNavbar, imgSubmittedNavbar, imgSubmittedHomePage, pressedLikePost, clickedPostComment]); 
 
 
       

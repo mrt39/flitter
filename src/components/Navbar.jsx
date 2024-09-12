@@ -97,6 +97,7 @@ const Navbar = ({user, setCurrentUser}) => {
           <li><a className="dropdown-item" href="#" onClick={handleSignOut}>Sign out</a></li>
         </ul>
 
+        {/* use different react components for forms in homepage and navbar in order to seperate concerns and avoid state/post logic clashing */}
         <SubmitPostModal
         currentUser = {user}
         />
