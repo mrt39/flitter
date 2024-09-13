@@ -118,9 +118,16 @@ export default function SubmitPostForm({ currentUser, location, handleClose }) {
     useEffect(() => {
         //only trigger if an image is selected
         if (imageSelected){
-        // select the attachment button next to the message input box and make it the anchor for the popover to be displayed over
-        const attachmentIcon = document.querySelector('#sendAnImgButton')
-        setPopOverAnchorEl(attachmentIcon)
+          var attachmentIcon = null
+          // select the attachment button next to the message input box and make it the anchor for the popover to be displayed over
+          // if the image is selected from navbar, attach the button to navbar. if from homepage, attach it to homepage.
+          {location === 'navbar' ? 'sendAnImgButtonNavbar' : "sendAnImgButtonHomepage"}
+          if (document.querySelector('#sendAnImgButtonNavbar')){
+            attachmentIcon = document.querySelector('#sendAnImgButtonNavbar')
+          } else {
+            attachmentIcon = document.querySelector('#sendAnImgButtonHomepage')
+          }
+          setPopOverAnchorEl(attachmentIcon)
         }
     }, [imageSelected]);
 
@@ -195,7 +202,8 @@ useEffect(() => {
         <input type="submit" value="Submit" disabled={isSubmittingPost} />
       </form>
 
-      <button id="sendAnImgButton" onClick={handleAttachmentClick} disabled={isSubmittingPost}>
+      <button 
+      id={location === 'navbar' ? 'sendAnImgButtonNavbar' : "sendAnImgButtonHomepage"} onClick={handleAttachmentClick} disabled={isSubmittingPost}>
         Send An Image!
       </button>
       <input ref={fileInputRef} type='file' accept="image/*" className='fileInputMessageBox' onChange={handleFileInputChange} disabled={isSubmittingPost} />
