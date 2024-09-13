@@ -5,7 +5,8 @@ import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import Button from '@mui/material/Button';
-import SubmitPostFormNavbar from './SubmitPostFormNavbar.jsx';
+import SubmitPostForm from './SubmitPostForm.jsx';
+
 
 
 const style = {
@@ -51,11 +52,12 @@ export default function SubmitPostModal({currentUser}) {
         <Fade in={open}>
           <Box sx={style}>
 
-          <SubmitPostFormNavbar
+          <SubmitPostForm
           currentUser={currentUser}
+          location="navbar"
           handleClose={handleClose}
-          />
 
+          />
 
           </Box>
         </Fade>

@@ -17,7 +17,7 @@ const PostsDisplay = ({fromThisUser}) => {
   //Pass the UserContext defined in app.jsx
   const { currentUser, setSelectedUser } = useContext(UserContext); 
 
-  const { allPosts, setAllPosts, pressedSubmitPostHome, pressedSubmitPostNavbar, imgSubmittedNavbar, imgSubmittedHomePage } = useContext(AppStatesContext); 
+  const { allPosts, setAllPosts, imgSubmittedNavbar, imgSubmittedHomePage, pressedSubmitPost} = useContext(AppStatesContext); 
 
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -72,7 +72,7 @@ const PostsDisplay = ({fromThisUser}) => {
       });
     };
     getMessages();
-    }, [pressedSubmitPostHome, pressedSubmitPostNavbar, imgSubmittedNavbar, imgSubmittedHomePage, pressedLikePost, clickedPostComment]); 
+    }, [pressedSubmitPost, imgSubmittedNavbar, imgSubmittedHomePage, pressedLikePost, clickedPostComment]); 
 
 
       

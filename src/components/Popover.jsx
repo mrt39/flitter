@@ -9,13 +9,13 @@ import '../styles/Popover.css'
 import { useEffect } from 'react';
 
 
-export default function FileInputPopover({popOveranchorEl, setPopOverAnchorEl, setimageSelected, handleImgSendBtn, imgSubmitted}) {
+export default function FileInputPopover({popOveranchorEl, setPopOverAnchorEl, setImageSelected, handleImgSendBtn, imgSubmittedHomePage, imgSubmittedNavbar}) {
 
   const [open, setOpen] = useState(false);
 
   const handleClose = () => {
     setOpen(false)
-    setimageSelected(false);
+    setImageSelected(false);
     setPopOverAnchorEl(null);
   };
 
@@ -28,10 +28,10 @@ export default function FileInputPopover({popOveranchorEl, setPopOverAnchorEl, s
 
   //close popover when image is sent 
       useEffect(() => {
-        if (imgSubmitted){
+        if (imgSubmittedHomePage || imgSubmittedNavbar){
           handleClose()
         }
-  }, [imgSubmitted]);
+  }, [imgSubmittedHomePage, imgSubmittedNavbar]);
 
 
 

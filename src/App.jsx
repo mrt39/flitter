@@ -96,12 +96,13 @@ const App = () => {
 
 
   //user presses "send" after selecting the image
+  //use two different states for navbar form and homepage form, as otherwise they clash while posting
   const [imgSubmittedNavbar, setImgSubmittedNavbar] = useState(false);
   const [imgSubmittedHomePage, setImgSubmittedHomePage] = useState(false);
   //seperate the conditional "send a post" states for the navbar submit form and homepage submit form, so that submitting from one doesn't trigger the other
-  const [pressedSubmitPostHome, setPressedSubmitPostHome] = useState(false)
-  const [pressedSubmitPostNavbar, setPressedSubmitPostNavbar] = useState(false)
-  const [isSubmittingPost, setisSubmittingPost] = useState(false); // Track if a submission is already in progress
+  const [pressedSubmitPost, setPressedSubmitPost] = useState(false)
+
+  const [isSubmittingPost, setisSubmittingPost] = useState(false); // Track if a submission is already in progress, disable all submit buttons
 
 
   // get the user data when logged in, also checks if the user is logged in after each refresh
@@ -214,9 +215,9 @@ const App = () => {
             allPosts, setAllPosts, snackbarOpen, setSnackbarOpen, 
             snackbarOpenCondition, setSnackbarOpenCondition, 
             profileUpdated, setProfileUpdated, imgSubmittedNavbar, setImgSubmittedNavbar,
-            imgSubmittedHomePage, setImgSubmittedHomePage, 
-            pressedSubmitPostHome, setPressedSubmitPostHome, pressedSubmitPostNavbar, 
-            setPressedSubmitPostNavbar, isSubmittingPost, setisSubmittingPost
+            imgSubmittedHomePage, setImgSubmittedHomePage, isSubmittingPost, 
+            setisSubmittingPost, pressedSubmitPost, setPressedSubmitPost
+            
           }}>
           {currentUser ? 
             <Navbar 
