@@ -5,7 +5,6 @@ import { Box, Container, Stack, Typography} from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import { AccountProfile } from '../components/account-profile.jsx';
 import { AccountProfileChangeForm } from '../components/account-profile-changeForm.jsx';
-import Snackbar from "../components/Snackbar.jsx"
 import "../styles/ProfileEdit.css"
 
 
@@ -13,13 +12,12 @@ import "../styles/ProfileEdit.css"
 
 const ProfileEdit = () => {
 
- const { snackbarOpenCondition, setSnackbarOpenCondition, snackbarOpen, setSnackbarOpen, setCurrentUser, profileUpdated, setProfileUpdated } = useContext(AppStatesContext); 
+ const { snackbarOpenCondition, setSnackbarOpenCondition, setSnackbarOpen, setCurrentUser, profileUpdated, setProfileUpdated } = useContext(AppStatesContext); 
 
   // Pass the UserContext defined in app.jsx
   const { currentUser} = useContext(UserContext); 
 
-  //check if the e-mail address user puts is invalid
-  const [invalidEmail, setInvalidEmail] = useState(false); 
+
 
   
  return ( 
@@ -62,8 +60,6 @@ const ProfileEdit = () => {
                 user={currentUser}
                 setCurrentUser={setCurrentUser}
                 setSnackbarOpen={setSnackbarOpen}
-                invalidEmail={invalidEmail}
-                setInvalidEmail={setInvalidEmail}
                 setSnackbarOpenCondition={setSnackbarOpenCondition}
                 snackbarOpenCondition={snackbarOpenCondition}
                 profileUpdated={profileUpdated}
@@ -74,12 +70,6 @@ const ProfileEdit = () => {
           </div>
         </Stack>
       </Container>
-      <Snackbar
-      snackbarOpenCondition={snackbarOpenCondition}
-      snackbarOpen={snackbarOpen}
-      setSnackbarOpen={setSnackbarOpen}
-      invalidEmail={invalidEmail}
-      />
     </Box>
   </>
 );

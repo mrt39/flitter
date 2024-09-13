@@ -2,7 +2,7 @@
 import { Link as RouterLink } from "react-router-dom";
 import { useState, useEffect, useContext  } from 'react';
 import { UserContext, AppStatesContext } from '../App.jsx';
-import { useOutletContext, Navigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import '../styles/Login.css'
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -13,7 +13,6 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import Snackbar from "../components/Snackbar.jsx"
 import Footer from "../components/Footer.jsx";
 
 export default function Login() {
@@ -22,7 +21,7 @@ export default function Login() {
   // Passing the UserContext defined in app.jsx
   const { currentUser} = useContext(UserContext); 
 
-  const {snackbarOpenCondition, setSnackbarOpenCondition, snackbarOpen, setSnackbarOpen } = useContext(AppStatesContext); 
+  const { setSnackbarOpenCondition, setSnackbarOpen } = useContext(AppStatesContext); 
 
 
 
@@ -198,11 +197,6 @@ export default function Login() {
           </Box>
         </Box>
 
-        <Snackbar
-          snackbarOpenCondition={snackbarOpenCondition}
-          snackbarOpen={snackbarOpen}
-          setSnackbarOpen={setSnackbarOpen}
-        />
       </Container>
       <Footer/>
     </>

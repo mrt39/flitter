@@ -23,7 +23,7 @@ export default function CustomizedSnackbars({snackbarOpen, setSnackbarOpen, snac
   };
 
   return (
-    <Stack spacing={2} sx={{ width: '100%' }}>
+    <Stack spacing={2} >
       <Snackbar 
       open={snackbarOpen} 
       autoHideDuration={6000} 

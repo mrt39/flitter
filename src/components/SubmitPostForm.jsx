@@ -118,7 +118,7 @@ export default function SubmitPostForm({ currentUser, location, handleClose }) {
     useEffect(() => {
         //only trigger if an image is selected
         if (imageSelected){
-        /* select the attachment button next to the message input box and make it the anchor for the popover to be displayed over */
+        // select the attachment button next to the message input box and make it the anchor for the popover to be displayed over
         const attachmentIcon = document.querySelector('#sendAnImgButton')
         setPopOverAnchorEl(attachmentIcon)
         }

@@ -12,7 +12,6 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import Snackbar from "../components/Snackbar.jsx"
 import Footer from "../components/Footer.jsx";
 import { clean } from 'profanity-cleaner';
 
@@ -21,7 +20,7 @@ export default function SignUp() {
 
   const navigate = useNavigate(); 
 
-  const {snackbarOpenCondition, setSnackbarOpenCondition, snackbarOpen, setSnackbarOpen } = useContext(AppStatesContext); 
+  const {setSnackbarOpenCondition, setSnackbarOpen } = useContext(AppStatesContext); 
 
   const [submitted, setSubmitted] = useState(false);
   const [signUpData, setSignUpData] = useState({ });
@@ -218,11 +217,6 @@ export default function SignUp() {
         </Box>
       </Box>
 
-      <Snackbar
-        snackbarOpenCondition={snackbarOpenCondition}
-        snackbarOpen={snackbarOpen}
-        setSnackbarOpen={setSnackbarOpen}
-      />
     </Container>
     <Footer/>
   </>

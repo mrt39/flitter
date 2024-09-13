@@ -1,11 +1,13 @@
 import { Outlet } from "react-router-dom";
 import Navbar from "./components/Navbar.jsx"
 import ThemeButton from "./components/ThemeButton.jsx"
+import Snackbar from "./components/Snackbar.jsx"
 import './styles/App.css'
 import { useEffect, useState, createContext} from "react";
 import { Navigate, } from "react-router-dom";
 import Box from '@mui/material/Box';
 import { CircularProgress, Alert } from '@mui/material';
+
 
 
 /* //bootstrap styles
@@ -194,7 +196,7 @@ const App = () => {
 
   return (
 
-      <div className='appContainer'>
+    <div className='appContainer'>
       <ThemeButton
         theme={theme}
         setTheme={setTheme}
@@ -211,33 +213,37 @@ const App = () => {
 
       {/* ---------------------------------- MUI DARK THEME END ---------------------------------- */}
 
-        <AppStatesContext.Provider value={{ 
-            allPosts, setAllPosts, snackbarOpen, setSnackbarOpen, 
-            snackbarOpenCondition, setSnackbarOpenCondition, 
-            profileUpdated, setProfileUpdated, imgSubmittedNavbar, setImgSubmittedNavbar,
-            imgSubmittedHomePage, setImgSubmittedHomePage, isSubmittingPost, 
-            setisSubmittingPost, pressedSubmitPost, setPressedSubmitPost
-            
-          }}>
-          {currentUser ? 
-            <Navbar 
-            user={currentUser} 
-            setCurrentUser={setCurrentUser}
+      <AppStatesContext.Provider value={{ 
+          allPosts, setAllPosts, snackbarOpen, setSnackbarOpen, 
+          snackbarOpenCondition, setSnackbarOpenCondition, 
+          profileUpdated, setProfileUpdated, imgSubmittedNavbar, setImgSubmittedNavbar,
+          imgSubmittedHomePage, setImgSubmittedHomePage, isSubmittingPost, 
+          setisSubmittingPost, pressedSubmitPost, setPressedSubmitPost
+      }}>
 
-            />
-          : <Navigate to="/login" /> } 
+        <Snackbar
+          snackbarOpenCondition={snackbarOpenCondition}
+          snackbarOpen={snackbarOpen}
+          setSnackbarOpen={setSnackbarOpen}
+        />
 
-          <UserContext.Provider value={{ currentUser, setCurrentUser, selectedUser, setSelectedUser}}>
+        {currentUser ? 
+          <Navbar 
+          user={currentUser} 
+          setCurrentUser={setCurrentUser}
 
-            <Outlet /> 
-            
-          </UserContext.Provider>
+          />
+        : <Navigate to="/login" /> } 
 
-        </AppStatesContext.Provider>
+        <UserContext.Provider value={{ currentUser, setCurrentUser, selectedUser, setSelectedUser}}>
+          <Outlet /> 
+        </UserContext.Provider>
+
+      </AppStatesContext.Provider>
 
       </ThemeProvider>
 
-      </div>
+    </div>
 
 
   );

@@ -17,7 +17,7 @@ import { clean } from 'profanity-cleaner';
 
 
 
-export const AccountProfileChangeForm = ({user, setSnackbarOpen, invalidEmail, setInvalidEmail,  setSnackbarOpenCondition, profileUpdated, setProfileUpdated}) => {
+export const AccountProfileChangeForm = ({user, setSnackbarOpen, setSnackbarOpenCondition, setProfileUpdated}) => {
 
   const [loading, setLoading] = useState(false);
   const [values, setValues] = useState({
@@ -26,6 +26,9 @@ export const AccountProfileChangeForm = ({user, setSnackbarOpen, invalidEmail, s
     bio: user.bio,
   });
   const [clickedOnProfileUpdate, setClickedOnProfileUpdate] = useState(false)
+
+  //check if the e-mail address user puts is invalid
+  const [invalidEmail, setInvalidEmail] = useState(false); 
 
   function handleChange (event) {
     setValues({
