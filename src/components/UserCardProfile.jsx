@@ -1,15 +1,19 @@
 /* eslint-disable react/prop-types */
-import { useState, useContext, useEffect } from 'react'
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useState,  useEffect, useContext } from 'react'
+import { UserContext } from '../App.jsx';
+import { Link, useNavigate } from "react-router-dom";
 import { Card, CardContent, Typography, Button, Avatar } from '@mui/material';
-import { CircularProgress, Alert } from '@mui/material';
 import "../styles/Profile.css"
 //imports for generating the url path for routing 
 import slugify from 'slugify';
 
 
 
-const UserCardProfile = ({currentUser, selectedUser, setSelectedUser, pressedFollow, setPressedFollow}) => {
+const UserCardProfile = ({pressedFollow, setPressedFollow}) => {
+
+
+  // Pass the UserContext defined in app.jsx
+  const {currentUser, selectedUser} = useContext(UserContext); 
 
 
   const [loading, setLoading] = useState(false)

@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import {
   Box,
   Button,
@@ -11,23 +11,30 @@ import {
   Divider,
   TextField,
 } from '@mui/material';
+import { AppStatesContext, UserContext } from '../App.jsx';
 import Grid from '@mui/material/Grid2';
 import "../styles/account-profile-changeForm.css"
 import { clean } from 'profanity-cleaner';
 
 
 
-export const AccountProfileChangeForm = ({user, setSnackbarOpen, setSnackbarOpenCondition, setProfileUpdated}) => {
+export const AccountProfileChangeForm = () => {
+
+
+  const { setSnackbarOpenCondition, setSnackbarOpen,  setProfileUpdated } = useContext(AppStatesContext); 
+
+  // Pass the UserContext defined in app.jsx
+  const { currentUser} = useContext(UserContext); 
 
   const [loading, setLoading] = useState(false);
   const [values, setValues] = useState({
-    name: user.name,
-    email: user.email,
-    bio: user.bio,
+    name: currentUser.name,
+    email: currentUser.email,
+    bio: currentUser.bio,
   });
   const [clickedOnProfileUpdate, setClickedOnProfileUpdate] = useState(false)
 
-  //check if the e-mail address user puts is invalid
+  //check if the e-mail address currentUser puts is invalid
   const [invalidEmail, setInvalidEmail] = useState(false); 
 
   function handleChange (event) {
@@ -96,7 +103,7 @@ export const AccountProfileChangeForm = ({user, setSnackbarOpen, setSnackbarOpen
           filteredBio=await clean(values.bio, { keepFirstAndLastChar: true, placeholder: '#' })
         }
 
-        fetch(import.meta.env.VITE_BACKEND_URL+'/editprofile/' + user["_id"], {
+        fetch(import.meta.env.VITE_BACKEND_URL+'/editprofile/' + currentUser["_id"], {
             method: 'PATCH',
             body: JSON.stringify({ name: filteredName, email: filteredEmail, bio: filteredBio}), 
             headers: {
@@ -164,7 +171,7 @@ export const AccountProfileChangeForm = ({user, setSnackbarOpen, setSnackbarOpen
                 md={6}
               >
                 <TextField
-                  disabled={loading ||user.email === "demoacc@demoacc.com" ? true : false} 
+                  disabled={loading ||currentUser.email === "demoacc@demoacc.com" ? true : false} 
                   fullWidth
                   label="Name"
                   name="name"
@@ -179,7 +186,7 @@ export const AccountProfileChangeForm = ({user, setSnackbarOpen, setSnackbarOpen
                 md={6}
               >
                 <TextField
-                  disabled={loading ||user.googleId|| user.email === "demoacc@demoacc.com" ? true : false}
+                  disabled={loading ||currentUser.googleId|| currentUser.email === "demoacc@demoacc.com" ? true : false}
                   fullWidth
                   error={invalidEmail}
                   helperText={invalidEmail? 'Invalid E-mail address!' : ' '}   
@@ -197,7 +204,7 @@ export const AccountProfileChangeForm = ({user, setSnackbarOpen, setSnackbarOpen
                 md={12}
               >
                 <TextField
-                  disabled={loading ||user.email === "demoacc@demoacc.com" ? true : false}
+                  disabled={loading ||currentUser.email === "demoacc@demoacc.com" ? true : false}
                   fullWidth
                   id="bio"
                   label="Bio"
@@ -217,7 +224,7 @@ export const AccountProfileChangeForm = ({user, setSnackbarOpen, setSnackbarOpen
         <Divider />
         <CardActions sx={{ justifyContent: 'flex-end' }}>
           <Button 
-          disabled={loading ||user.email === "demoacc@demoacc.com" ? true : false}
+          disabled={loading ||currentUser.email === "demoacc@demoacc.com" ? true : false}
           variant="contained"
           onClick={handleSubmit}>
             Save details

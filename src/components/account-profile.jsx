@@ -5,18 +5,22 @@ import {
   CardActions,
 } from '@mui/material';
 import { useState, useEffect, useContext } from 'react';
-import { AppStatesContext } from '../App.jsx';
+import { AppStatesContext, UserContext } from '../App.jsx';
 import "../styles/Account-Profile.css"
 import MuiAvatar from "./MuiAvatar";
 
 
-export const AccountProfile = ({user, setProfileUpdated}) => {
+export const AccountProfile = () => {
 
-const { setSnackbarOpenCondition, setSnackbarOpen } = useContext(AppStatesContext); 
+const { setSnackbarOpenCondition, setSnackbarOpen, setProfileUpdated } = useContext(AppStatesContext); 
+
+// Pass the UserContext defined in app.jsx
+const {currentUser} = useContext(UserContext); 
 
 
 const [uploadedImg, setUploadedImg] = useState();
 const [imgSubmitted, setImgSubmitted] = useState(false);
+
 
 function handleChange(event){
   const uploadedImg = event.target.files[0]
@@ -48,7 +52,7 @@ async function changeProfileImage() {
   const formData = new FormData()
   formData.append("image", uploadedImg)
 
-    fetch(import.meta.env.VITE_BACKEND_URL+'/uploadprofilepic/' + user["_id"], {
+    fetch(import.meta.env.VITE_BACKEND_URL+'/uploadprofilepic/' + currentUser["_id"], {
         method: "post",
         body: formData, 
         headers: {
@@ -83,13 +87,13 @@ return (
           <div className="card-body">
             <div className="d-flex flex-column align-items-center text-center profileAvatar">
               <MuiAvatar
-              user={user}
+              user={currentUser}
               profilePageAvatar="yes"
               />                  
               <div className="mt-3">
-                <h4>{user.name}</h4>
-                <p className="text-secondary mb-1">{user.email}</p>
-                <p className="text-muted font-size-sm">{user.bio}</p>
+                <h4>{currentUser.name}</h4>
+                <p className="text-secondary mb-1">{currentUser.email}</p>
+                <p className="text-muted font-size-sm">{currentUser.bio}</p>
               </div>
             </div>
           </div>
@@ -97,7 +101,7 @@ return (
   <CardActions className='accountProfileCardActions'>
 
     <input 
-    disabled = {user.email === "demoacc@demoacc.com" ? true : false}
+    disabled = {currentUser.email === "demoacc@demoacc.com" ? true : false}
     type="file" 
     className="hidden"
     value=""
@@ -109,14 +113,14 @@ return (
     {/* hide the input field and choose  a label for the functionality, as input brings its own embedded css, easier to modify label*/}
     <Button 
     variant="contained"
-    disabled = {user.email === "demoacc@demoacc.com" ? true : false}
+    disabled = {currentUser.email === "demoacc@demoacc.com" ? true : false}
     >
       <label htmlFor="image" className="imgLbl">Choose an Image</label>
 
     </Button>
 
     <Button 
-    disabled = {user.email === "demoacc@demoacc.com" ? true : false}
+    disabled = {currentUser.email === "demoacc@demoacc.com" ? true : false}
     variant="contained"
     onClick={submitImg}
     >

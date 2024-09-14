@@ -14,7 +14,7 @@ import PostsDisplay from '../components/PostsDisplay.jsx';
 const Profile = () => {
 
   // Pass the UserContext defined in app.js
-  const { currentUser, selectedUser, setSelectedUser } = useContext(UserContext); 
+  const {selectedUser, setSelectedUser } = useContext(UserContext); 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [pressedFollow, setPressedFollow] = useState(false)
@@ -80,15 +80,12 @@ const Profile = () => {
     <div className="profileContainer">
       
       <UserCardProfile
-      currentUser = {currentUser}
-      selectedUser = {selectedUser}
-      setSelectedUser = {setSelectedUser}
       pressedFollow = {pressedFollow}
       setPressedFollow = {setPressedFollow}
       />
 
-    <br /><br /> <br /><br /> <br /><br />
-    <PostsDisplay
+      <br /><br /> <br /><br /> <br /><br />
+      <PostsDisplay
       fromThisUser = {selectedUser} //instead of displaying all posts, display the posts only from this user
       />
 

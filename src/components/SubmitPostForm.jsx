@@ -2,15 +2,15 @@
 import { useState, useEffect, useRef, useContext } from 'react';
 import { AppStatesContext } from '../App.jsx';
 import FileInputPopover from "../components/Popover.jsx";
-import Snackbar from "../components/Snackbar.jsx";
 import { Alert } from '@mui/material';
 import { clean } from 'profanity-cleaner';
 
 export default function SubmitPostForm({ currentUser, location, handleClose }) {
   const { 
-    snackbarOpenCondition, setSnackbarOpenCondition, snackbarOpen, setSnackbarOpen, 
-    isSubmittingPost, setisSubmittingPost , pressedSubmitPost, setPressedSubmitPost, 
-    imgSubmittedNavbar, setImgSubmittedNavbar, imgSubmittedHomePage, setImgSubmittedHomePage,
+    setSnackbarOpenCondition, setSnackbarOpen, isSubmittingPost, 
+    setisSubmittingPost , pressedSubmitPost, setPressedSubmitPost, 
+    imgSubmittedNavbar, setImgSubmittedNavbar, imgSubmittedHomePage, 
+    setImgSubmittedHomePage,
   } = useContext(AppStatesContext);
 
   //value in the form for submitting posts
@@ -235,11 +235,7 @@ useEffect(() => {
         handleImgSendBtn={handleImgSendBtn}
       />
 
-      <Snackbar
-        snackbarOpenCondition={snackbarOpenCondition}
-        snackbarOpen={snackbarOpen}
-        setSnackbarOpen={setSnackbarOpen}
-      />
+
 
       {error && <Alert severity="error">{error.message}</Alert>}
     </>
