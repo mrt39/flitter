@@ -16,6 +16,10 @@ export default function SubmitPostForm({ currentUser, location, handleClose }) {
   //value in the form for submitting posts
   const [value, setValue] = useState("");
   const [error, setError] = useState(null);
+
+
+  // Max character limit
+  const maxCharacters = 280;
   
 
   // Handle text change in form
@@ -27,7 +31,7 @@ export default function SubmitPostForm({ currentUser, location, handleClose }) {
   // Submit the post
   async function handleSubmit(event) {
     event.preventDefault();
-    if (isSubmittingPost) return; // Prevent multiple submissions
+    if (isSubmittingPost || value.length > maxCharacters) return; // Prevent multiple submissions, also prevents from submitting if above 280 characters.
 
     setisSubmittingPost(true); // Mark submission as in progress
 
@@ -197,9 +201,23 @@ useEffect(() => {
       <form onSubmit={handleSubmit}>
         <label>
           {location === 'navbar' ? 'Send a Post:' : "What's on your mind?"}
-          <textarea value={value} onChange={handleChange} />
+          <textarea 
+          value={value} 
+          onChange={handleChange} 
+          style={{ borderColor: value.length > maxCharacters ? 'red' : '' }} 
+          />
         </label>
-        <input type="submit" value="Submit" disabled={isSubmittingPost} />
+        {/* Character Counter */}
+          <div style={{ color: value.length > maxCharacters ? 'red' : '' }}>
+        {value.length}/{maxCharacters}
+        </div>
+        {/* Disable submit if already submitting or character count exceeds the limit */}
+        <input 
+        type="submit" 
+        value="Submit" 
+        disabled={isSubmittingPost || value.length > maxCharacters}         
+        />
+
       </form>
 
       <button 

@@ -31,3 +31,7 @@
   .commentFormBtn:hover {
     background-color: #218838;
   }
+
+  .commentFormBtn:disabled {
+    background-color: gray;
+  }

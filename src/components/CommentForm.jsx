@@ -21,6 +21,9 @@ const CommentForm = ({postID, clickedPostComment, setClickedPostComment}) => {
     setShowForm(!showForm); // Toggle form visibility
   };
 
+  // Max character limit
+  const maxCharacters = 280;
+
   function handleChange(event){
     setValue(event.target.value)
   }
@@ -35,6 +38,9 @@ const CommentForm = ({postID, clickedPostComment, setClickedPostComment}) => {
     //useeffect to handle submitting blog posts
     useEffect(() => {
         async function sendCommentonPost() {
+
+          if (value.length > maxCharacters) return; // Prevent from submitting if above 280 characters.
+
           //on submit, clean the words with the profanity cleaner package
           //https://www.npmjs.com/package/profanity-cleaner
           let filteredCommentMessage = await clean(value, { keepFirstAndLastChar: true, placeholder: '#' }) 
@@ -81,8 +87,24 @@ const CommentForm = ({postID, clickedPostComment, setClickedPostComment}) => {
       </button>
 
       <div className={`comment-form ${showForm ? "show" : ""}`}>
-        <textarea value={value} onChange={handleChange} className="commentFormTextarea" placeholder="Enter your comment..." />
-        <button className="commentFormBtn" onClick={handleSendClick}>Send</button>
+        <textarea 
+        value={value} 
+        onChange={handleChange} 
+        className="commentFormTextarea" 
+        placeholder="Enter your comment..." 
+        style={{ borderColor: value.length > maxCharacters ? 'red' : '' }} 
+        />
+        {/* Character Counter */}
+        <div style={{ color: value.length > maxCharacters ? 'red' : '' }}>
+        {value.length}/{maxCharacters}
+        </div>
+        <button 
+        className="commentFormBtn" 
+        onClick={handleSendClick}
+        disabled={value.length > maxCharacters}         
+        >
+          Send
+        </button>
       </div>
     </div>
   );
