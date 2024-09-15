@@ -26,6 +26,8 @@ const PostsDisplay = ({fromThisUser}) => {
   const [likepostID, setLikePostID] = useState("")
   const [pressedLikePost, setPressedLikePost] = useState(false)
 
+  const [filteredMessages, setFilteredMessages] = useState([])
+
   
   //handle commenting on the posts
   const [clickedPostComment, setClickedPostComment] = useState(false);
@@ -116,6 +118,43 @@ const PostsDisplay = ({fromThisUser}) => {
   }, [pressedLikePost]);
 
 
+    //useffect for sorting messages
+    useEffect(() => {
+    async function sortMessageDisplay(){
+      var filteredMessages = []
+      //if fromThisUser exists (rendering /profile route), only get the messages from that user, display chronologically
+      if (fromThisUser){
+        allPosts.forEach((post) => {
+          // Check if the post is from this user
+          if (post.from[0]._id === fromThisUser._id) {
+            // Push the post into filteredMessages array
+            filteredMessages.push(post);
+          }
+        });
+        
+        // Sort filteredMessages array by date 
+        filteredMessages.sort((a, b) => new Date(a.date) - new Date(b.date));
+      }else{ //if fromThisUser does not exist (rendering home route),  get all the messages, display randomly
+        filteredMessages = allPosts
+        //randomize the posts
+        for (var i = filteredMessages.length - 1; i >= 0; i--) {
+          var j = Math.floor(Math.random() * (i + 1));
+          var temp = filteredMessages[i];
+          filteredMessages[i] = filteredMessages[j];
+          filteredMessages[j] = temp;
+        }
+      }
+      setFilteredMessages(filteredMessages)
+    }
+
+    sortMessageDisplay()
+
+  }, [allPosts]);
+
+
+  
+
+
 
 
   if (loading) {
@@ -138,79 +177,40 @@ const PostsDisplay = ({fromThisUser}) => {
 
   return (
     <ul>
-      {allPosts && allPosts.length > 0 ? (
-        allPosts.map((post) => (
-          // If fromThisUser exists, only display posts from that user
-          fromThisUser ? (
-            post.from[0]._id === fromThisUser._id && (
-              <li key={post._id}>
-                <Link onClick={() => handleProfileRouting(post.from[0])}>
-                  <h3>{post.from[0].name}</h3>
-                </Link>
+      {allPosts && allPosts.length > 0 ? 
 
-                {post.message && (
-                  <p>{post.message}</p>
-                )}
+      (filteredMessages.map((post) => (<li key={post._id}>
+          <Link onClick={() => handleProfileRouting(post.from[0])}>
+            <h3>{post.from[0].name}</h3>
+          </Link>
 
-                {post.image && (
-                  <p>
-                    <img className="msgBoxImg1" src={post.image} alt="image" />
-                  </p>
-                )}
+          {post.message && (
+            <p>{post.message}</p>
+          )}
 
-                <p>{dayjs(new Date(post.date)).format('MMM D, H:mm')}</p>
-                <button onClick={() => handleLike(post._id)}>Like Post</button>
-                <p>Likes: {post.likeCount}</p>
+          {post.image && (
+            <p>
+              <img className="msgBoxImg1" src={post.image} alt="image" />
+            </p>
+          )}
 
-                <CommentForm postID={post._id} 
-                  clickedPostComment={clickedPostComment} 
-                  setClickedPostComment={setClickedPostComment} 
-                />
-                <p>Comments: {post.commentCount}</p>
+          <p>{dayjs(new Date(post.date)).format('MMM D, H:mm')}</p>
+          <button onClick={() => handleLike(post._id)}>Like Post</button>
+          <p>Likes: {post.likeCount}</p>
 
-                <br />
+          <CommentForm postID={post._id} 
+            clickedPostComment={clickedPostComment} 
+            setClickedPostComment={setClickedPostComment} 
+          />
+          <p>Comments: {post.commentCount}</p>
 
-                <CommentsDisplay post={post} />
+          <br />
 
-                <br /> <br /> <br />
-              </li>
-            )
-          ) : (
-            // If fromThisUser does not exist, display all posts
-            <li key={post._id}>
-              <Link onClick={() => handleProfileRouting(post.from[0])}>
-                <h3>{post.from[0].name}</h3>
-              </Link>
+          <CommentsDisplay post={post} />
 
-              {post.message && (
-                <p>{post.message}</p>
-              )}
-
-              {post.image && (
-                <p>
-                  <img className="msgBoxImg1" src={post.image} alt="image" />
-                </p>
-              )}
-
-              <p>{dayjs(new Date(post.date)).format('MMM D, H:mm')}</p>
-              <button onClick={() => handleLike(post._id)}>Like Post</button>
-              <p>Likes: {post.likeCount}</p>
-
-              <CommentForm 
-              postID={post._id} 
-              clickedPostComment={clickedPostComment} 
-              setClickedPostComment={setClickedPostComment} 
-              />
-              <p>Comments: {post.commentCount}</p>
-
-              <br />
-
-              <CommentsDisplay post={post} />
-
-              <br /> <br /> <br />
-            </li>
-          )
-        ))
+          <br /> <br /> <br />
+        </li>
+      ))
       ) : (
         <p>No posts available</p>
       )}

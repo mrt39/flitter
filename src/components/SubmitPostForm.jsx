@@ -195,9 +195,33 @@ useEffect(() => {
 
 
 
+  async function populate(){
+    try {
+      const result = await fetch(import.meta.env.VITE_BACKEND_URL + '/populate', {
+          method: "GET",
+          headers: {
+            'Content-Type': 'application/json',
+            "Access-Control-Allow-Origin": "*",
+          },
+          credentials: "include" // Include credentials like cookies
+      });
+
+      if (result.ok) {
+          await result.json();
+          console.log("Populated successfully!");
+      } else {
+          throw new Error(result);
+      }
+      } catch (error) {
+          console.error('Error:', error);
+          setError(error);
+      } 
+  }
+
 
   return (
     <>
+    <button onClick={populate}>POPULATE</button>
       <form onSubmit={handleSubmit}>
         <label>
           {location === 'navbar' ? 'Send a Post:' : "What's on your mind?"}
