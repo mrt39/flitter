@@ -455,16 +455,14 @@ router.get("/followers/:shortid", async (req, res) => {
   }
 })
 
-//experimental populate route for populating the db
+/* //experimental populate route for populating the db
+//using faker app: https://fakerjs.dev/api/
 router.get("/populate", async (req, res) => {
 
   var quotes = []
   var quoteIndex = 0
 
   try {
-
-    console.log()
-
     //get the quotes data into quotes const
     await fetch("https://gist.githubusercontent.com/camperbot/5a022b72e96c4c9585c32bf6a75f62d9/raw/e3c6895ce42069f0ee7e991229064f167fe8ccdc/quotes.json", {
       method: 'GET',
@@ -492,7 +490,7 @@ router.get("/populate", async (req, res) => {
         shortId: randomShortId,
         name: faker.person.fullName(),
         bio: faker.person.bio(),
-        uploadedpic: faker.image.avatar()
+        uploadedpic: faker.image.urlLoremFlickr({ height: 128, width: 128, category: 'humans' })
       });
       await newUser.save();
       //make 10 posts with this user
@@ -502,23 +500,19 @@ router.get("/populate", async (req, res) => {
             date: faker.date.between({ from: '2024-08-01T00:00:00.000Z', to: '2024-09-25T00:00:00.000Z' }),
             message: quotes[quoteIndex].quote,
         });
-        console.log(newPost)
         await newPost.save();
         quoteIndex++
        }
     } 
-
-
-
-/*     res.status(200).json({
+    res.status(200).json({
       message: "Populate operation completed successfully"
-    });   */
+    });  
 
   } catch (err) {
       res.send(err);
   }
 
-})
+}) */
 
 
 

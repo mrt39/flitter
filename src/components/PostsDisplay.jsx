@@ -6,9 +6,11 @@ import CommentForm from "../components/CommentForm.jsx";
 import CommentsDisplay from "../components/CommentsDisplay.jsx";
 import { UserContext, AppStatesContext } from '../App.jsx';
 import Box from '@mui/material/Box';
-import { CircularProgress, Alert } from '@mui/material';
+import { CircularProgress, Alert, Avatar } from '@mui/material';
 //imports for generating the url path for routing 
 import slugify from 'slugify';
+//infinite scroll 
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 
 
@@ -151,8 +153,22 @@ const PostsDisplay = ({fromThisUser}) => {
 
   }, [allPosts]);
 
-
   
+  //state for setting the visible post count, for infinite scroll functionality 
+  const [visiblePosts, setVisiblePosts] = useState(5); // Initial amount of posts to show
+  const [loadingPosts, setLoadingPosts] = useState(false); // Track posts loading state
+
+
+  // Function to load more posts when scrolled to the bottom, with a 1.5-second delay
+  function loadMorePosts () {
+    setLoadingPosts(true); // Start loading
+
+    // Delay the loading of the next set of posts by 1.5 seconds
+    setTimeout(() => {
+      setVisiblePosts(visiblePosts + 7); // Increase the visible post count by 10
+      setLoadingPosts(false); // End loading
+    }, 1000);
+  };
 
 
 
@@ -177,11 +193,30 @@ const PostsDisplay = ({fromThisUser}) => {
 
   return (
     <ul>
-      {allPosts && allPosts.length > 0 ? 
+    <InfiniteScroll
+      dataLength={visiblePosts} // This is the length of the currently visible posts
+      next={loadMorePosts} // Function to call when more posts are to be loaded
+      hasMore={visiblePosts < filteredMessages.length} // Check if there's more to load
+      loader={ // Display while loading more
+        loadingPosts && 
+        <CircularProgress size="5rem" sx={{"marginBottom":"5rem"}}/>
+      } 
+      endMessage={<p>No more posts to show.</p>} // Message when no more posts
+    >
 
-      (filteredMessages.map((post) => (<li key={post._id}>
+      {/* only display if allPosts is populated. */}
+      {allPosts && allPosts.length > 0 ? 
+       //displaying 10 at a time
+      (filteredMessages.slice(0, visiblePosts).map(post => (
+      
+      <li key={post._id}>
           <Link onClick={() => handleProfileRouting(post.from[0])}>
             <h3>{post.from[0].name}</h3>
+            <Avatar
+            alt={post.from[0].name}
+            src={post.from[0].picture? post.from[0].picture : post.from[0].uploadedpic}
+            sx={{ width: 80, height: 80, margin: 'auto', mt: 2 }}
+            />
           </Link>
 
           {post.message && (
@@ -214,7 +249,10 @@ const PostsDisplay = ({fromThisUser}) => {
       ) : (
         <p>No posts available</p>
       )}
-    </ul>
+
+
+    </InfiniteScroll>
+  </ul>
   
   );
 };

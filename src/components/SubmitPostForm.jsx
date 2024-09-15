@@ -195,7 +195,7 @@ useEffect(() => {
 
 
 
-  async function populate(){
+/*   async function populate(){
     try {
       const result = await fetch(import.meta.env.VITE_BACKEND_URL + '/populate', {
           method: "GET",
@@ -216,12 +216,12 @@ useEffect(() => {
           console.error('Error:', error);
           setError(error);
       } 
-  }
+  } */
 
 
   return (
     <>
-    <button onClick={populate}>POPULATE</button>
+    {/* <button onClick={populate}>POPULATE</button> */}
       <form onSubmit={handleSubmit}>
         <label>
           {location === 'navbar' ? 'Send a Post:' : "What's on your mind?"}
