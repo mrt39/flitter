@@ -83,7 +83,7 @@ const Navbar = ({user, setCurrentUser}) => {
           <Icon.PeopleFill  className="bi pe-none" width="24" height="24" role="img" aria-label="Find People!"/>
           </div>
         </li>
-        </Link>
+      </Link>
       </ul>
         {/* use different react components for forms in homepage and navbar in order to seperate concerns and avoid state/post logic clashing */}
         <SubmitPostModal

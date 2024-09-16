@@ -1,0 +1,88 @@
+.post-feed-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  
+  .post-feed {
+    width: 600px;
+  }
+  
+  .post-item {
+    border-bottom: 1px solid #e0e0e0;
+    padding: 10px;
+  }
+  
+  .post-header {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .post-name {
+    font-weight: bold;
+  }
+  
+  .post-date {
+    margin-left: 10px;
+  }
+  
+  .post-content {
+    margin-top: 5px;
+  }
+  
+  .post-actions {
+    display: flex;
+    justify-content: space-evenly;
+    margin-top: 10px;
+  }
+  
+  .post-action-btn {
+    margin-right: 10px;
+  }
+  
+  .post-item:last-child {
+    border-bottom: none;
+  }
+
+  .postLikeCommentCount{
+    margin-left: 5px !important;
+  }
+
+
+
+  /* General post action button styling */
+.icon-button {
+    display: flex;
+    align-items: center;
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+  }
+  
+  /* Like button hover effect */
+  .like-button:hover {
+    color: #f91880;
+    text-shadow: 0 0 10px #f91880;
+  }
+  
+  .like-button:hover .MuiSvgIcon-root {
+    color: #f91880;
+  }
+  
+  .like-button:hover .postLikeCommentCount {
+    color: #f91880;
+    text-shadow: 0 0 10px #f91880;
+  }
+  
+  /* Comment button hover effect */
+  .comment-button:hover {
+    color: #1d9bf0;
+    text-shadow: 0 0 10px #1d9bf0;
+  }
+  
+  .comment-button:hover .MuiSvgIcon-root {
+    color: #1d9bf0;
+  }
+  
+  .comment-button:hover .postLikeCommentCount {
+    color: #1d9bf0;
+    text-shadow: 0 0 10px #1d9bf0;
+  }

@@ -1,8 +1,9 @@
 /* eslint-disable react/prop-types */
 import {useState} from 'react'
-import * as React from 'react';
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import '../styles/Sidebar.css'
 import SidebarLink from "./SidebarLink.jsx";
+import SubmitPostModal from "../components/SubmitPostModal.jsx";
 import HomeIcon from "@mui/icons-material/Home";
 import SearchIcon from "@mui/icons-material/Search";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
@@ -11,22 +12,20 @@ import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import PermIdentityIcon from "@mui/icons-material/PermIdentity";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import IconButton from '@mui/material/IconButton';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
-import Divider from '@mui/material/Divider';
-import PersonAdd from '@mui/icons-material/PersonAdd';
-import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
+import LogoImg from "../assets/logo.png";
+//imports for generating the url path for routing 
+import slugify from 'slugify';
 
 
 
 
-
-const Sidebar = () => {
+const Sidebar = ({user, setCurrentUser}) => {
 
 
     const [anchorEl, setAnchorEl] = useState(document.querySelector('#sideBarAccountMenu'));
@@ -39,20 +38,69 @@ const Sidebar = () => {
     };
 
 
+    const navigate = useNavigate(); 
+
+
+
+
+  //handle generating the url path for routing to /profile/:slug
+  function handleProfileRouting(){
+    //slugify the username, e.g:"john-doe"
+    const slug = slugify(user.name, { lower: true }); 
+    //combine slug with usershortID to create the unique profile path for the selected user to route to
+    const profilePath = `/profile/${slug}-${user.shortId}`
+    return profilePath
+  }
+
+
+  function handleSignOut(){
+      fetch(import.meta.env.VITE_BACKEND_URL+'/logout',{
+      method: 'POST',
+      credentials: 'include' //sends cookies to server, so it can log out/unauthenticate user!
+      })
+      .then(async result => {
+        if (result.ok) {
+          let response = await result.json(); 
+          console.warn(response); 
+          await setCurrentUser(null)
+          navigate('/login'); // Route to /login upon successful logout
+        } else {
+          throw new Error(result);
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+      //close the menu
+      handleClose() 
+  }
+
+
 
   return (
     <div className="sidebar">
-        <SidebarLink text="Home" Icon={HomeIcon} />
+        <div className="sidebarLogo">
+          <img src={LogoImg} alt="logo" />
+        </div>
+        <Link className="sidebarLink" to="/">
+            <SidebarLink text="Home" Icon={HomeIcon} />
+        </Link>
         <SidebarLink text="Explore" Icon={SearchIcon} />
         <SidebarLink text="Notifications" Icon={NotificationsNoneIcon} />
         <SidebarLink text="Messages" Icon={MailOutlineIcon} />
         <SidebarLink text="Bookmarks" Icon={BookmarkBorderIcon} />
         <SidebarLink text="Lists" Icon={ListAltIcon} />
-        <SidebarLink text="Profile" Icon={PermIdentityIcon} />
-        <SidebarLink text="More" Icon={MoreHorizIcon}/>
-        <Button id="sidebarPostBtn">
-            Post
-        </Button>
+        <Link  className="sidebarLink" to={handleProfileRouting()} >
+            <SidebarLink text="Profile" Icon={PermIdentityIcon} />
+        </Link>
+        <Link className="sidebarLink" to="/profileedit">
+            <SidebarLink text="More" Icon={MoreHorizIcon}/>
+        </Link>
+
+        {/* use different react components for forms in homepage and navbar in order to seperate concerns and avoid state/post logic clashing */}
+        <SubmitPostModal
+        currentUser = {user}
+        />
 
 
         <Button
@@ -64,8 +112,14 @@ const Sidebar = () => {
             aria-haspopup="true"
             aria-expanded={open ? 'true' : undefined}
           >
-            <Avatar sx={{ width: 32, height: 32 }}>M</Avatar>
-            <p>UsernameHere</p>
+            <Avatar 
+                sx={{ width: 32, height: 32 }}
+                alt={user.name}
+                src={user.picture? user.picture : user.uploadedpic}
+            >
+
+            </Avatar>
+            <p>{user.name}</p>
             <p id='sidebarUserIconBtn3Dot'>...</p>
         </Button>
 
@@ -107,7 +161,7 @@ const Sidebar = () => {
         transformOrigin={{ horizontal: 'left', vertical: 'bottom' }}
         anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
       >
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={handleSignOut}>
           <ListItemIcon>
             <Logout fontSize="small" />
           </ListItemIcon>

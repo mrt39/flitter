@@ -228,13 +228,12 @@ const App = () => {
           setSnackbarOpen={setSnackbarOpen}
         />
 
-        <Sidebar/>
+
 
         {currentUser ? 
-          <Navbar 
-          user={currentUser} 
-          setCurrentUser={setCurrentUser}
-
+            <Sidebar
+            user={currentUser} 
+            setCurrentUser={setCurrentUser}
           />
         : <Navigate to="/login" /> } 
 
