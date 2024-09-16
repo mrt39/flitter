@@ -1,0 +1,66 @@
+.sidebar{
+    width: 250px;
+    min-width: 250px;
+    padding: 20px 20px;
+    margin: 20px auto 0 auto;
+    box-shadow: 0 0 6px hsl(210 14% 90%);
+    position: relative;
+}
+
+#sidebarPostBtn{
+    width: 100%;
+    height: 50px;
+    background-color: rgb(29, 155, 240);
+    border-radius: 20px;
+    color: white;
+    font-weight: 700;
+    text-transform: inherit;
+    margin-top: 2rem;
+    border-bottom-left-radius: 9999px;
+    border-bottom-right-radius: 9999px;
+    border-top-left-radius: 9999px;
+    border-top-right-radius: 9999px;
+}
+
+#sidebarPostBtn:hover{
+    background-color: rgb(26, 140, 216);
+}
+
+
+
+#sidebarUserIconBtn{
+    width: 90%;
+    height: 50px;
+    display: flex;
+    justify-content: space-between;
+    position: absolute;
+    bottom: 0px;
+    left: 10px;
+    right: 10px;
+    background-color: inherit;
+    border-radius: 20px;
+    color: inherit;
+    font-weight: 700;
+    text-transform: inherit;
+    margin-bottom: 0rem;
+    margin-left: 0;
+    border-bottom-left-radius: 9999px;
+    border-bottom-right-radius: 9999px;
+    border-top-left-radius: 9999px;
+    border-top-right-radius: 9999px;
+}
+
+#sidebarUserIconBtn:hover{
+    background-color: inherit;
+}
+
+
+#sideBarAccountMenu .MuiPaper-root{
+    margin-top: 0 !important;
+    box-shadow: rgba(255, 255, 255, 0.2) 0px 0px 15px, rgba(255, 255, 255, 0.15) 0px 0px 3px;
+
+}
+
+#sidebarUserIconBtn3Dot{
+    margin-top: 9px;
+}

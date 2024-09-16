@@ -85,6 +85,10 @@ const Navbar = ({user, setCurrentUser}) => {
         </li>
         </Link>
       </ul>
+        {/* use different react components for forms in homepage and navbar in order to seperate concerns and avoid state/post logic clashing */}
+        <SubmitPostModal
+          currentUser = {user}
+        />
       <div className="dropdown border-top">
         <a href="#" className="d-flex align-items-center justify-content-center p-3 link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
           <div className="navbarAvatar">
@@ -97,10 +101,7 @@ const Navbar = ({user, setCurrentUser}) => {
           <li><a className="dropdown-item" href="#" onClick={handleSignOut}>Sign out</a></li>
         </ul>
 
-        {/* use different react components for forms in homepage and navbar in order to seperate concerns and avoid state/post logic clashing */}
-        <SubmitPostModal
-        currentUser = {user}
-        />
+
         
       </div>
     </div>

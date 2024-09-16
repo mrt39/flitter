@@ -1,5 +1,6 @@
 import { Outlet } from "react-router-dom";
 import Navbar from "./components/Navbar.jsx"
+import Sidebar from "./components/Sidebar.jsx"
 import ThemeButton from "./components/ThemeButton.jsx"
 import Snackbar from "./components/Snackbar.jsx"
 import './styles/App.css'
@@ -226,6 +227,8 @@ const App = () => {
           snackbarOpen={snackbarOpen}
           setSnackbarOpen={setSnackbarOpen}
         />
+
+        <Sidebar/>
 
         {currentUser ? 
           <Navbar 
