@@ -1,26 +1,36 @@
 /* eslint-disable react/prop-types */
-import {useState} from 'react'
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import '../styles/Sidebar.css'
-import SidebarLink from "./SidebarLink.jsx";
-import SubmitPostModal from "../components/SubmitPostModal.jsx";
-import HomeIcon from "@mui/icons-material/Home";
-import SearchIcon from "@mui/icons-material/Search";
-import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
-import MailOutlineIcon from "@mui/icons-material/MailOutline";
-import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
-import ListAltIcon from "@mui/icons-material/ListAlt";
-import PermIdentityIcon from "@mui/icons-material/PermIdentity";
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
+import { useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import '../styles/Sidebar.css';
+import SidebarLink from './SidebarLink.jsx';
+import SubmitPostModal from '../components/SubmitPostModal.jsx';
+
+// MUI Imports
+import { 
+  Avatar, 
+  Button, 
+  Menu, 
+  MenuItem, 
+  ListItemIcon 
+} from '@mui/material';
+
+// Icons
+import HomeIcon from '@mui/icons-material/Home';
+import SearchIcon from '@mui/icons-material/Search';
+import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
+import MailOutlineIcon from '@mui/icons-material/MailOutline';
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
+import ListAltIcon from '@mui/icons-material/ListAlt';
+import PermIdentityIcon from '@mui/icons-material/PermIdentity';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import Logout from '@mui/icons-material/Logout';
-import LogoImg from "../assets/logo.png";
-//imports for generating the url path for routing 
-import slugify from 'slugify';
+
+
+// Assets
+import LogoImg from '../assets/logo.png';
+
+// Utility
+import slugify from 'slugify'; // for generating the URL path for routing
 
 
 

@@ -73,6 +73,18 @@ const App = () => {
           main: '#131052',
         },
       },
+      components: {
+        MuiButton: {
+          styleOverrides: {
+            root: {
+              '&:hover': {
+                // background color change for user's profile display button at the bottom of the sidebar
+                backgroundColor: toggleDarkMode ? '#333' : '#ddd',
+              },
+            },
+          },
+        },
+      },
     });
 
   //----------------------MUI DARK THEME END---------------------------

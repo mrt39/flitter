@@ -46,25 +46,22 @@
     height: 50px;
     display: flex;
     justify-content: space-between;
+    align-items: center; 
+    gap: 12px;
     position: absolute;
     bottom: 0px;
     left: 10px;
     right: 10px;
-    background-color: inherit;
     border-radius: 20px;
     color: inherit;
     font-weight: 700;
     text-transform: inherit;
-    margin-bottom: 0rem;
+    margin-bottom: 0.5rem;
     margin-left: 0;
     border-bottom-left-radius: 9999px;
     border-bottom-right-radius: 9999px;
     border-top-left-radius: 9999px;
     border-top-right-radius: 9999px;
-}
-
-#sidebarUserIconBtn:hover{
-    background-color: inherit;
 }
 
 
@@ -76,4 +73,5 @@
 
 #sidebarUserIconBtn3Dot{
     margin-top: 9px;
+    margin-left: auto; /* Pushes the three dots to the right */
 }

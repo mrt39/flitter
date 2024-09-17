@@ -73,7 +73,6 @@ const PostsDisplay = ({fromThisUser}) => {
       .then(data => {
           //sort data by dates, descending order
           data.sort((post1,post2) => (post1.date < post2.date) ? 1 : ((post2.date < post1.date) ? -1 : 0))
-          console.log(data)
           setAllPosts(data)
           setLoading(false)
       })
@@ -214,8 +213,8 @@ const PostsDisplay = ({fromThisUser}) => {
         } 
       >
 
-        {/* only display if allPosts is populated. */}
-        {allPosts && allPosts.length > 0 ? 
+        {/* only display if filteredMessages is populated. */}
+        {filteredMessages && filteredMessages.length > 0 ? 
         //displaying 10 at a time
         (filteredMessages.slice(0, visiblePosts).map(post => (
         
@@ -325,23 +324,23 @@ const PostsDisplay = ({fromThisUser}) => {
         }
         secondary={
           <>
-            <Typography variant="body1" className="post-content">
+            <Typography component="span" variant="body1" className="post-content">
               {post.message}
             </Typography>
-            <div className="post-actions">
+            <span className="post-actions">
               <IconButton size="small" className="icon-button comment-button">
                 <ChatBubbleOutline fontSize="small" />
-                <Typography variant="body1" className="postLikeCommentCount">
+                <Typography component="span" variant="body2" className="postLikeCommentCount">
                   {post.commentCount}
                 </Typography>
               </IconButton>
               <IconButton size="small" className="icon-button like-button">
                 <FavoriteBorder fontSize="small" />
-                <Typography variant="body1" className="postLikeCommentCount">
+                <Typography component="span" variant="body2" className="postLikeCommentCount">
                   {post.likeCount}
                 </Typography>
               </IconButton>
-            </div>
+            </span>
           </>
         }
       />
@@ -349,7 +348,7 @@ const PostsDisplay = ({fromThisUser}) => {
           
         ))
         ) : (
-          <p>No posts available</p>
+          <p>No posts available.</p>
         )}
 
 

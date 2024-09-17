@@ -28,6 +28,9 @@
   
   .post-content {
     margin-top: 5px;
+    display: block;
+    margin-bottom: 1em; 
+    padding: 0;
   }
   
   .post-actions {
