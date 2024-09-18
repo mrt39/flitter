@@ -1,5 +1,4 @@
 import { Outlet } from "react-router-dom";
-import Navbar from "./components/Navbar.jsx"
 import Sidebar from "./components/Sidebar.jsx"
 import ThemeButton from "./components/ThemeButton.jsx"
 import Snackbar from "./components/Snackbar.jsx"
@@ -80,6 +79,16 @@ const App = () => {
               '&:hover': {
                 // background color change for user's profile display button at the bottom of the sidebar
                 backgroundColor: toggleDarkMode ? '#333' : '#ddd',
+              },
+            },
+          },
+        },
+        MuiListItem: {
+          styleOverrides: {
+            root: {
+              '&:hover': {
+                // background color change for user's profile display button at the bottom of the sidebar
+                backgroundColor: toggleDarkMode ? '#1C1C1C' : '#F7F9F9',
               },
             },
           },

@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import '../styles/Home.css'
 import {useContext } from 'react'
-import PostsDisplay from '../components/PostsDisplay.jsx';
+import AllPostsDisplay from '../components/AllPostsDisplay.jsx';
 import { UserContext } from '../App.jsx';
 import SubmitPostForm from '../components/SubmitPostForm.jsx';
 
@@ -29,7 +29,7 @@ function Home() {
       />
 
       <br /><br /> <br /><br /> <br /><br />
-      <PostsDisplay
+      <AllPostsDisplay
       />
 
 

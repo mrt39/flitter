@@ -9,6 +9,8 @@ import Home from './routes/Home.jsx';
 import Profile from './routes/Profile.jsx';
 import ProfileEdit from './routes/ProfileEdit.jsx';
 import Followers from './routes/Followers.jsx';
+import SingularPostPage from './routes/SingularPostPage.jsx';
+
 
 
 
@@ -29,9 +31,10 @@ const router = createBrowserRouter([
           { path: "followedby", element: <Followers />},
         ] */
       },
-      { path: "profileedit", element: <ProfileEdit />},
       { path: "profile/:slugID/following", element: <Followers />},
       { path: "profile/:slugID/followers", element: <Followers />},
+      { path: "profileedit", element: <ProfileEdit />},
+      { path: "post/:postID", element: <SingularPostPage />},
     ], 
   },
 

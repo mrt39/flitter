@@ -1,10 +1,13 @@
 /* eslint-disable react/prop-types */
 import { useState, useEffect, useContext } from "react";
+import {  Typography,  IconButton } from '@mui/material';
+import {  ChatBubbleOutline } from '@mui/icons-material';
+
 import { UserContext } from '../App.jsx';
 import { clean } from 'profanity-cleaner';
 import '../styles/CommentForm.css'
 
-const CommentForm = ({postID, clickedPostComment, setClickedPostComment}) => {
+const CommentForm = ({post, clickedPostComment, setClickedPostComment}) => {
 
   
   //Pass the UserContext defined in app.jsx
@@ -15,7 +18,6 @@ const CommentForm = ({postID, clickedPostComment, setClickedPostComment}) => {
 
   const [showForm, setShowForm] = useState(false); // State to toggle form visibility
   const [value, setValue] = useState("")
-/*   const [clickedPostComment, setClickedPostComment] = useState(false); */
 
   const handleCommentClick = () => {
     setShowForm(!showForm); // Toggle form visibility
@@ -48,7 +50,7 @@ const CommentForm = ({postID, clickedPostComment, setClickedPostComment}) => {
           await fetch(import.meta.env.VITE_BACKEND_URL+'/sendCommentonPost', {
             method: "post",
             // store date as isostring to make the reading easier later
-            body: JSON.stringify({ from:currentUser, toPostID:postID , date: new Date().toISOString(), comment: filteredCommentMessage}), 
+            body: JSON.stringify({ from:currentUser, toPostID:post._id , date: new Date().toISOString(), comment: filteredCommentMessage}), 
             headers: {
                 'Content-Type': 'application/json',
                 "Access-Control-Allow-Origin": "*",
@@ -81,12 +83,7 @@ const CommentForm = ({postID, clickedPostComment, setClickedPostComment}) => {
 
 
   return (
-    <div>
-      <button onClick={handleCommentClick}>
-        {showForm ? "Hide" : "Comment"}
-      </button>
-
-      <div className={`comment-form ${showForm ? "show" : ""}`}>
+    <>
         <textarea 
         value={value} 
         onChange={handleChange} 
@@ -105,8 +102,7 @@ const CommentForm = ({postID, clickedPostComment, setClickedPostComment}) => {
         >
           Send
         </button>
-      </div>
-    </div>
+    </>
   );
 };
 

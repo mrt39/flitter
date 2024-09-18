@@ -1,17 +1,52 @@
-.post-feed-container {
+.postDisplayContainer{
+
+}
+
+.usernameLinkOnPost{
+    color: inherit;
+    font-weight: inherit;
+    text-decoration: inherit;
+}
+
+.usernameLinkOnPost:hover{
+  text-decoration: underline;
+}
+
+.singularPostLinkOnPost{
+  color: inherit;
+  font-weight: inherit;
+  text-decoration: inherit;
+
+
+
+
+  display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
     display: flex;
-    justify-content: center;
-    margin-top: 20px;
-  }
-  
-  .post-feed {
-    width: 600px;
-  }
-  
-  .post-item {
-    border-bottom: 1px solid #e0e0e0;
-    padding: 10px;
-  }
+    -webkit-box-pack: start;
+    -ms-flex-pack: start;
+    -webkit-justify-content: flex-start;
+    justify-content: flex-start;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    position: relative;
+    -webkit-text-decoration: none;
+    text-decoration: none;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: left;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    padding-left: 16px;
+    padding-right: 16px;
+    -webkit-align-items: flex-start;
+    -webkit-box-align: flex-start;
+    -ms-flex-align: flex-start;
+    align-items: flex-start;
+}
   
   .post-header {
     display: flex;
@@ -54,11 +89,12 @@
 
 
   /* General post action button styling */
-.icon-button {
-    display: flex;
-    align-items: center;
-    transition: color 0.3s ease, text-shadow 0.3s ease;
-  }
+    .icon-button {
+        display: flex;
+        align-items: center;
+        transition: color 0.3s ease, text-shadow 0.3s ease;
+        z-index: 999;
+    }
   
   /* Like button hover effect */
   .like-button:hover {

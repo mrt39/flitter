@@ -226,6 +226,7 @@ useEffect(() => {
         <label>
           {location === 'navbar' ? 'Send a Post:' : "What's on your mind?"}
           <textarea 
+          required
           value={value} 
           onChange={handleChange} 
           style={{ borderColor: value.length > maxCharacters ? 'red' : '' }} 

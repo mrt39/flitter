@@ -5,7 +5,7 @@ import { UserContext} from '../App.jsx';
 import { CircularProgress, Alert } from '@mui/material';
 import "../styles/Profile.css"
 import UserCardProfile from "../components/UserCardProfile.jsx";
-import PostsDisplay from '../components/PostsDisplay.jsx';
+import AllPostsDisplay from '../components/AllPostsDisplay.jsx';
 //import for generating the url path for routing 
 
 
@@ -85,7 +85,7 @@ const Profile = () => {
       />
 
       <br /><br /> <br /><br /> <br /><br />
-      <PostsDisplay
+      <AllPostsDisplay
       fromThisUser = {selectedUser} //instead of displaying all posts, display the posts only from this user
       />
 
