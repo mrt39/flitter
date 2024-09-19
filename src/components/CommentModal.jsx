@@ -23,7 +23,7 @@ const style = {
   p: 4,
 };
 
-export default function CommentModal({post, clickedPostComment, setClickedPostComment}) {
+export default function CommentModal({post}) {
   
     //modal states
     const [open, setOpen] = useState(false);
@@ -60,9 +60,6 @@ export default function CommentModal({post, clickedPostComment, setClickedPostCo
 
                     <CommentForm
                     post={post} 
-                    clickedPostComment={clickedPostComment} 
-                    setClickedPostComment={setClickedPostComment} 
-
                     />
 
                     </Box>

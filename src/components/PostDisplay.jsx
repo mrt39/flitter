@@ -4,7 +4,7 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import dayjs from 'dayjs';
 import CommentModal from './CommentModal.jsx';
-import { UserContext, } from '../App.jsx';
+import { UserContext, AppStatesContext} from '../App.jsx';
 import { Avatar } from '@mui/material';
 import { ListItemText,  ListItemAvatar} from '@mui/material';
 import {  Typography,  IconButton,  } from '@mui/material';
@@ -23,14 +23,14 @@ const PostDisplay = ({post}) => {
   //Pass the UserContext defined in app.jsx
   const { currentUser, setSelectedUser } = useContext(UserContext); 
 
+  const {refreshPosts, setRefreshPosts} = useContext(AppStatesContext); 
 
-  //handle liking the posts
-  const [likepostID, setLikePostID] = useState("")
-  const [pressedLikePost, setPressedLikePost] = useState(false)
 
-  
-  //handle commenting on the posts
-  const [clickedPostComment, setClickedPostComment] = useState(false);
+
+  //Id for liking the posts
+  const [pressedLikePost, setPressedLikePost] = useState(false); // Like state for individual post
+
+
 
 
   const navigate = useNavigate(); 
@@ -46,9 +46,9 @@ const PostDisplay = ({post}) => {
     navigate(profilePath); 
   }
     
+
       
-  function handleLike(postID){
-    setLikePostID(postID)
+  function handleLike(){
     setPressedLikePost(true)
   }
 
@@ -58,7 +58,7 @@ const PostDisplay = ({post}) => {
       await fetch(import.meta.env.VITE_BACKEND_URL+'/likePost', {
         method: "PATCH",
         // storing date as isostring to make the reading easier later
-        body: JSON.stringify({ postID: likepostID, likedBy: currentUser}), 
+        body: JSON.stringify({ postID: post._id, likedBy: currentUser}), 
         headers: {
             'Content-Type': 'application/json',
             "Access-Control-Allow-Origin": "*",
@@ -70,6 +70,7 @@ const PostDisplay = ({post}) => {
           await result.json();
           console.log("Liked Post!")
           setPressedLikePost(false)
+          setRefreshPosts(!refreshPosts)
         } else{
           throw new Error(result)
         }
@@ -80,7 +81,7 @@ const PostDisplay = ({post}) => {
       }); 
     }
     //only trigger when comment is posted
-    if (pressedLikePost ===true){
+    if (pressedLikePost){
       likePost();
     } 
   }, [pressedLikePost]);
@@ -92,7 +93,7 @@ const PostDisplay = ({post}) => {
   return (
     < >
     <Link className="singularPostLinkOnPost" to={`/post/${post._id}`}>
-        <Link 
+        <span 
             className="usernameLinkOnPost" 
             onClick={(e) => 
                 {e.preventDefault();  //prevent routing to the post, which is the parent element within the PostDisplay.jsx
@@ -105,18 +106,24 @@ const PostDisplay = ({post}) => {
                     src={post.from[0].picture? post.from[0].picture : post.from[0].uploadedpic}
                 />
             </ListItemAvatar>
-        </Link>
+        </span>
         <ListItemText
             primary={
             <div className="post-header">
-                <Link className="usernameLinkOnPost" onClick={() => handleProfileRouting(post.from[0])}>
-                    <Typography variant="subtitle1" className="post-name">
-                    {post.from[0].name}
-                    </Typography>
-                </Link>
-                <Typography variant="body2" color="textSecondary" className="post-date">
-                {dayjs(new Date(post.date)).format('MMM D, H:mm')}
+              <span 
+                  className="usernameLinkOnPost" 
+                  onClick={(e) => 
+                      {e.preventDefault();  //prevent routing to the post, which is the parent element within the PostDisplay.jsx
+                      handleProfileRouting(post.from[0] //route to profile instead
+                  )}}
+              >
+                <Typography variant="subtitle1" className="post-name">
+                {post.from[0].name}
                 </Typography>
+              </span>
+              <Typography variant="body2" color="textSecondary" className="post-date">
+              {dayjs(new Date(post.date)).format('MMM D, H:mm')}
+              </Typography>
             </div>
             }
             secondary={
@@ -133,14 +140,13 @@ const PostDisplay = ({post}) => {
                     </Typography>
 
                     <span className="post-actions">
-                        <CommentModal post={post} 
-                            clickedPostComment={clickedPostComment} 
-                            setClickedPostComment={setClickedPostComment} 
+                        <CommentModal 
+                          post={post} 
                         />
                         <IconButton 
                             onClick={(e) => { 
                                 e.preventDefault(); //prevent routing to the post, which is the parent element within the PostDisplay.jsx
-                                handleLike(post._id);
+                                handleLike();
                             }} 
                             size="small" 
                             className="icon-button like-button"

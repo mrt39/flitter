@@ -3,21 +3,24 @@ import { useState, useEffect, useContext } from "react";
 import {  Typography,  IconButton } from '@mui/material';
 import {  ChatBubbleOutline } from '@mui/icons-material';
 
-import { UserContext } from '../App.jsx';
+import { UserContext, AppStatesContext } from '../App.jsx';
 import { clean } from 'profanity-cleaner';
 import '../styles/CommentForm.css'
 
-const CommentForm = ({post, clickedPostComment, setClickedPostComment}) => {
+const CommentForm = ({post}) => {
 
   
   //Pass the UserContext defined in app.jsx
   const { currentUser} = useContext(UserContext); 
+
+  const {refreshPosts, setRefreshPosts} = useContext(AppStatesContext); 
 
 
 
 
   const [showForm, setShowForm] = useState(false); // State to toggle form visibility
   const [value, setValue] = useState("")
+  const [clickedPostComment, setClickedPostComment] = useState(false); // State to toggle form visibility
 
   const handleCommentClick = () => {
     setShowForm(!showForm); // Toggle form visibility
@@ -62,6 +65,7 @@ const CommentForm = ({post, clickedPostComment, setClickedPostComment}) => {
               await result.json();
               console.log("Commented on the Succesfully!")
               setClickedPostComment(false)
+              setRefreshPosts(!refreshPosts)
             } else{
               throw new Error(result)
             }

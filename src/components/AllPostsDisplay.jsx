@@ -27,7 +27,7 @@ const AllPostsDisplay = ({fromThisUser}) => {
   //Pass the UserContext defined in app.jsx
   const { currentUser, setSelectedUser } = useContext(UserContext); 
 
-  const { allPosts, setAllPosts, imgSubmittedNavbar, imgSubmittedHomePage, pressedSubmitPost} = useContext(AppStatesContext); 
+  const { allPosts, setAllPosts, imgSubmittedNavbar, imgSubmittedHomePage, pressedSubmitPost, refreshPosts, setRefreshPosts} = useContext(AppStatesContext); 
 
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -36,11 +36,15 @@ const AllPostsDisplay = ({fromThisUser}) => {
   const [likepostID, setLikePostID] = useState("")
   const [pressedLikePost, setPressedLikePost] = useState(false)
 
+
+
   const [filteredMessages, setFilteredMessages] = useState([])
 
+  // Control shuffling. 
+  //Create this variable to prevent the homepage AllPostsDisplay from shuffling posts when the user likes or comments on a post.
+  const [shouldNotShuffle, setShouldNotShuffle] = useState(false); 
+
   
-  //handle commenting on the posts
-  const [clickedPostComment, setClickedPostComment] = useState(false);
 
 
   //fetch for getting data of all posts
@@ -68,7 +72,11 @@ const AllPostsDisplay = ({fromThisUser}) => {
       });
     };
     getMessages();
-    }, [pressedSubmitPost, imgSubmittedNavbar, imgSubmittedHomePage, pressedLikePost, clickedPostComment]); 
+    //should shuffle by default
+    setShouldNotShuffle(false)
+    }, [pressedSubmitPost, imgSubmittedNavbar, imgSubmittedHomePage, refreshPosts]); 
+
+
 
 
       
@@ -90,7 +98,7 @@ const AllPostsDisplay = ({fromThisUser}) => {
         
         // Sort filteredMessages array by date 
         filteredMessages.sort((a, b) => new Date(b.date) - new Date(a.date));
-      }else{ //if fromThisUser does not exist (rendering home route),  get all the messages, display randomly
+      }else{ //if fromThisUser does not exist (rendering home route), get all the messages, display randomly
         filteredMessages = allPosts
         //randomize the posts
         for (var i = filteredMessages.length - 1; i >= 0; i--) {
@@ -124,6 +132,11 @@ const AllPostsDisplay = ({fromThisUser}) => {
       setLoadingPosts(false); // End loading
     }, 1000);
   };
+
+
+
+
+
 
 
 

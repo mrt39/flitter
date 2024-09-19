@@ -115,7 +115,8 @@ const App = () => {
 
   //all posts
   const [allPosts, setAllPosts] = useState([]);
-
+  //refresh posts in the event of like, comment or sending a new post
+  const [refreshPosts, setRefreshPosts] = useState(false);
 
 
 
@@ -240,7 +241,8 @@ const App = () => {
           snackbarOpenCondition, setSnackbarOpenCondition, 
           profileUpdated, setProfileUpdated, imgSubmittedNavbar, setImgSubmittedNavbar,
           imgSubmittedHomePage, setImgSubmittedHomePage, isSubmittingPost, 
-          setisSubmittingPost, pressedSubmitPost, setPressedSubmitPost
+          setisSubmittingPost, pressedSubmitPost, setPressedSubmitPost,
+          refreshPosts, setRefreshPosts
       }}>
 
         <Snackbar
