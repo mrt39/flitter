@@ -116,6 +116,18 @@ router.get("/getallposts", async (req, res) => {
 })
 
 
+// get all posts to display 
+router.get("/getsingularpost/:postid", async (req, res) => {
+    const postID = req.params.postid // access URL variable
+  try {
+    const singularPost = await Post.findOne({_id: postID});
+    res.send(singularPost);
+  } catch (err) {
+    res.send(err);
+  }
+})
+
+
 
 // submit a new post 
 router.post("/submitPost", async (req, res) => {

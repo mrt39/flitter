@@ -27,7 +27,7 @@ const AllPostsDisplay = ({fromThisUser}) => {
   //Pass the UserContext defined in app.jsx
   const { currentUser, setSelectedUser } = useContext(UserContext); 
 
-  const { allPosts, setAllPosts, imgSubmittedNavbar, imgSubmittedHomePage, pressedSubmitPost, refreshPosts, setRefreshPosts} = useContext(AppStatesContext); 
+  const { allPosts, setAllPosts, imgSubmittedNavbar, imgSubmittedHomePage, pressedSubmitPost, refreshPosts} = useContext(AppStatesContext); 
 
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -161,7 +161,7 @@ const AllPostsDisplay = ({fromThisUser}) => {
 
   return (
     <Box className="post-feed-container">
-            <List className="post-feed">
+      <List className="post-feed">
 
       <InfiniteScroll
         dataLength={visiblePosts} // This is the length of the currently visible posts
@@ -177,43 +177,6 @@ const AllPostsDisplay = ({fromThisUser}) => {
         {filteredMessages && filteredMessages.length > 0 ? 
         //displaying 10 at a time
         (filteredMessages.slice(0, visiblePosts).map(post => (
-        
-/*         <li key={post._id}>
-            <Link onClick={() => handleProfileRouting(post.from[0])}>
-              <h3>{post.from[0].name}</h3>
-              <Avatar
-              alt={post.from[0].name}
-              src={post.from[0].picture? post.from[0].picture : post.from[0].uploadedpic}
-              sx={{ width: 80, height: 80, margin: 'auto', mt: 2 }}
-              />
-            </Link>
-
-            {post.message && (
-              <p>{post.message}</p>
-            )}
-
-            {post.image && (
-              <p>
-                <img className="msgBoxImg1" src={post.image} alt="image" />
-              </p>
-            )}
-
-            <p>{dayjs(new Date(post.date)).format('MMM D, H:mm')}</p>
-            <button onClick={() => handleLike(post._id)}>Like Post</button>
-            <p>Likes: {post.likeCount}</p>
-
-            <CommentForm post={post} 
-              clickedPostComment={clickedPostComment} 
-              setClickedPostComment={setClickedPostComment} 
-            />
-            <p>Comments: {post.commentCount}</p>
-
-            <br />
-
-            <CommentsDisplay post={post} />
-
-            <br /> <br /> <br />
-          </li> */
 
       <ListItem key={post._id} className="post-item" alignItems="flex-start">
         <PostDisplay

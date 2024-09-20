@@ -13,7 +13,6 @@ import { FavoriteBorder} from '@mui/icons-material';
 
 //imports for generating the url path for routing 
 import slugify from 'slugify';
-//infinite scroll 
 import '../styles/PostDisplay.css'
 
 

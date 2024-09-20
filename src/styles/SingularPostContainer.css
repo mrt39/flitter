@@ -1,0 +1,11 @@
+.singularPostPage{
+    width: 100%;
+}
+
+
+.singularPostContainer{
+    max-width: 600px;
+    margin: 0 auto; /* Center */
+    padding: 0 15px; /* padding for smaller screens */
+    width: 100%; /* Fluid width until max-width is hit */
+}

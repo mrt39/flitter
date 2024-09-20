@@ -54,17 +54,17 @@ const App = () => {
 
   //----------------------MUI DARK THEME---------------------------
     // state to manage the dark mode
-    const [toggleDarkMode, setToggleDarkMode] = useState(true);
+    const [darkModeOn, setDarkModeOn] = useState(true);
 
     // function to toggle the dark mode as true or false
     const toggleDarkTheme = () => {
-      setToggleDarkMode(!toggleDarkMode);
+      setDarkModeOn(!darkModeOn);
     };
   
     // applying the primary and secondary theme colors
     const darkTheme = createTheme({
       palette: {
-        mode: toggleDarkMode ? 'dark' : 'light', 
+        mode: darkModeOn ? 'dark' : 'light', 
         primary: {
           main: '#90caf9',
         },
@@ -78,7 +78,7 @@ const App = () => {
             root: {
               '&:hover': {
                 // background color change for user's profile display button at the bottom of the sidebar
-                backgroundColor: toggleDarkMode ? '#333' : '#ddd',
+                backgroundColor: darkModeOn ? '#333' : '#ddd',
               },
             },
           },
@@ -88,7 +88,7 @@ const App = () => {
             root: {
               '&:hover': {
                 // background color change for user's profile display button at the bottom of the sidebar
-                backgroundColor: toggleDarkMode ? '#1C1C1C' : '#F7F9F9',
+                backgroundColor: darkModeOn ? '#1C1C1C' : '#F7F9F9',
               },
             },
           },
@@ -231,7 +231,7 @@ const App = () => {
 
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <h2>Toggle Dark mode</h2>
-        <Switch checked={toggleDarkMode} onChange={toggleDarkTheme} />
+        <Switch checked={darkModeOn} onChange={toggleDarkTheme} />
       </div>
 
       {/* ---------------------------------- MUI DARK THEME END ---------------------------------- */}
@@ -242,7 +242,7 @@ const App = () => {
           profileUpdated, setProfileUpdated, imgSubmittedNavbar, setImgSubmittedNavbar,
           imgSubmittedHomePage, setImgSubmittedHomePage, isSubmittingPost, 
           setisSubmittingPost, pressedSubmitPost, setPressedSubmitPost,
-          refreshPosts, setRefreshPosts
+          refreshPosts, setRefreshPosts, darkModeOn
       }}>
 
         <Snackbar

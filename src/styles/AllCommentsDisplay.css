@@ -1,0 +1,23 @@
+.comment-feed-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  
+  .comment-feed {
+    max-width: 600px;
+    margin: 0 auto; /* Center */
+    padding: 0 15px; /* padding for smaller screens */
+    width: 100%; /* Fluid width until max-width is hit */
+  }
+  
+  .comment-item {
+    border-bottom: 1px solid #e0e0e0;
+    padding: 33px !important;
+    padding-bottom: 12px !important ;
+  }
+  
+  .comment-item:last-child {
+    border-bottom: none;
+  }
+  

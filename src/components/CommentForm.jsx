@@ -2,6 +2,12 @@
 import { useState, useEffect, useContext } from "react";
 import {  Typography,  IconButton } from '@mui/material';
 import {  ChatBubbleOutline } from '@mui/icons-material';
+import { TextField, Avatar, Button, Box  } from '@mui/material';
+import ImageIcon from '@mui/icons-material/Image';
+import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
+
+import data from '@emoji-mart/data'
+import Picker from '@emoji-mart/react'
 
 import { UserContext, AppStatesContext } from '../App.jsx';
 import { clean } from 'profanity-cleaner';
@@ -13,73 +19,70 @@ const CommentForm = ({post}) => {
   //Pass the UserContext defined in app.jsx
   const { currentUser} = useContext(UserContext); 
 
-  const {refreshPosts, setRefreshPosts} = useContext(AppStatesContext); 
+  const {refreshPosts, setRefreshPosts, darkModeOn} = useContext(AppStatesContext); 
 
-
-
-
-  const [showForm, setShowForm] = useState(false); // State to toggle form visibility
   const [value, setValue] = useState("")
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [clickedPostComment, setClickedPostComment] = useState(false); // State to toggle form visibility
-
-  const handleCommentClick = () => {
-    setShowForm(!showForm); // Toggle form visibility
-  };
 
   // Max character limit
   const maxCharacters = 280;
+
+  const handleEmojiSelect = (emoji) => {
+    handleChange({ target: { value: value + emoji.native } });
+    setShowEmojiPicker(false);
+  };
 
   function handleChange(event){
     setValue(event.target.value)
   }
 
   const handleSendClick = () => {
-    setShowForm(false); // Hide form after sending
     setClickedPostComment(true)
   };
 
 
 
-    //useeffect to handle submitting blog posts
-    useEffect(() => {
-        async function sendCommentonPost() {
+  //useeffect to handle submitting blog posts
+  useEffect(() => {
+    async function sendCommentonPost() {
 
-          if (value.length > maxCharacters) return; // Prevent from submitting if above 280 characters.
+      if (value.length > maxCharacters) return; // Prevent from submitting if above 280 characters.
 
-          //on submit, clean the words with the profanity cleaner package
-          //https://www.npmjs.com/package/profanity-cleaner
-          let filteredCommentMessage = await clean(value, { keepFirstAndLastChar: true, placeholder: '#' }) 
-    
-          await fetch(import.meta.env.VITE_BACKEND_URL+'/sendCommentonPost', {
-            method: "post",
-            // store date as isostring to make the reading easier later
-            body: JSON.stringify({ from:currentUser, toPostID:post._id , date: new Date().toISOString(), comment: filteredCommentMessage}), 
-            headers: {
-                'Content-Type': 'application/json',
-                "Access-Control-Allow-Origin": "*",
-            },
-            credentials:"include" //required for sending the cookie data-authorization check
-        })
-          .then(async result => {
-            if (result.ok){
-              await result.json();
-              console.log("Commented on the Succesfully!")
-              setClickedPostComment(false)
-              setRefreshPosts(!refreshPosts)
-            } else{
-              throw new Error(result)
-            }
-          })
-          .catch(error => {
-            console.error('Error:', error);
-            setClickedPostComment(false)
-          }); 
+      //on submit, clean the words with the profanity cleaner package
+      //https://www.npmjs.com/package/profanity-cleaner
+      let filteredCommentMessage = await clean(value, { keepFirstAndLastChar: true, placeholder: '#' }) 
+
+      await fetch(import.meta.env.VITE_BACKEND_URL+'/sendCommentonPost', {
+        method: "POST",
+        // store date as isostring to make the reading easier later
+        body: JSON.stringify({ from:currentUser, toPostID:post._id , date: new Date().toISOString(), comment: filteredCommentMessage}), 
+        headers: {
+            'Content-Type': 'application/json',
+            "Access-Control-Allow-Origin": "*",
+        },
+        credentials:"include" //required for sending the cookie data-authorization check
+    })
+      .then(async result => {
+        if (result.ok){
+          await result.json();
+          console.log("Commented on the Succesfully!")
+          setClickedPostComment(false)
+          setRefreshPosts(!refreshPosts)
+        } else{
+          throw new Error(result)
         }
-        //only trigger when comment is posted
-        if (clickedPostComment ===true){
-            sendCommentonPost();
-        } 
-      }, [clickedPostComment]);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        setClickedPostComment(false)
+      }); 
+    }
+    //only trigger when comment is posted
+    if (clickedPostComment ===true){
+        sendCommentonPost();
+    } 
+  }, [clickedPostComment]);
 
 
 
@@ -87,26 +90,54 @@ const CommentForm = ({post}) => {
 
 
   return (
-    <>
-        <textarea 
-        value={value} 
-        onChange={handleChange} 
-        className="commentFormTextarea" 
-        placeholder="Enter your comment..." 
-        style={{ borderColor: value.length > maxCharacters ? 'red' : '' }} 
+    <Box className="comment-form-container">
+      <Avatar
+        alt="User Avatar"
+        src={currentUser.picture || currentUser.uploadedpic}
+        sx={{ marginRight: 2 }}
+        className="comment-avatar"
+      />
+      <Box sx={{ flexGrow: 1 }}>
+        <textarea
+          className="comment-input"
+          placeholder="Post your comment."
+          value={value}
+          onChange={handleChange}
         />
-        {/* Character Counter */}
-        <div style={{ color: value.length > maxCharacters ? 'red' : '' }}>
-        {value.length}/{maxCharacters}
-        </div>
-        <button 
-        className="commentFormBtn" 
-        onClick={handleSendClick}
-        disabled={value.length > maxCharacters}         
-        >
-          Send
-        </button>
-    </>
+        <Box className="comment-actions">
+          <IconButton
+            onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+            className="emoji-button"
+          >
+            <SentimentSatisfiedAltIcon sx={{ color: '#1da1f2' }} />
+
+          </IconButton>
+          <Button
+            variant="contained"
+            onClick={handleSendClick}
+            className="reply-button"
+            sx={{
+              backgroundColor: '#1da1f2',
+              color: 'white',
+              textTransform: 'none',
+              borderRadius: '9999px',
+              padding: '4px 16px', // Adjusted padding for a more compact button
+              fontWeight: 'bold', // Make text bold
+              '&:hover': {
+                backgroundColor: '#1a91da',
+              },
+            }}
+          >
+            Reply
+          </Button>
+        </Box>
+        {showEmojiPicker && (
+          <Box className="emoji-picker">
+            <Picker data={data} onEmojiSelect={handleEmojiSelect} theme={darkModeOn? "dark": "light"} />
+          </Box>
+        )}
+      </Box>
+    </Box>
   );
 };
 

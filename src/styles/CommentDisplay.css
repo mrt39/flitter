@@ -1,0 +1,36 @@
+
+.usernameLinkOnComment{
+    color: inherit;
+    font-weight: inherit;
+    text-decoration: inherit;
+}
+
+.usernameLinkOnComment:hover{
+    text-decoration: underline;
+}
+
+
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.comment-name {
+    font-weight: bold;
+}
+
+.comment-date {
+    margin-left: 10px;
+}
+
+.comment-content {
+    margin-top: 5px;
+    display: block;
+    margin-bottom: 1em; 
+    padding: 0;
+}
+
+
+.comment-item:last-child {
+    border-bottom: none;
+}
