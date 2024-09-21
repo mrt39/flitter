@@ -1,0 +1,11 @@
+.commentModalReplyingToTextContainer{
+    display: flex;
+    align-items: center; 
+    margin-bottom: 1rem;
+    margin-top: 2rem;
+    margin-left: 31px;
+}
+
+.commentModalReplyingText{
+    font-size: 13px !important;
+}

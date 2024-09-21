@@ -83,16 +83,26 @@ const App = () => {
             },
           },
         },
-        MuiListItem: {
+        MuiCssBaseline: {
           styleOverrides: {
-            root: {
+            '.singularPostLinkOnPost': {
+              transition: 'background-color 0.3s ease',
               '&:hover': {
-                // background color change for user's profile display button at the bottom of the sidebar
                 backgroundColor: darkModeOn ? '#1C1C1C' : '#F7F9F9',
               },
             },
           },
         },
+/*         MuiListItem: {
+          styleOverrides: {
+            root: {
+              '&:hover': {
+                // background color change for post displays
+                backgroundColor: darkModeOn ? '#1C1C1C' : '#F7F9F9',
+              },
+            },
+          },
+        }, */
       },
     });
 

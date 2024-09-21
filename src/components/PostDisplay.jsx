@@ -6,7 +6,7 @@ import dayjs from 'dayjs';
 import CommentModal from './CommentModal.jsx';
 import { UserContext, AppStatesContext} from '../App.jsx';
 import { Avatar } from '@mui/material';
-import { ListItemText,  ListItemAvatar} from '@mui/material';
+import { ListItemText,  ListItemAvatar, Box} from '@mui/material';
 import {  Typography,  IconButton,  } from '@mui/material';
 import { FavoriteBorder} from '@mui/icons-material';
 
@@ -17,12 +17,12 @@ import '../styles/PostDisplay.css'
 
 
 
-const PostDisplay = ({post}) => {
+const PostDisplay = ({post, location}) => {
 
   //Pass the UserContext defined in app.jsx
   const { currentUser, setSelectedUser } = useContext(UserContext); 
 
-  const {refreshPosts, setRefreshPosts} = useContext(AppStatesContext); 
+  const {refreshPosts, setRefreshPosts, darkModeOn} = useContext(AppStatesContext); 
 
 
 
@@ -89,79 +89,82 @@ const PostDisplay = ({post}) => {
 
   
 
-  return (
-    < >
-    <Link className="singularPostLinkOnPost" to={`/post/${post._id}`}>
-        <span 
-            className="usernameLinkOnPost" 
-            onClick={(e) => 
-                {e.preventDefault();  //prevent routing to the post, which is the parent element within the PostDisplay.jsx
-                handleProfileRouting(post.from[0] //route to profile instead
-            )}}
-        >
+  const PostContent = ({ post, handleProfileRouting, handleLike }) => (
+    <span className="postContentContainer">
+        <span className="usernameLinkOnPost" onClick={(e) => {
+            e.preventDefault();
+            handleProfileRouting(post.from[0]);
+        }}>
             <ListItemAvatar>
-            <Avatar 
+                <Avatar
                     alt={post.from[0].name}
-                    src={post.from[0].picture? post.from[0].picture : post.from[0].uploadedpic}
+                    src={post.from[0].picture ? post.from[0].picture : post.from[0].uploadedpic}
                 />
             </ListItemAvatar>
         </span>
         <ListItemText
-            primary={
-            <div className="post-header">
-              <span 
-                  className="usernameLinkOnPost" 
-                  onClick={(e) => 
-                      {e.preventDefault();  //prevent routing to the post, which is the parent element within the PostDisplay.jsx
-                      handleProfileRouting(post.from[0] //route to profile instead
-                  )}}
-              >
-                <Typography variant="subtitle1" className="post-name">
-                {post.from[0].name}
-                </Typography>
-              </span>
-              <Typography variant="body2" color="textSecondary" className="post-date">
-              {dayjs(new Date(post.date)).format('MMM D, H:mm')}
-              </Typography>
-            </div>
-            }
-            secondary={
+            primary={(
+                <div className="post-header">
+                    <span
+                        className="usernameLinkOnPost"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            handleProfileRouting(post.from[0]);
+                        }}
+                    >
+                        <Typography variant="subtitle1" className="post-name">
+                            {post.from[0].name}
+                        </Typography>
+                    </span>
+                    <Typography variant="body2" color="textSecondary" className="post-date">
+                        {dayjs(new Date(post.date)).format('MMM D, H:mm')}
+                    </Typography>
+                </div>
+            )}
+            secondary={(
                 <>
                     <Typography component="span" variant="body1" className="post-content">
-                    {post.image ? 
-                    (
-                        <img className="msgBoxImg1" src={post.image} alt="image" />
-                    )
-                    : 
-                    <span>{post.message}</span>
-                    }
-                        {post.message}
+                        {post.image ? (
+                            <img className="postImg" src={post.image} alt="image" />
+                        ) : (
+                            <span>{post.message}</span>
+                        )}
                     </Typography>
-
-                    <span className="post-actions">
-                        <CommentModal 
-                          post={post} 
-                        />
-                        <IconButton 
-                            onClick={(e) => { 
-                                e.preventDefault(); //prevent routing to the post, which is the parent element within the PostDisplay.jsx
-                                handleLike();
-                            }} 
-                            size="small" 
-                            className="icon-button like-button"
-                        >
-                        <FavoriteBorder fontSize="small" />
-                        <Typography component="span" variant="body2" className="postLikeCommentCount">
-                            {post.likeCount}
-                        </Typography>
-                        </IconButton>
-                    </span>
+                    {location && location === "comment-modal" ? "" : (
+                        <span className="post-actions">
+                            <CommentModal post={post} />
+                            <IconButton
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    handleLike();
+                                }}
+                                size="small"
+                                className="icon-button like-button"
+                            >
+                                <FavoriteBorder fontSize="small" />
+                                <Typography component="span" variant="body2" className="postLikeCommentCount">
+                                    {post.likeCount}
+                                </Typography>
+                            </IconButton>
+                        </span>
+                    )}
                 </>
-            }
+            )}
         />
-        </Link>
-    </>
-  );
+    </span>
+);
+
+return (
+    <span className="postDisplayContainer">
+        {location === "singular-post-page" ? (
+            <PostContent post={post} handleProfileRouting={handleProfileRouting} handleLike={handleLike} />
+        ) : (
+            <Link className="singularPostLinkOnPost" to={`/post/${post._id}`}>
+                <PostContent post={post} handleProfileRouting={handleProfileRouting} handleLike={handleLike} />
+            </Link>
+        )}
+    </span>
+);
 };
 
 

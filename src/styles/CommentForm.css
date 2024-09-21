@@ -1,12 +1,11 @@
 .comment-form-container {
   display: flex;
-  padding: 8px 12px; /* Adjusted padding */
   border-top: 1px solid #e0e0e0; /* Slightly lighter border */
 
 
   max-width: 600px;
   margin: 0 auto; /* Center */
-  padding: 8px 35px; /* padding for smaller screens */
+  padding: 8px 31px; /* padding for smaller screens */
   width: 100%; /* Fluid width until max-width is hit */
 }
 

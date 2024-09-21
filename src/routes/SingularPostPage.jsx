@@ -10,7 +10,7 @@ import AllCommentsDisplay from '../components/AllCommentsDisplay.jsx';
 import Box from '@mui/material/Box';
 import { CircularProgress, Alert, AppBar, Toolbar, IconButton, Typography } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import '../styles/SingularPostContainer.css'
+import '../styles/SingularPostPage.css'
 
 
 
@@ -104,6 +104,7 @@ const SingularPostPage = ({}) => {
     <div className="singularPostContainer">
         <PostDisplay
           post={singularPost}
+          location={"singular-post-page"}
         />
     </div>
     <CommentForm
