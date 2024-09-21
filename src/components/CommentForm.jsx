@@ -13,7 +13,7 @@ import { UserContext, AppStatesContext } from '../App.jsx';
 import { clean } from 'profanity-cleaner';
 import '../styles/CommentForm.css'
 
-const CommentForm = ({post}) => {
+const CommentForm = ({post, handleClose}) => {
 
   
   //Pass the UserContext defined in app.jsx
@@ -37,8 +37,16 @@ const CommentForm = ({post}) => {
     setValue(event.target.value)
   }
 
-  const handleSendClick = () => {
+  const handleSendClick = (event) => {
+    if (value === ""){
+      return
+    }
+    event.preventDefault();
     setClickedPostComment(true)
+    //if form is opened through modal, close the modal
+    if (handleClose){
+      handleClose()
+    }
   };
 
 
@@ -68,6 +76,7 @@ const CommentForm = ({post}) => {
           await result.json();
           console.log("Commented on the Succesfully!")
           setClickedPostComment(false)
+          setValue("")
           setRefreshPosts(!refreshPosts)
         } else{
           throw new Error(result)
@@ -90,7 +99,7 @@ const CommentForm = ({post}) => {
 
 
   return (
-    <Box className="comment-form-container">
+    <Box component="form" /* onSubmit={handleSendClick} */ className="comment-form-container">
       <Avatar
         alt="User Avatar"
         src={currentUser.picture || currentUser.uploadedpic}
@@ -99,6 +108,7 @@ const CommentForm = ({post}) => {
       />
       <Box sx={{ flexGrow: 1 }}>
         <textarea
+          required
           className="comment-input"
           placeholder="Post your comment."
           value={value}
@@ -108,12 +118,14 @@ const CommentForm = ({post}) => {
           <IconButton
             onClick={() => setShowEmojiPicker(!showEmojiPicker)}
             className="emoji-button"
+            type="button" // Prevent this button from triggering the form submission
           >
             <SentimentSatisfiedAltIcon sx={{ color: '#1da1f2' }} />
 
           </IconButton>
           <Button
             variant="contained"
+            type="submit" // Make this button the form submission button
             onClick={handleSendClick}
             className="reply-button"
             sx={{

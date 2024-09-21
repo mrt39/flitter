@@ -1,14 +1,12 @@
 /* eslint-disable react/prop-types */
-import { useState, useEffect, useContext } from "react";
+import { useState } from "react";
 import Backdrop from '@mui/material/Backdrop';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
-import SubmitPostForm from './SubmitPostForm.jsx';
 import CommentForm from './CommentForm.jsx';
 import {  Typography,  IconButton } from '@mui/material';
 import {  ChatBubbleOutline } from '@mui/icons-material';
-import { UserContext } from '../App.jsx';
 
 
 const style = {
@@ -60,6 +58,7 @@ export default function CommentModal({post}) {
 
                     <CommentForm
                     post={post} 
+                    handleClose={handleClose}
                     />
 
                     </Box>
