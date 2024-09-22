@@ -88,7 +88,7 @@ const PostDisplay = ({post, location}) => {
 
 
   
-
+//define the component here, in order to not to repeat the code in the "location === "singular-post-page" ?" statement below
   const PostContent = ({ post, handleProfileRouting, handleLike }) => (
     <span className="postContentContainer">
         <span className="usernameLinkOnPost" onClick={(e) => {

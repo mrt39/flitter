@@ -17,20 +17,40 @@
 
 .comment-input {
   width: 100%;
-  height: 60px; /* Slightly taller to match Twitter */
+  height: 60px; 
   border: none;
   outline: none;
-  font-size: 16px; /* Larger font size */
+  font-size: 16px; 
   font-family: Helvetica Neue,Segoe UI,Helvetica,Arial,sans-serif !important;;
   color: inherit;
   background-color: transparent;
   resize: none;
   padding: 8px 0; /* Padding inside textarea */
   margin-bottom: 8px; /* Margin below textarea */
+
+
+  line-height: 1.4;
+  resize: none; /* Disable manual resizing */
+  overflow:auto; /* Automatically show the scrollbar when needed */
+  min-height: 40px; /* Initial height */
+  max-height: 1000px; /* Expand up to this height, after that scrollbar will appear */
 }
 
+
+/* Light mode scrollbars */
+.comment-input {
+  scrollbar-color: rgb(185, 202, 211) rgb(247, 249, 249); /* Thumb color, Track color */
+  scrollbar-width: thin; 
+}
+
+/* Dark mode scrollbars */
+.comment-input.dark-theme {
+  scrollbar-color: rgb(62, 65, 68) rgb(22, 24, 28);
+}
+
+
 .comment-input::placeholder {
-  color: #888; /* Placeholder color similar to Twitter */
+  color: #888; 
   font-size: 16px; /* Match the font size */
 }
 
@@ -59,3 +79,32 @@
 }
 
 
+.characterCounterAndReplyBtnContainer{
+  display: flex;
+  gap: 15px;
+}
+
+
+/* character counter */
+.character-counter {
+  width: 40px; /* Adjust size */
+  height: 40px; /* Adjust size */
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+}
+
+.counter-normal {
+  background-color: #1da1f2; /* Default color */
+}
+
+.counter-warning {
+  background-color: #f5a623; /* Yellow color */
+}
+
+.counter-error {
+  background-color: #e0245e; /* Red color */
+}

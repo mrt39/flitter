@@ -4,6 +4,7 @@ import {  Typography,  IconButton } from '@mui/material';
 import {  ChatBubbleOutline } from '@mui/icons-material';
 import { TextField, Avatar, Button, Box  } from '@mui/material';
 import ImageIcon from '@mui/icons-material/Image';
+import CircularProgress, { circularProgressClasses } from '@mui/material/CircularProgress';
 import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
 
 import data from '@emoji-mart/data'
@@ -25,17 +26,20 @@ const CommentForm = ({post, handleClose}) => {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [clickedPostComment, setClickedPostComment] = useState(false); // State to toggle form visibility
 
-  // Max character limit
+  // Character counter
   const maxCharacters = 280;
+  const [remainingCharacters, setRemainingCharacters] = useState(maxCharacters);
+  function handleChange(event) {
+    const newValue = event.target.value;
+    setValue(newValue);
+    setRemainingCharacters(maxCharacters - newValue.length);
+  }
+
 
   const handleEmojiSelect = (emoji) => {
     handleChange({ target: { value: value + emoji.native } });
     setShowEmojiPicker(false);
   };
-
-  function handleChange(event){
-    setValue(event.target.value)
-  }
 
   const handleSendClick = (event) => {
     if (value === ""){
@@ -109,7 +113,8 @@ const CommentForm = ({post, handleClose}) => {
       <Box sx={{ flexGrow: 1 }}>
         <textarea
           required
-          className="comment-input"
+          //if dark theme on, add dark-theme class
+          className={`comment-input ${darkModeOn ? 'dark-theme' : ''}`}
           placeholder="Post your comment."
           value={value}
           onChange={handleChange}
@@ -123,25 +128,74 @@ const CommentForm = ({post, handleClose}) => {
             <SentimentSatisfiedAltIcon sx={{ color: '#1da1f2' }} />
 
           </IconButton>
+          <div className="characterCounterAndReplyBtnContainer">
+            {/* character counter */}
+            <Box sx={{ position: 'relative', display: 'inline-flex', marginLeft: 2 }}>
+              <Box sx={{ position: 'relative', display: 'inline-flex', alignItems: "center"}}>
+                {/* Background Circle (Gray) */}
+                <CircularProgress
+                  variant="determinate"
+                  value={100} // Always fully rendered for the gray background
+                  size={24}
+                  thickness={4}
+                  sx={{
+                    color: darkModeOn ? '#424242' : '#d3d3d3', // Gray color for unfilled part
+                  }}
+                />
+                
+                {/* Foreground Circle (Filling with Blue/Yellow/Red) */}
+                <CircularProgress
+                  variant="determinate"
+                  value={100 - (remainingCharacters / maxCharacters) * 100} // Filling progress based on remaining characters
+                  size={24}
+                  thickness={4}
+                  sx={{
+                    position: 'absolute', // Stacking on top of the gray circle
+                    left: 0,
+                    color: remainingCharacters < 0 ? '#e0245e' : remainingCharacters <= 20 ? '#f5a623' : '#1da1f2', // Filled part: red/yellow/blue
+                    [`& .${circularProgressClasses.circle}`]: {
+                      strokeLinecap: 'round',
+                    },
+                  }}
+                />
+              </Box>
+              {remainingCharacters < 20 && (
+                <Typography
+                  variant="caption"
+                  component="div"
+                  sx={{
+                    position: 'absolute',
+                    left: '50%',
+                    top: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    color: remainingCharacters < 0 ? '#e0245e' : 'inherit',
+                  }}
+                >
+                  {remainingCharacters}
+                </Typography>
+              )}
+          </Box>
           <Button
-            variant="contained"
-            type="submit" // Make this button the form submission button
-            onClick={handleSendClick}
-            className="reply-button"
-            sx={{
-              backgroundColor: '#1da1f2',
-              color: 'white',
-              textTransform: 'none',
-              borderRadius: '9999px',
-              padding: '4px 16px', // Adjusted padding for a more compact button
-              fontWeight: 'bold', // Make text bold
-              '&:hover': {
-                backgroundColor: '#1a91da',
-              },
-            }}
-          >
-            Reply
+              variant="contained"
+              type="submit" // Make this button the form submission button
+              onClick={handleSendClick}
+              className="reply-button"
+              disabled={remainingCharacters<0}
+              sx={{
+                backgroundColor: '#1da1f2',
+                color: 'white',
+                textTransform: 'none',
+                borderRadius: '9999px',
+                padding: '4px 16px', // Adjusted padding for a more compact button
+                fontWeight: 'bold', // Make text bold
+                '&:hover': {
+                  backgroundColor: '#1a91da',
+                },
+              }}
+            >
+              Reply
           </Button>
+        </div>
         </Box>
         {showEmojiPicker && (
           <Box className="emoji-picker">
