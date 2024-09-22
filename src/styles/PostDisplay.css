@@ -123,6 +123,27 @@
         transition: color 0.3s ease, text-shadow 0.3s ease;
         z-index: 999;
     }
+
+    .icon-button {
+      transition: background-color 0.3s ease;
+    }
+    
+    .liked {
+      animation: like-animation 0.3s forwards;
+    }
+    
+    @keyframes like-animation {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.2);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+
   
   /* Like button hover effect */
   .like-button:hover {

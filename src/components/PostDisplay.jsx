@@ -8,7 +8,7 @@ import { UserContext, AppStatesContext} from '../App.jsx';
 import { Avatar } from '@mui/material';
 import { ListItemText,  ListItemAvatar, Box} from '@mui/material';
 import {  Typography,  IconButton,  } from '@mui/material';
-import { FavoriteBorder} from '@mui/icons-material';
+import { Favorite, FavoriteBorder} from '@mui/icons-material';
 
 
 //imports for generating the url path for routing 
@@ -19,71 +19,93 @@ import '../styles/PostDisplay.css'
 
 const PostDisplay = ({post, location}) => {
 
-  //Pass the UserContext defined in app.jsx
-  const { currentUser, setSelectedUser } = useContext(UserContext); 
+    //Pass the UserContext defined in app.jsx
+    const { currentUser, setSelectedUser } = useContext(UserContext); 
 
-  const {refreshPosts, setRefreshPosts, darkModeOn} = useContext(AppStatesContext); 
-
-
-
-  //Id for liking the posts
-  const [pressedLikePost, setPressedLikePost] = useState(false); // Like state for individual post
+    const {refreshPosts, setRefreshPosts, darkModeOn} = useContext(AppStatesContext); 
 
 
+    //state for storing if the currentuser has already liked this post
+    const [currentUserLikedPost, setCurrentUserLikedPost] = useState(false); // Like state for individual post
+
+    //Id for liking the posts
+    const [pressedLikePost, setPressedLikePost] = useState(false); // Like state for individual post
 
 
-  const navigate = useNavigate(); 
 
-  //handle generating the url path for routing to /profile/:slug
-  function handleProfileRouting(clickedOnUser){
-    setSelectedUser(clickedOnUser)
-    //slugify the username, e.g:"john-doe"
-    const slug = slugify(clickedOnUser.name, { lower: true }); 
-    //combine slug with usershortID to create the unique profile path for the selected user to route to
-    const profilePath = `/profile/${slug}-${clickedOnUser.shortId}`
-    // Route to the profile path
-    navigate(profilePath); 
-  }
+
+    const navigate = useNavigate(); 
+
+    //handle generating the url path for routing to /profile/:slug
+    function handleProfileRouting(clickedOnUser){
+        setSelectedUser(clickedOnUser)
+        //slugify the username, e.g:"john-doe"
+        const slug = slugify(clickedOnUser.name, { lower: true }); 
+        //combine slug with usershortID to create the unique profile path for the selected user to route to
+        const profilePath = `/profile/${slug}-${clickedOnUser.shortId}`
+        // Route to the profile path
+        navigate(profilePath); 
+    }
     
 
       
-  function handleLike(){
-    setPressedLikePost(true)
-  }
-
-   //useffect for liking posts
-   useEffect(() => {
-    async function likePost() {
-      await fetch(import.meta.env.VITE_BACKEND_URL+'/likePost', {
-        method: "PATCH",
-        // storing date as isostring to make the reading easier later
-        body: JSON.stringify({ postID: post._id, likedBy: currentUser}), 
-        headers: {
-            'Content-Type': 'application/json',
-            "Access-Control-Allow-Origin": "*",
-        },
-        credentials:"include" //required for sending the cookie data-authorization check
-    })
-      .then(async result => {
-        if (result.ok){
-          await result.json();
-          console.log("Liked Post!")
-          setPressedLikePost(false)
-          setRefreshPosts(!refreshPosts)
-        } else{
-          throw new Error(result)
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        setPressedLikePost(false)
-      }); 
+    function handleLike(){
+        setPressedLikePost(true)
     }
-    //only trigger when comment is posted
-    if (pressedLikePost){
-      likePost();
-    } 
-  }, [pressedLikePost]);
+
+    //useffect for liking posts
+    useEffect(() => {
+        async function likePost() {
+        //find if post is already liked by the user, if user is already in likedby array, in order to properly display (filled or empty+like animation) the heart icon in ui
+        //find via converting id objects to string because querying with id's doesn't work
+        const likedPostIndex = post.likedby.findIndex(u => u._id.toString() === currentUser._id.toString());
+
+        await fetch(import.meta.env.VITE_BACKEND_URL+'/likePost', {
+            method: "PATCH",
+            // storing date as isostring to make the reading easier later
+            body: JSON.stringify({ postID: post._id, likedBy: currentUser}), 
+            headers: {
+                'Content-Type': 'application/json',
+                "Access-Control-Allow-Origin": "*",
+            },
+            credentials:"include" //required for sending the cookie data-authorization check
+        })
+        .then(async result => {
+            if (result.ok){
+            await result.json();
+            setCurrentUserLikedPost(likedPostIndex === -1); // Update state based on whether the user has liked this post or not
+            console.log("Liked Post!")
+            setPressedLikePost(false)
+            setRefreshPosts(!refreshPosts)
+            } else{
+            throw new Error(result)
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            setPressedLikePost(false)
+        }); 
+        }
+        //only trigger when comment is posted
+        if (pressedLikePost){
+        likePost();
+        } 
+    }, [pressedLikePost]);
+
+
+
+/*     //useffect to check if the currentuser has already liked this post
+    useEffect(() => {
+        //find if post is already liked by the user, if user is already in likedby array
+        //find via converting id objects to string because querying with id's doesn't work
+        const likingUserIndex = post.likedby.findIndex(u=>u._id.toString()===currentUser._id.toString())
+
+        if(likingUserIndex>-1) {//post is already liked by the user
+            setCurrentUserLikedPost(false)
+        } else{
+            setCurrentUserLikedPost(true)
+        }
+    }, [pressedLikePost]); */
 
 
 
@@ -139,9 +161,20 @@ const PostDisplay = ({post, location}) => {
                                     handleLike();
                                 }}
                                 size="small"
-                                className="icon-button like-button"
+                                className={`icon-button like-button ${currentUserLikedPost ? 'liked' : ''}`}
+
                             >
-                                <FavoriteBorder fontSize="small" />
+                                {post.likedby.findIndex(u=>u._id.toString()===currentUser._id.toString())>-1 ?  //find if post is already liked by the user, if user is already in likedby array
+                                (
+                                <Favorite fontSize="small" 
+                                sx={{ 
+                                    color: 'rgb(249, 24, 128)', 
+                                    transition: 'transform 0.3s',  
+                                }} />
+                                ) : ( //if it isn't liked, display an empty heart icon
+                                <FavoriteBorder fontSize="small" sx={{ color: 'defaultColor' }} />
+                                )}
+
                                 <Typography component="span" variant="body2" className="postLikeCommentCount">
                                     {post.likeCount}
                                 </Typography>
