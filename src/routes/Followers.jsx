@@ -100,7 +100,7 @@ if (loading) {
       </Typography>
       {currentPath==="following"
         ? 
-            followerData.following.length>0?
+        followerData&&followerData.following.length>0?
                 followerData.following.map((follower) => (
                     <ListItem key={follower._id}>
                     <ListItemAvatar>
@@ -119,7 +119,7 @@ if (loading) {
                 
             : <p>This user isn't following anyone.</p>
         :
-            followerData.followedby.length>0?
+        followerData&&followerData.followedby.length>0?
                 followerData.followedby.map((follower) => (
                     <ListItem key={follower._id}>
                     <ListItemAvatar>

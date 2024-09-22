@@ -93,16 +93,6 @@ const App = () => {
             },
           },
         },
-/*         MuiListItem: {
-          styleOverrides: {
-            root: {
-              '&:hover': {
-                // background color change for post displays
-                backgroundColor: darkModeOn ? '#1C1C1C' : '#F7F9F9',
-              },
-            },
-          },
-        }, */
       },
     });
 
