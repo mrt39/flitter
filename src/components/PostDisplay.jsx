@@ -4,11 +4,13 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import dayjs from 'dayjs';
 import CommentModal from './CommentModal.jsx';
+import HoverUserCard from './HoverUserCard.jsx';
 import { UserContext, AppStatesContext} from '../App.jsx';
 import { Avatar } from '@mui/material';
 import { ListItemText,  ListItemAvatar, Box} from '@mui/material';
 import {  Typography,  IconButton,  } from '@mui/material';
 import { Favorite, FavoriteBorder} from '@mui/icons-material';
+import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 
 
 //imports for generating the url path for routing 
@@ -93,22 +95,6 @@ const PostDisplay = ({post, location}) => {
     }, [pressedLikePost]);
 
 
-
-/*     //useffect to check if the currentuser has already liked this post
-    useEffect(() => {
-        //find if post is already liked by the user, if user is already in likedby array
-        //find via converting id objects to string because querying with id's doesn't work
-        const likingUserIndex = post.likedby.findIndex(u=>u._id.toString()===currentUser._id.toString())
-
-        if(likingUserIndex>-1) {//post is already liked by the user
-            setCurrentUserLikedPost(false)
-        } else{
-            setCurrentUserLikedPost(true)
-        }
-    }, [pressedLikePost]); */
-
-
-
   
 //define the component here, in order to not to repeat the code in the "location === "singular-post-page" ?" statement below
   const PostContent = ({ post, handleProfileRouting, handleLike }) => (
@@ -127,6 +113,14 @@ const PostDisplay = ({post, location}) => {
         <ListItemText
             primary={(
                 <div className="post-header">
+                    {/* MUI tooltip that will display a user card on hover */}
+                    <Tooltip 
+                        title={
+                            <HoverUserCard
+                                user={post.from[0]} 
+                            />
+                        }        
+                    > 
                     <span
                         className="usernameLinkOnPost"
                         onClick={(e) => {
@@ -134,13 +128,17 @@ const PostDisplay = ({post, location}) => {
                             handleProfileRouting(post.from[0]);
                         }}
                     >
+
+
                         <Typography variant="subtitle1" className="post-name">
                             {post.from[0].name}
                         </Typography>
+
                     </span>
                     <Typography variant="body2" color="textSecondary" className="post-date">
                         {dayjs(new Date(post.date)).format('MMM D, H:mm')}
                     </Typography>
+                    </Tooltip>
                 </div>
             )}
             secondary={(
