@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useLocation} from "react-router-dom";
 import { useState, useContext, useEffect } from 'react'
-import { UserContext} from '../App.jsx';
+import { UserContext, AppStatesContext} from '../App.jsx';
 import { CircularProgress, Alert } from '@mui/material';
 import "../styles/Profile.css"
 import UserCardProfile from "../components/UserCardProfile.jsx";
@@ -15,11 +15,9 @@ const Profile = () => {
 
   // Pass the UserContext defined in app.js
   const {selectedUser, setSelectedUser } = useContext(UserContext); 
+  const {pressedFollow, setPressedFollow} = useContext(AppStatesContext); 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [pressedFollow, setPressedFollow] = useState(false)
-
-
 
 
   //get the last 8 characters of current url (which is the assigned shortid for the selectedUser)
@@ -30,7 +28,7 @@ const Profile = () => {
   const last8Chars = currentPath.slice(-8);
 
 
-  //need to make a profile call because the selectedUser state will empty once the user refreshes the page
+  //make a profile call because the selectedUser state will empty once the user refreshes the page
   //fetch for getting data of the user, based on their shortId
   useEffect(() => {
     const getUserData = () => {

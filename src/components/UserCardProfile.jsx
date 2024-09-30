@@ -37,6 +37,7 @@ const UserCardProfile = ({pressedFollow, setPressedFollow}) => {
     setLoading(true)
     setPressedFollow(true);
   }
+
   
 
   //useEffect for handling follow

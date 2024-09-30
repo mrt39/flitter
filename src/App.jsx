@@ -118,6 +118,10 @@ const App = () => {
   //refresh posts in the event of like, comment or sending a new post
   const [refreshPosts, setRefreshPosts] = useState(false);
 
+  //toggle for pressing the follow button
+  const [pressedFollow, setPressedFollow] = useState(false)
+
+
 
 
   //user presses "send" after selecting the image
@@ -242,7 +246,7 @@ const App = () => {
           profileUpdated, setProfileUpdated, imgSubmittedNavbar, setImgSubmittedNavbar,
           imgSubmittedHomePage, setImgSubmittedHomePage, isSubmittingPost, 
           setisSubmittingPost, pressedSubmitPost, setPressedSubmitPost,
-          refreshPosts, setRefreshPosts, darkModeOn
+          refreshPosts, setRefreshPosts, darkModeOn, pressedFollow, setPressedFollow
       }}>
 
         <Snackbar

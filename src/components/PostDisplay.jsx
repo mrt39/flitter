@@ -34,8 +34,6 @@ const PostDisplay = ({post, location}) => {
     const [pressedLikePost, setPressedLikePost] = useState(false); // Like state for individual post
 
 
-
-
     const navigate = useNavigate(); 
 
     //handle generating the url path for routing to /profile/:slug
@@ -116,17 +114,19 @@ const PostDisplay = ({post, location}) => {
                     {/* MUI tooltip that will display a user card on hover */}
                     <Tooltip 
                         title={
-                            <HoverUserCard
-                                user={post.from[0]} 
-                            />
+                            <Box sx={{ minWidth: 280 }}> 
+                                <HoverUserCard user={post.from[0]} />
+                            </Box>
                         }
-                        leaveDelay={5000000}
+                        enterDelay={200}
+                        leaveDelay={200}
+                        placement="bottom"
                         PopperProps={{
                             modifiers: [
-                              {
-                                name: 'arrow',
-                                enabled: false, 
-                              },
+                                {
+                                    name: 'arrow',
+                                    enabled: false, 
+                                },
                             ],
                             sx: {
                               '.MuiTooltip-tooltip': {

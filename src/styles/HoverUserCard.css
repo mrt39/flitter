@@ -1,0 +1,16 @@
+.hoverUserCardContent:last-child{
+    margin-bottom: 0px !important;
+}
+
+.hoverUserCardFollowersLink{
+    color: inherit;
+    text-decoration: none;
+    margin-top: 20px;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.hoverUserCardFollowersLink:hover{
+    text-decoration: underline;
+
+}
