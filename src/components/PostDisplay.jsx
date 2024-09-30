@@ -119,26 +119,40 @@ const PostDisplay = ({post, location}) => {
                             <HoverUserCard
                                 user={post.from[0]} 
                             />
-                        }        
+                        }
+                        leaveDelay={5000000}
+                        PopperProps={{
+                            modifiers: [
+                              {
+                                name: 'arrow',
+                                enabled: false, 
+                              },
+                            ],
+                            sx: {
+                              '.MuiTooltip-tooltip': {
+                                backgroundColor: 'transparent',
+                                boxShadow: 'none', 
+                                padding: 0, 
+                              },
+                            },
+                          }}        
                     > 
-                    <span
-                        className="usernameLinkOnPost"
-                        onClick={(e) => {
-                            e.preventDefault();
-                            handleProfileRouting(post.from[0]);
-                        }}
-                    >
+                        <span
+                            className="usernameLinkOnPost"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                handleProfileRouting(post.from[0]);
+                            }}
+                        >
+                            <Typography variant="subtitle1" className="post-name">
+                                {post.from[0].name}
+                            </Typography>
 
-
-                        <Typography variant="subtitle1" className="post-name">
-                            {post.from[0].name}
-                        </Typography>
-
-                    </span>
+                        </span>
+                    </Tooltip>
                     <Typography variant="body2" color="textSecondary" className="post-date">
                         {dayjs(new Date(post.date)).format('MMM D, H:mm')}
                     </Typography>
-                    </Tooltip>
                 </div>
             )}
             secondary={(

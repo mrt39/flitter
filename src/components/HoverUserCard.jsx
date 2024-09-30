@@ -1,50 +1,50 @@
 /* eslint-disable react/prop-types */
-import React from 'react';
+import { useContext, useState, useEffect } from "react";
 import { Card, CardContent, Avatar, Typography, Box, Button } from '@mui/material';
-import { Verified } from '@mui/icons-material';
+import { AppStatesContext} from '../App.jsx';
+import '../styles/HoverUserCard.css';
 
-const HoverUserCard = ({user}) => {
+const HoverUserCard = ({ user }) => {
+
+  const {darkModeOn} = useContext(AppStatesContext); 
+
+
   return (
-    <Card sx={{ width: 300, borderRadius: 3, boxShadow: 3 }}>
-      <Box display="flex" flexDirection="row" alignItems="center" p={2}>
-        <Avatar
-          alt={user.name}
-          src={user.avatar}
-          sx={{ width: 56, height: 56, mr: 2 }}
-        />
-        <Box>
-          <Typography variant="h6" fontWeight="bold" noWrap>
+    <Card
+      onClick={(e) => {
+        e.preventDefault();
+      }}
+      sx={{
+        width: 300,
+        borderRadius: 3,
+        boxShadow: darkModeOn 
+        ? '0px 0px 8px rgba(255, 255, 255, 0.4)'  // White shadow for dark mode
+        : '0px 0px 15px rgba(0, 0, 0, 0.15)',      // Gray shadow for light mode,
+        padding: 2,
+      }}
+      className="userCardonHover"
+    >
+      {/* Flex container for avatar and follow button */}
+      <Box display="flex" justifyContent="space-between" alignItems="flex-start" sx={{ mb: 2 }}>
+        <div className="hoverUserCardAvatarandNameContainer">
+          <Avatar
+            alt={user.name}
+            src={user.picture ? user.picture : user.uploadedpic}
+            sx={{ width: 56, height: 56, mr: 2 }}
+          />
+          <Typography variant="h6" fontWeight="bold">
             {user.name}
-            {user.isVerified && (
-              <Verified sx={{ color: '#1DA1F2', fontSize: 18, ml: 0.5 }} />
-            )}
           </Typography>
-          <Typography variant="body2" color="textSecondary" noWrap>
-            @{user.username}
-          </Typography>
-        </Box>
-      </Box>
+        </div>
 
-      <CardContent sx={{ pt: 0 }}>
-        <Typography variant="body2" color="text.primary" paragraph>
-          {user.bio}
-        </Typography>
-
-        <Box display="flex" justifyContent="space-between">
-          <Typography variant="body2" fontWeight="bold">
-            {user.following} <span style={{ color: '#657786' }}>Following</span>
-          </Typography>
-          <Typography variant="body2" fontWeight="bold">
-            {user.followers} <span style={{ color: '#657786' }}>Followers</span>
-          </Typography>
-        </Box>
-
+        {/* Follow Button */}
         <Button
           variant="outlined"
           size="small"
           sx={{
-            mt: 1.5,
+            borderRadius: '9999px', // Rounded edges like Twitter button
             textTransform: 'none',
+            padding: '6px 16px',
             borderColor: '#1DA1F2',
             color: '#1DA1F2',
             '&:hover': {
@@ -55,12 +55,27 @@ const HoverUserCard = ({user}) => {
         >
           Follow
         </Button>
+      </Box>
+
+      {/* User's name and bio */}
+      <CardContent sx={{ p: 0 }}>
+        {/* User Bio */}
+        <Typography variant="body2" color="text.primary" paragraph>
+          {user.bio}
+        </Typography>
+
+        {/* Follower and Following Counts */}
+        <Box display="flex" justifyContent="flex-start" gap="50px">
+          <Typography variant="body2" fontWeight="bold">
+            {user.followingCount} <span style={{ color: '#657786' }}>Following</span>
+          </Typography>
+          <Typography variant="body2" fontWeight="bold">
+            {user.followerCount} <span style={{ color: '#657786' }}>Followers</span>
+          </Typography>
+        </Box>
       </CardContent>
     </Card>
   );
 };
 
-
-
 export default HoverUserCard;
-
