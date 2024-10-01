@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 import SidebarRight from "./components/SidebarRight.jsx"
-import ThemeButton from "./components/ThemeButton.jsx"
+import SidebarLeft from "./components/SidebarLeft.jsx"
 import Snackbar from "./components/Snackbar.jsx"
 import './styles/App.css'
 import { useEffect, useState, createContext} from "react";
@@ -16,7 +16,6 @@ import WbSunnyIcon from '@mui/icons-material/WbSunny'; // Sun icon
 //MUI DARK THEME
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
-import {Switch} from "@mui/material"
 //----------------------MUI DARK THEME END---------------------------
 
 
@@ -226,10 +225,10 @@ const App = () => {
       {/* ---------------------------------- MUI DARK THEME START ---------------------------------- */}
       <ThemeProvider theme={darkTheme}>
       <CssBaseline />
-
       <IconButton onClick={toggleDarkTheme}>
-        {darkModeOn ? <WbSunnyIcon /> : <Brightness2Icon />} {/* Toggle icons */}
+        {darkModeOn ? <WbSunnyIcon /> : <Brightness2Icon />} 
       </IconButton>
+
 
       {/* ---------------------------------- MUI DARK THEME END ---------------------------------- */}
 
@@ -253,13 +252,23 @@ const App = () => {
 
 
         {currentUser ? 
-            <SidebarRight
+
+            <SidebarLeft
             user={currentUser} 
             setCurrentUser={setCurrentUser}
-          />
+            />
         : <Navigate to="/login" /> } 
 
           <Outlet /> 
+
+          {currentUser ? 
+
+          <SidebarRight
+          user={currentUser} 
+          setCurrentUser={setCurrentUser}
+          />
+          : <Navigate to="/login" /> } 
+
         </UserContext.Provider>
 
       </AppStatesContext.Provider>

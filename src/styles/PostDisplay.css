@@ -77,6 +77,11 @@
   -ms-flex-align: flex-start;
   align-items: flex-start;
 }
+
+.postContentContainer{
+  border-bottom-color: rgb(47, 51, 54);
+  border-bottom-width: 1px;
+}
   
   .post-header {
     display: flex;

@@ -27,7 +27,7 @@ const AllPostsDisplay = ({fromThisUser}) => {
   //Pass the UserContext defined in app.jsx
   const { currentUser, setSelectedUser } = useContext(UserContext); 
 
-  const { allPosts, setAllPosts, imgSubmittedNavbar, imgSubmittedHomePage, pressedSubmitPost, refreshPosts} = useContext(AppStatesContext); 
+  const { allPosts, setAllPosts, imgSubmittedNavbar, imgSubmittedHomePage, pressedSubmitPost, refreshPosts, darkModeOn} = useContext(AppStatesContext); 
 
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -178,7 +178,7 @@ const AllPostsDisplay = ({fromThisUser}) => {
         //displaying 10 at a time
         (filteredMessages.slice(0, visiblePosts).map(post => (
 
-      <ListItem key={post._id} className="post-item" alignItems="flex-start">
+      <ListItem key={post._id} className={darkModeOn?"post-item-dark":"post-item"} alignItems="flex-start">
         <PostDisplay
           post={post}
         />

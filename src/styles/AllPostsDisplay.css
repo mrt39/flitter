@@ -11,8 +11,13 @@
   width: 100%; /* Fluid width until max-width is hit */
 }
 
-.post-item {
-  border-bottom: 1px solid #e0e0e0;
+.post-item-dark {
+  border-bottom: 1px solid rgb(47, 51, 54);
+  padding: 0 !important;
+}
+
+.post-item{
+  border-bottom: 1px solid rgb(239, 243, 244);
   padding: 0 !important;
 }
 
