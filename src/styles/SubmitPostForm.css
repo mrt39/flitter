@@ -1,12 +1,16 @@
+.submitPostFormIconContainer{
+    display: flex;
+}
+
 .submitPostFormSeperator-darkMode{
-        background-color: rgb(47, 51, 54);
-        height: 1px;
-        border: 0 solid black;
-        margin: 0px;
-        min-height: 0px;
-        min-width: 0px;
-        max-width: 600px;
-        z-index: 0;
+    background-color: rgb(47, 51, 54);
+    height: 1px;
+    border: 0 solid black;
+    margin: 0px;
+    min-height: 0px;
+    min-width: 0px;
+    max-width: 600px;
+    z-index: 0;
 }
 
 
@@ -20,3 +24,4 @@
     max-width: 600px;
     z-index: 0;
 }
+

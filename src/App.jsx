@@ -7,7 +7,9 @@ import { useEffect, useState, createContext} from "react";
 import { Navigate, } from "react-router-dom";
 import Box from '@mui/material/Box';
 import { CircularProgress, Alert } from '@mui/material';
-
+import IconButton from '@mui/material/IconButton';
+import Brightness2Icon from '@mui/icons-material/Brightness2'; // Crescent icon
+import WbSunnyIcon from '@mui/icons-material/WbSunny'; // Sun icon
 
 
 //----------------------MUI DARK THEME---------------------------
@@ -225,10 +227,9 @@ const App = () => {
       <ThemeProvider theme={darkTheme}>
       <CssBaseline />
 
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <h2>Toggle Dark mode</h2>
-        <Switch checked={darkModeOn} onChange={toggleDarkTheme} />
-      </div>
+      <IconButton onClick={toggleDarkTheme}>
+        {darkModeOn ? <WbSunnyIcon /> : <Brightness2Icon />} {/* Toggle icons */}
+      </IconButton>
 
       {/* ---------------------------------- MUI DARK THEME END ---------------------------------- */}
 
@@ -241,6 +242,7 @@ const App = () => {
           refreshPosts, setRefreshPosts, darkModeOn, pressedFollow, setPressedFollow,
           toggleDarkTheme
       }}>
+        <UserContext.Provider value={{ currentUser, setCurrentUser, selectedUser, setSelectedUser}}>
 
         <Snackbar
           snackbarOpenCondition={snackbarOpenCondition}
@@ -257,7 +259,6 @@ const App = () => {
           />
         : <Navigate to="/login" /> } 
 
-        <UserContext.Provider value={{ currentUser, setCurrentUser, selectedUser, setSelectedUser}}>
           <Outlet /> 
         </UserContext.Provider>
 
