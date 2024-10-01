@@ -3,14 +3,25 @@ import { useState, useEffect, useRef, useContext } from 'react';
 import { AppStatesContext } from '../App.jsx';
 import FileInputPopover from "../components/Popover.jsx";
 import { Alert } from '@mui/material';
+import { TextField, Avatar, Button, Box, Typography,  IconButton } from '@mui/material';
+import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
+import PhotoCamera from '@mui/icons-material/PhotoCamera'; 
+import CircularProgress, { circularProgressClasses } from '@mui/material/CircularProgress';
+import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
 import { clean } from 'profanity-cleaner';
+
+import '../styles/SubmitPostForm.css'
+
+
+import data from '@emoji-mart/data'
+import Picker from '@emoji-mart/react'
 
 export default function SubmitPostForm({ currentUser, location, handleClose }) {
   const { 
     setSnackbarOpenCondition, setSnackbarOpen, isSubmittingPost, 
     setisSubmittingPost , pressedSubmitPost, setPressedSubmitPost, 
     imgSubmittedNavbar, setImgSubmittedNavbar, imgSubmittedHomePage, 
-    setImgSubmittedHomePage,
+    setImgSubmittedHomePage, darkModeOn
   } = useContext(AppStatesContext);
 
   //value in the form for submitting posts
@@ -18,20 +29,40 @@ export default function SubmitPostForm({ currentUser, location, handleClose }) {
   const [error, setError] = useState(null);
 
 
-  // Max character limit
-  const maxCharacters = 280;
-  
+    // Max character limit
+    const maxCharacters = 280;
+    // Character counter
+    const [remainingCharacters, setRemainingCharacters] = useState(maxCharacters);
 
   // Handle text change in form
   function handleChange(event) {
-    setValue(event.target.value);
+    const newValue = event.target.value;
+    setValue(newValue);
+    setRemainingCharacters(maxCharacters - newValue.length);
   }
+
+  //emoji select
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+
+  const handleEmojiSelect = (emoji) => {
+    handleChange({ target: { value: value + emoji.native } });
+    setShowEmojiPicker(false);
+  };
+
 
   //not using useEffect for the sending posts fetch api in order to not make both homepage form and navbar form trigger at the same time
   // Submit the post
   async function handleSubmit(event) {
     event.preventDefault();
-    if (isSubmittingPost || value.length > maxCharacters) return; // Prevent multiple submissions, also prevents from submitting if above 280 characters.
+
+    //if empty, return
+    if (value === ""){
+      return
+    }
+    
+    if (isSubmittingPost || value.length > maxCharacters) {
+      return
+    }; // Prevent multiple submissions, also prevents from submitting if above 280 characters.
 
     setisSubmittingPost(true); // Mark submission as in progress
 
@@ -222,34 +253,147 @@ useEffect(() => {
   return (
     <>
     {/* <button onClick={populate}>POPULATE</button> */}
-      <form onSubmit={handleSubmit}>
-        <label>
-          {location === 'navbar' ? 'Send a Post:' : "What's on your mind?"}
-          <textarea 
+
+
+
+
+    <Box component="form" /* onSubmit={handleSendClick} */ className="comment-form-container">
+      <Avatar
+        alt="User Avatar"
+        src={currentUser.picture || currentUser.uploadedpic}
+        sx={{ marginRight: 2 }}
+        className="comment-avatar"
+      />
+      <Box sx={{ flexGrow: 1 }}>
+        <textarea
           required
-          value={value} 
-          onChange={handleChange} 
-          style={{ borderColor: value.length > maxCharacters ? 'red' : '' }} 
-          />
-        </label>
-        {/* Character Counter */}
-          <div style={{ color: value.length > maxCharacters ? 'red' : '' }}>
-        {value.length}/{maxCharacters}
-        </div>
-        {/* Disable submit if already submitting or character count exceeds the limit */}
-        <input 
-        type="submit" 
-        value="Submit" 
-        disabled={isSubmittingPost || value.length > maxCharacters}         
+          //if dark theme on, add dark-theme class
+          className={`comment-input ${darkModeOn ? 'dark-theme' : ''}`}
+          placeholder={location === "homepage"?"What's on your mind?": "Send a Post."}
+          value={value}
+          onChange={handleChange}
         />
+        <Box className="comment-actions">
+          <div className='submitPostFormIconContainer'>
+              <IconButton 
+              id={location === 'navbar' ? 'sendAnImgButtonNavbar' : "sendAnImgButtonHomepage"} 
+              onClick={handleAttachmentClick} 
+              disabled={isSubmittingPost}
+              aria-label="upload picture"
+              component="label"
+            >
+              <ImageOutlinedIcon sx={{ color: '#1da1f2' }} /> 
+            </IconButton>
+            <IconButton
+              onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+              className="emoji-button"
+              type="button" // Prevent this button from triggering the form submission
+            >
+              <SentimentSatisfiedAltIcon sx={{ color: '#1da1f2' }} />
 
-      </form>
+            </IconButton>
+          </div>
 
-      <button 
-      id={location === 'navbar' ? 'sendAnImgButtonNavbar' : "sendAnImgButtonHomepage"} onClick={handleAttachmentClick} disabled={isSubmittingPost}>
-        Send An Image!
-      </button>
-      <input ref={fileInputRef} type='file' accept="image/*" className='fileInputMessageBox' onChange={handleFileInputChange} disabled={isSubmittingPost} />
+          <div className="characterCounterAndReplyBtnContainer">
+            {/* character counter */}
+            <Box sx={{ position: 'relative', display: 'inline-flex', marginLeft: 2 }}>
+              <Box sx={{ position: 'relative', display: 'inline-flex', alignItems: "center"}}>
+                {/* Background Circle (Gray) */}
+                <CircularProgress
+                  variant="determinate"
+                  value={100} // Always fully rendered for the gray background
+                  size={24}
+                  thickness={4}
+                  sx={{
+                    color: darkModeOn ? '#424242' : '#d3d3d3', // Gray color for unfilled part
+                  }}
+                />
+                
+                {/* Foreground Circle (Filling with Blue/Yellow/Red) */}
+                <CircularProgress
+                  variant="determinate"
+                  value={100 - (remainingCharacters / maxCharacters) * 100} // Filling progress based on remaining characters
+                  size={24}
+                  thickness={4}
+                  sx={{
+                    position: 'absolute', // Stacking on top of the gray circle
+                    left: 0,
+                    color: remainingCharacters < 0 ? '#e0245e' : remainingCharacters <= 20 ? '#f5a623' : '#1da1f2', // Filled part: red/yellow/blue
+                    [`& .${circularProgressClasses.circle}`]: {
+                      strokeLinecap: 'round',
+                    },
+                  }}
+                />
+              </Box>
+              {remainingCharacters < 20 && (
+                <Typography
+                  variant="caption"
+                  component="div"
+                  sx={{
+                    position: 'absolute',
+                    left: '50%',
+                    top: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    color: remainingCharacters < 0 ? '#e0245e' : 'inherit',
+                  }}
+                >
+                  {remainingCharacters}
+                </Typography>
+              )}
+          </Box>
+          <Button
+              variant="contained"
+              type="submit" // Make this button the form submission button
+              onClick={handleSubmit}
+              className="reply-button"
+              disabled={remainingCharacters<0}
+              sx={{
+                backgroundColor: '#1da1f2',
+                color: 'white',
+                textTransform: 'none',
+                borderRadius: '9999px',
+                padding: '4px 16px', // Adjusted padding for a more compact button
+                fontWeight: 'bold', // Make text bold
+                '&:hover': {
+                  backgroundColor: '#1a91da',
+                },
+              }}
+            >
+              Post
+          </Button>
+        </div>
+        </Box>
+        {showEmojiPicker && (
+          <Box className="emoji-picker">
+            <Picker data={data} onEmojiSelect={handleEmojiSelect} theme={darkModeOn? "dark": "light"} />
+          </Box>
+        )}
+      </Box>
+    </Box>
+
+
+
+
+
+{/*       <IconButton 
+        id={location === 'navbar' ? 'sendAnImgButtonNavbar' : "sendAnImgButtonHomepage"} 
+        onClick={handleAttachmentClick} 
+        disabled={isSubmittingPost}
+        aria-label="upload picture"
+        component="label"
+      >
+        <ImageIcon /> 
+      </IconButton> */}
+      {/* hidden file input */}
+      <input 
+        ref={fileInputRef} 
+        type='file' 
+        accept="image/*" 
+        className='fileInputMessageBox' 
+        onChange={handleFileInputChange} 
+        disabled={isSubmittingPost}
+        style={{ display: 'none' }} // Hide the input
+      />
       
       <FileInputPopover
         popOveranchorEl={popOveranchorEl}
@@ -263,6 +407,7 @@ useEffect(() => {
 
 
       {error && <Alert severity="error">{error.message}</Alert>}
+      <div className={darkModeOn? 'submitPostFormSeperator-darkMode': "submitPostFormSeperator"}></div>
     </>
   );
 }

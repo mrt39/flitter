@@ -55,7 +55,7 @@ const CommentForm = ({post, handleClose}) => {
 
 
 
-  //useeffect to handle submitting blog posts
+  //useeffect to handle submitting comments on posts
   useEffect(() => {
     async function sendCommentonPost() {
 

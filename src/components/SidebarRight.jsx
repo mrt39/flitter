@@ -1,9 +1,9 @@
 /* eslint-disable react/prop-types */
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import '../styles/Sidebar.css';
+import '../styles/SidebarRight.css';
 import SidebarLink from './SidebarLink.jsx';
-import SubmitPostModal from '../components/SubmitPostModal.jsx';
+import SubmitPostModal from './SubmitPostModal.jsx';
 
 // MUI Imports
 import { 
@@ -35,7 +35,7 @@ import slugify from 'slugify'; // for generating the URL path for routing
 
 
 
-const Sidebar = ({user, setCurrentUser}) => {
+const SidebarRight = ({user, setCurrentUser}) => {
 
 
     const [anchorEl, setAnchorEl] = useState(document.querySelector('#sideBarAccountMenu'));
@@ -188,5 +188,5 @@ const Sidebar = ({user, setCurrentUser}) => {
   );
 }
 
-export default Sidebar
+export default SidebarRight
 

@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import Sidebar from "./components/Sidebar.jsx"
+import SidebarRight from "./components/SidebarRight.jsx"
 import ThemeButton from "./components/ThemeButton.jsx"
 import Snackbar from "./components/Snackbar.jsx"
 import './styles/App.css'
@@ -10,16 +10,6 @@ import { CircularProgress, Alert } from '@mui/material';
 
 
 
-/* //bootstrap styles
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap-icons/font/bootstrap-icons.css'; 
-import 'bootstrap/dist/js/bootstrap.bundle.min.js';
-
-
-
-
-// context created for theme (dark/light) 
-export const ThemeContext = createContext(); */
 //----------------------MUI DARK THEME---------------------------
 //MUI DARK THEME
 import { ThemeProvider, createTheme } from "@mui/material/styles";
@@ -45,20 +35,26 @@ const App = () => {
 
   //theme (dark/light)
   //load the theme from localstorage so that the user selection persists. use light theme as default.
-  const savedTheme = localStorage.getItem('theme') || 'light';
 
-  const [theme, setTheme] = useState(savedTheme);
-
+/*   const [theme, setTheme] = useState(savedTheme);
+ */
 
 
 
   //----------------------MUI DARK THEME---------------------------
-    // state to manage the dark mode
-    const [darkModeOn, setDarkModeOn] = useState(true);
+    //load the theme from localstorage so that the user selection persists. use dark theme as default.
+    const savedTheme = localStorage.getItem('darkModeOn') || 'true';
 
-    // function to toggle the dark mode as true or false
+    // Parse saved theme value as a boolean. Default to true (dark mode) if no value is found.
+    const [darkModeOn, setDarkModeOn] = useState(savedTheme === 'true');
+
+    // Function to toggle the dark mode
     const toggleDarkTheme = () => {
-      setDarkModeOn(!darkModeOn);
+      setDarkModeOn(prevDarkModeOn => {
+        const newTheme = !prevDarkModeOn;
+        localStorage.setItem('darkModeOn', newTheme); // Store new value in localStorage
+        return newTheme;
+      });
     };
   
     // applying the primary and secondary theme colors
@@ -224,10 +220,6 @@ const App = () => {
   return (
 
     <div className='appContainer'>
-      <ThemeButton
-        theme={theme}
-        setTheme={setTheme}
-      />
 
       {/* ---------------------------------- MUI DARK THEME START ---------------------------------- */}
       <ThemeProvider theme={darkTheme}>
@@ -246,7 +238,8 @@ const App = () => {
           profileUpdated, setProfileUpdated, imgSubmittedNavbar, setImgSubmittedNavbar,
           imgSubmittedHomePage, setImgSubmittedHomePage, isSubmittingPost, 
           setisSubmittingPost, pressedSubmitPost, setPressedSubmitPost,
-          refreshPosts, setRefreshPosts, darkModeOn, pressedFollow, setPressedFollow
+          refreshPosts, setRefreshPosts, darkModeOn, pressedFollow, setPressedFollow,
+          toggleDarkTheme
       }}>
 
         <Snackbar
@@ -258,7 +251,7 @@ const App = () => {
 
 
         {currentUser ? 
-            <Sidebar
+            <SidebarRight
             user={currentUser} 
             setCurrentUser={setCurrentUser}
           />

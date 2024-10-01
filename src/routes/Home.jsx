@@ -28,7 +28,6 @@ function Home() {
        location="homepage"
       />
 
-      <br /><br /> <br /><br /> <br /><br />
       <AllPostsDisplay
       />
 
