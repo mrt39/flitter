@@ -21,7 +21,7 @@ const style = {
   p: 4,
 };
 
-export default function SubmitPostModal({currentUser}) {
+export default function SubmitPostModal() {
 
 
 
@@ -53,7 +53,6 @@ export default function SubmitPostModal({currentUser}) {
           <Box sx={style}>
 
           <SubmitPostForm
-          currentUser={currentUser}
           location="navbar"
           handleClose={handleClose}
 

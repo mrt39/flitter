@@ -13,6 +13,10 @@
   justify-content: center;
 }
 
+.outletContainer{
+  width: 600px;
+}
+
 .circularProgressContainer{
   display: flex;
   justify-content: center;

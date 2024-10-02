@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useState, useContext } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { AppStatesContext } from '../App.jsx';
+import { AppStatesContext, UserContext } from '../App.jsx';
 import '../styles/SidebarLeft.css';
 import SidebarLink from './SidebarLink.jsx';
 import SubmitPostModal from './SubmitPostModal.jsx';
@@ -27,6 +27,7 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import Logout from '@mui/icons-material/Logout';
 
 
+
 // Assets
 import LogoImg from '../assets/logo.png';
 
@@ -36,9 +37,10 @@ import slugify from 'slugify'; // for generating the URL path for routing
 
 
 
-const SidebarLeft = ({user, setCurrentUser}) => {
+const SidebarLeft = () => {
 
-    const {darkModeOn} = useContext(AppStatesContext); 
+    const {darkModeOn, toggleDarkTheme} = useContext(AppStatesContext); 
+    const {currentUser, setCurrentUser} = useContext(UserContext);
 
 
     const [anchorEl, setAnchorEl] = useState(document.querySelector('#sideBarAccountMenu'));
@@ -59,9 +61,9 @@ const SidebarLeft = ({user, setCurrentUser}) => {
   //handle generating the url path for routing to /profile/:slug
   function handleProfileRouting(){
     //slugify the username, e.g:"john-doe"
-    const slug = slugify(user.name, { lower: true }); 
-    //combine slug with usershortID to create the unique profile path for the selected user to route to
-    const profilePath = `/profile/${slug}-${user.shortId}`
+    const slug = slugify(currentUser.name, { lower: true }); 
+    //combine slug with usershortID to create the unique profile path for the selected currentUser to route to
+    const profilePath = `/profile/${slug}-${currentUser.shortId}`
     return profilePath
   }
 
@@ -69,7 +71,7 @@ const SidebarLeft = ({user, setCurrentUser}) => {
   function handleSignOut(){
       fetch(import.meta.env.VITE_BACKEND_URL+'/logout',{
       method: 'POST',
-      credentials: 'include' //sends cookies to server, so it can log out/unauthenticate user!
+      credentials: 'include' //sends cookies to server, so it can log out/unauthenticate currentUser!
       })
       .then(async result => {
         if (result.ok) {
@@ -111,9 +113,7 @@ const SidebarLeft = ({user, setCurrentUser}) => {
         </Link>
 
         {/* use different react components for forms in homepage and navbar in order to seperate concerns and avoid state/post logic clashing */}
-        <SubmitPostModal
-        currentUser = {user}
-        />
+        <SubmitPostModal/>
 
 
         <Button
@@ -127,12 +127,12 @@ const SidebarLeft = ({user, setCurrentUser}) => {
           >
             <Avatar 
                 sx={{ width: 32, height: 32 }}
-                alt={user.name}
-                src={user.picture? user.picture : user.uploadedpic}
+                alt={currentUser.name}
+                src={currentUser.picture? currentUser.picture : currentUser.uploadedpic}
             >
 
             </Avatar>
-            <p>{user.name}</p>
+            <p>{currentUser.name}</p>
             <p id='sidebarUserIconBtn3Dot'>...</p>
         </Button>
 

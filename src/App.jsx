@@ -8,8 +8,8 @@ import { Navigate, } from "react-router-dom";
 import Box from '@mui/material/Box';
 import { CircularProgress, Alert } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
-import Brightness2Icon from '@mui/icons-material/Brightness2'; // Crescent icon
-import WbSunnyIcon from '@mui/icons-material/WbSunny'; // Sun icon
+import Brightness2Icon from '@mui/icons-material/Brightness2';
+import WbSunnyIcon from '@mui/icons-material/WbSunny'; 
 
 
 //----------------------MUI DARK THEME---------------------------
@@ -222,15 +222,10 @@ const App = () => {
 
     <div className='appContainer'>
 
-      {/* ---------------------------------- MUI DARK THEME START ---------------------------------- */}
+      {/* mui theme provider */}
       <ThemeProvider theme={darkTheme}>
       <CssBaseline />
-      <IconButton onClick={toggleDarkTheme}>
-        {darkModeOn ? <WbSunnyIcon /> : <Brightness2Icon />} 
-      </IconButton>
 
-
-      {/* ---------------------------------- MUI DARK THEME END ---------------------------------- */}
 
       <AppStatesContext.Provider value={{ 
           allPosts, setAllPosts, snackbarOpen, setSnackbarOpen, 
@@ -252,22 +247,19 @@ const App = () => {
 
 
         {currentUser ? 
-
-            <SidebarLeft
-            user={currentUser} 
-            setCurrentUser={setCurrentUser}
-            />
-        : <Navigate to="/login" /> } 
-
+        <>
+          <SidebarLeft/>
+          <div className="outletContainer">
           <Outlet /> 
+          </div>
+          <SidebarRight/>
+        </>
+        : //if not logged in, only render outlet and navigate to /login
+        <>
+          <Outlet />
+          <Navigate to="/login" /> 
+        </>} 
 
-          {currentUser ? 
-
-          <SidebarRight
-          user={currentUser} 
-          setCurrentUser={setCurrentUser}
-          />
-          : <Navigate to="/login" /> } 
 
         </UserContext.Provider>
 
