@@ -178,7 +178,7 @@ const AllPostsDisplay = ({fromThisUser}) => {
         //displaying 10 at a time
         (filteredMessages.slice(0, visiblePosts).map(post => (
 
-      <ListItem key={post._id} className={darkModeOn?"post-item-dark":"post-item"} alignItems="flex-start">
+      <ListItem key={post._id} className={`post-item ${darkModeOn ? 'dark-mode' : ''}`} alignItems="flex-start">
         <PostDisplay
           post={post}
         />

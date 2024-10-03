@@ -36,6 +36,9 @@ export default function SubmitPostForm({location, handleClose }) {
   const [error, setError] = useState(null);
 
 
+  //state for storing when the user clicks on the textarea
+  const [isFocused, setIsFocused] = useState(false);
+
     // Max character limit
     const maxCharacters = 280;
     // Character counter
@@ -141,23 +144,40 @@ export default function SubmitPostForm({location, handleClose }) {
 
 
 
-    <Box component="form" /* onSubmit={handleSendClick} */ className="comment-form-container">
+    <Box component="form" sx={{ /* width: `${location === "navbar" ? "600px" : ''}` */ }} className={`submitPost-form-container`}>
+    
       <Avatar
         alt="User Avatar"
-        src={currentUser.picture || currentUser.uploadedpic}
+        src={currentUser? currentUser.picture || currentUser.uploadedpic: ""}
         sx={{ marginRight: 2 }}
-        className="comment-avatar"
+        className="submitPost-avatar"
       />
-      <Box sx={{ flexGrow: 1 }}>
+      {/* have different width on navbar */}
+      <Box sx={{ width: `${location === "navbar" ? "100%" : '420px'}` }} className="submitPostFormtextAreacontainer">
         <textarea
           required
           //if dark theme on, add dark-theme class
-          className={`comment-input ${darkModeOn ? 'dark-theme' : ''}`}
+          className={`
+            submitPost-input 
+            ${darkModeOn ? 'dark-mode' : ''} 
+` } 
           placeholder={location === "homepage"?"What's on your mind?": "Send a Post."}
           value={value}
           onChange={handleChange}
+          onFocus={() => setIsFocused(true)}  
+          onBlur={() => setIsFocused(false)}   
         />
-        <Box className="comment-actions">
+        
+
+        <Box className={`
+            submitPost-actions 
+            ${isFocused ?  //display border at the bottom of the textarea when focused
+                darkModeOn ?
+                'submitPost-actions-border-top-dark' 
+                : 
+                'submitPost-actions-bottom-top'
+              :
+              ''}` } >
           <div className='submitPostFormIconContainer'>
             <ImageUploadButton
               location={location} 
@@ -255,7 +275,6 @@ export default function SubmitPostForm({location, handleClose }) {
 
 
       {error && <Alert severity="error">{error.message}</Alert>}
-      <div className={darkModeOn? 'submitPostFormSeperator-darkMode': "submitPostFormSeperator"}></div>
     </>
   );
 }

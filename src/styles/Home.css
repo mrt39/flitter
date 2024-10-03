@@ -1,4 +1,11 @@
-
 .msgBoxImg1{
     max-width: 30vw !important;
+}
+
+.homePageTopContainer{
+    border-bottom: 1px solid rgb(239, 243, 244);
+}
+
+.homePageTopContainer.dark-mode{
+    border-bottom: 1px solid rgb(47, 51, 54);
 }

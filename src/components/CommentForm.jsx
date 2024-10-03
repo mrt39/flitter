@@ -103,7 +103,7 @@ const CommentForm = ({post, handleClose}) => {
 
 
   return (
-    <Box component="form" /* onSubmit={handleSendClick} */ className="comment-form-container">
+    <Box component="form" /* onSubmit={handleSendClick} */ className={darkModeOn? "comment-form-container-dark":"comment-form-container"}>
       <Avatar
         alt="User Avatar"
         src={currentUser.picture || currentUser.uploadedpic}
