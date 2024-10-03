@@ -65,6 +65,17 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding-top: 5px;
+  border-top: 1px solid transparent; 
+  transition: border-top 0.3s ease-in-out;
+}
+
+.comment-actions-border-top-dark {
+  border-top: 1px solid rgb(47, 51, 54);
+}
+
+.comment-actions-bottom-top {
+  border-top: 1px solid rgb(239, 243, 244);
 }
 
 .emoji-button {

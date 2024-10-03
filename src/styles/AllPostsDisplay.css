@@ -19,20 +19,12 @@
   border-top: 1px solid rgb(239, 243, 244);
 }
 
-.post-item:last-child {
-  border-bottom: none;
-}
-
 .post-item.dark-mode{
   border-bottom: 1px solid rgb(47, 51, 54);
 }
 
 .post-item.dark-mode:first-child{
   border-top: 1px solid rgb(47, 51, 54);
-}
-
-.post-item.dark-mode:last-child {
-  border-bottom: none;
 }
 
 

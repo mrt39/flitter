@@ -142,9 +142,9 @@ export default function SubmitPostForm({location, handleClose }) {
     {/* <button onClick={populate}>POPULATE</button> */}
 
 
+    <Box className="submitPost-form-container">
 
-
-    <Box component="form" sx={{ /* width: `${location === "navbar" ? "600px" : ''}` */ }} className={`submitPost-form-container`}>
+    <Box component="form" className="submitPost-form">
     
       <Avatar
         alt="User Avatar"
@@ -153,7 +153,7 @@ export default function SubmitPostForm({location, handleClose }) {
         className="submitPost-avatar"
       />
       {/* have different width on navbar */}
-      <Box sx={{ width: `${location === "navbar" ? "100%" : '420px'}` }} className="submitPostFormtextAreacontainer">
+      <Box sx={{ width: "100%" }} className="submitPostFormtextAreacontainer">
         <textarea
           required
           //if dark theme on, add dark-theme class
@@ -269,6 +269,7 @@ export default function SubmitPostForm({location, handleClose }) {
           </Box>
         )}
       </Box>
+    </Box>
     </Box>
 
 

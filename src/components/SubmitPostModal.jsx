@@ -12,10 +12,10 @@ import SubmitPostForm from './SubmitPostForm.jsx';
 const style = {
   position: 'absolute',
   top: '50%',
-  left: '50%',
+  left: '49.52%',
   transform: 'translate(-50%, -50%)',
   width: 600,
-  height: 210,
+  height: 200,
   bgcolor: 'background.paper',
   border: '2px solid #000',
   boxShadow: 24,

@@ -1,7 +1,7 @@
 .comment-feed-container {
     display: flex;
     justify-content: center;
-    margin-top: 20px;
+    margin-top: 10px;
   }
   
   .comment-feed {
@@ -12,12 +12,22 @@
   }
   
   .comment-item {
-    border-bottom: 1px solid #e0e0e0;
-    padding: 33px !important;
-    padding-bottom: 12px !important ;
+    border-bottom: 1px solid rgb(239, 243, 244);
+    padding: 12px 33px 12px 33px !important;
+
+  }
+
+  .comment-item:first-child {
+    border-top: 1px solid rgb(239, 243, 244);
   }
   
-  .comment-item:last-child {
-    border-bottom: none;
+
+  
+  .comment-item.dark-mode{
+    border-bottom: 1px solid rgb(47, 51, 54);
+  }
+  
+  .comment-item.dark-mode:first-child{
+    border-top: 1px solid rgb(47, 51, 54);
   }
   

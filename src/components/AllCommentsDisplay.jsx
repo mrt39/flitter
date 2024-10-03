@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 import { useContext, useState, useEffect } from "react";
+import {AppStatesContext } from '../App.jsx';
 import CommentDisplay from './CommentDisplay.jsx';
 import {ListItem,} from '@mui/material';
 import Box from '@mui/material/Box';
@@ -16,6 +17,9 @@ const AllCommentsDisplay = ({post}) => {
 
 
   const [sortedComments, setSortedComments] = useState([])
+
+  const {darkModeOn} = useContext(AppStatesContext); 
+
 
 
   useEffect(() => {
@@ -65,7 +69,7 @@ const AllCommentsDisplay = ({post}) => {
         (sortedComments.slice(0, visibleComments).map(comment => (
           <ListItem 
           key={comment._id} 
-          className="comment-item" 
+          className={`comment-item ${darkModeOn ? 'dark-mode' : ''}`} 
           alignItems="flex-start"
           >
             <CommentDisplay

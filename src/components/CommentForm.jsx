@@ -26,6 +26,9 @@ const CommentForm = ({post, handleClose}) => {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [clickedPostComment, setClickedPostComment] = useState(false); // State to toggle form visibility
 
+  //state for storing when the user clicks on the textarea
+  const [isFocused, setIsFocused] = useState(false);
+
   // Character counter
   const maxCharacters = 280;
   const [remainingCharacters, setRemainingCharacters] = useState(maxCharacters);
@@ -103,7 +106,7 @@ const CommentForm = ({post, handleClose}) => {
 
 
   return (
-    <Box component="form" /* onSubmit={handleSendClick} */ className={darkModeOn? "comment-form-container-dark":"comment-form-container"}>
+    <Box component="form" className={darkModeOn? "comment-form-container-dark":"comment-form-container"}>
       <Avatar
         alt="User Avatar"
         src={currentUser.picture || currentUser.uploadedpic}
@@ -118,8 +121,20 @@ const CommentForm = ({post, handleClose}) => {
           placeholder="Post your comment."
           value={value}
           onChange={handleChange}
+          onFocus={() => setIsFocused(true)}  
+          onBlur={() => setIsFocused(false)} 
         />
-        <Box className="comment-actions">
+        <Box 
+        className={`
+          comment-actions 
+          ${isFocused ?  //display border at the bottom of the textarea when focused
+              darkModeOn ?
+              'comment-actions-border-top-dark' 
+              : 
+              'comment-actions-bottom-top'
+            :
+            ''}` }
+        >
           <IconButton
             onClick={() => setShowEmojiPicker(!showEmojiPicker)}
             className="emoji-button"
