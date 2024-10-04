@@ -39,16 +39,29 @@ export default function SubmitPostForm({location, handleClose }) {
   //state for storing when the user clicks on the textarea
   const [isFocused, setIsFocused] = useState(false);
 
-    // Max character limit
-    const maxCharacters = 280;
-    // Character counter
-    const [remainingCharacters, setRemainingCharacters] = useState(maxCharacters);
+  const textareaRef = useRef(null);
+
+  // Adjust the textarea height dynamically
+  const autoResize = () => {
+    const textarea = textareaRef.current;
+    if (textarea) {
+      textarea.style.height = 'auto';  // Reset the height
+      textarea.style.height = `${textarea.scrollHeight}px`; // Set to scroll height
+
+    }
+  };
+
+  // Max character limit
+  const maxCharacters = 280;
+  // Character counter
+  const [remainingCharacters, setRemainingCharacters] = useState(maxCharacters);
 
   // Handle text change in form
   function handleChange(event) {
     const newValue = event.target.value;
     setValue(newValue);
     setRemainingCharacters(maxCharacters - newValue.length);
+    autoResize(); // Resize on every input change
   }
 
   //emoji select
@@ -155,6 +168,7 @@ export default function SubmitPostForm({location, handleClose }) {
       {/* have different width on navbar */}
       <Box sx={{ width: "100%" }} className="submitPostFormtextAreacontainer">
         <textarea
+          ref={textareaRef} 
           required
           //if dark theme on, add dark-theme class
           className={`
@@ -163,7 +177,10 @@ export default function SubmitPostForm({location, handleClose }) {
 ` } 
           placeholder={location === "homepage"?"What's on your mind?": "Send a Post."}
           value={value}
-          onChange={handleChange}
+          onChange={(e) => {
+            handleChange(e);  
+            autoResize();     // Adjust the size on input change
+          }}
           onFocus={() => setIsFocused(true)}  
           onBlur={() => setIsFocused(false)}   
         />

@@ -44,10 +44,11 @@
     margin-bottom: 8px; 
     line-height: 1.4;
     resize: none; 
-    overflow:auto; 
-    min-height: 40px; 
-    max-height: 1000px; 
-
+    overflow-y: auto;  
+    transition: height 0.2s ease;
+    overflow-y: auto;  
+    min-height: 60px; 
+    max-height: 200px;  
   }
   
   /* Light mode scrollbars */

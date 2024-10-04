@@ -1,7 +1,6 @@
 .comment-feed-container {
     display: flex;
     justify-content: center;
-    margin-top: 10px;
   }
   
   .comment-feed {

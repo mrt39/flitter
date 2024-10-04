@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import {  Typography,  IconButton } from '@mui/material';
 import {  ChatBubbleOutline } from '@mui/icons-material';
 import { TextField, Avatar, Button, Box  } from '@mui/material';
@@ -29,6 +29,21 @@ const CommentForm = ({post, handleClose}) => {
   //state for storing when the user clicks on the textarea
   const [isFocused, setIsFocused] = useState(false);
 
+  const textareaRef = useRef(null);
+
+  // Adjust the textarea height dynamically
+  const autoResize = () => {
+    const textarea = textareaRef.current;
+    if (textarea) {
+      textarea.style.height = 'auto';  // Reset the height
+      textarea.style.height = `${textarea.scrollHeight}px`; // Set to scroll height
+
+    }
+  };
+
+
+
+
   // Character counter
   const maxCharacters = 280;
   const [remainingCharacters, setRemainingCharacters] = useState(maxCharacters);
@@ -36,6 +51,7 @@ const CommentForm = ({post, handleClose}) => {
     const newValue = event.target.value;
     setValue(newValue);
     setRemainingCharacters(maxCharacters - newValue.length);
+    autoResize(); // Resize on every input change
   }
 
 
@@ -115,12 +131,16 @@ const CommentForm = ({post, handleClose}) => {
       />
       <Box sx={{ flexGrow: 1 }}>
         <textarea
+          ref={textareaRef} 
           required
           //if dark theme on, add dark-theme class
           className={`comment-input ${darkModeOn ? 'dark-theme' : ''}`}
           placeholder="Post your comment."
           value={value}
-          onChange={handleChange}
+          onChange={(e) => {
+            handleChange(e);  
+            autoResize();     // Adjust the size on input change
+          }}
           onFocus={() => setIsFocused(true)}  
           onBlur={() => setIsFocused(false)} 
         />
