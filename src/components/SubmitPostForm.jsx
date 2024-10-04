@@ -174,7 +174,7 @@ export default function SubmitPostForm({location, handleClose }) {
           className={`
             submitPost-input 
             ${darkModeOn ? 'dark-mode' : ''} 
-` } 
+            ` } 
           placeholder={location === "homepage"?"What's on your mind?": "Send a Post."}
           value={value}
           onChange={(e) => {

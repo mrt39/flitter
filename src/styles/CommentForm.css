@@ -1,19 +1,14 @@
-.comment-form-container-dark {
-  display: flex;
-  border-top: 1px solid rgb(47, 51, 54);
-  max-width: 600px;
-  margin: 0 auto; 
-  padding: 8px 31px; 
-  width: 100%; 
-}
-
 .comment-form-container {
   display: flex;
   border-top: 1px solid rgb(239, 243, 244); 
   max-width: 600px;
   margin: 0 auto; 
-  padding: 8px 31px; 
+  padding: 15px 31px 8px; 
   width: 100%; 
+}
+
+.comment-form-container.dark-mode {
+  border-top: 1px solid rgb(47, 51, 54);
 }
 
 .comment-avatar {

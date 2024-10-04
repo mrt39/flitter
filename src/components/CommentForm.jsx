@@ -122,7 +122,11 @@ const CommentForm = ({post, handleClose}) => {
 
 
   return (
-    <Box component="form" className={darkModeOn? "comment-form-container-dark":"comment-form-container"}>
+    <Box component="form" className=  
+        {`
+        comment-form-container 
+        ${darkModeOn ? 'dark-mode' : ''} 
+        ` }>
       <Avatar
         alt="User Avatar"
         src={currentUser.picture || currentUser.uploadedpic}

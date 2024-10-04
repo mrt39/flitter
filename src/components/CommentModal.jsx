@@ -6,7 +6,8 @@ import Backdrop from '@mui/material/Backdrop';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
-import { Typography, IconButton, Avatar, Divider } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import { Typography, IconButton} from '@mui/material';
 import { ChatBubbleOutline } from '@mui/icons-material';
 
 import "../styles/CommentModal.css"
@@ -21,7 +22,8 @@ const style = {
   bgcolor: 'background.paper',
   boxShadow: 24,
   p: 2,
-  borderRadius: '10px',
+  pt: 6,
+  borderRadius: '16px',
 };
 
 export default function CommentModal({ post }) {
@@ -58,6 +60,17 @@ export default function CommentModal({ post }) {
       >
         <Fade in={open}>
             <Box sx={style}>
+                <IconButton
+                  aria-label="close"
+                  onClick={handleClose}
+                  sx={{
+                    position: 'absolute',
+                    top: 6,
+                    right: 23,
+                  }}
+                >
+                  <CloseIcon />
+                </IconButton>
                 <PostDisplay 
                 post={post} 
                 location={"comment-modal"}
