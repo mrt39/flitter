@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useContext, useState, useEffect, useRef } from "react";
 import PostDisplay from './PostDisplay.jsx';
-import { UserContext, AppStatesContext } from '../App.jsx';
+import { AppStatesContext } from '../App.jsx';
 import Box from '@mui/material/Box';
 import { CircularProgress, Alert} from '@mui/material';
 import {List, ListItem} from '@mui/material';
@@ -12,17 +12,12 @@ import '../styles/AllPostsDisplay.css'
 
 const AllPostsDisplay = ({fromThisUser}) => {
 
-  //Pass the UserContext defined in app.jsx
-  const { currentUser, setSelectedUser } = useContext(UserContext); 
 
   const { allPosts, setAllPosts, imgSubmittedNavbar, imgSubmittedHomePage, pressedSubmitPost, refreshPosts, darkModeOn} = useContext(AppStatesContext); 
 
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  //handle liking the posts
-  const [likepostID, setLikePostID] = useState("")
-  const [pressedLikePost, setPressedLikePost] = useState(false)
 
   const [filteredMessages, setFilteredMessages] = useState([])
 

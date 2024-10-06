@@ -12,11 +12,9 @@ import {  Typography,  IconButton,  } from '@mui/material';
 import { Favorite, FavoriteBorder} from '@mui/icons-material';
 import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 
-
 //imports for generating the url path for routing 
 import slugify from 'slugify';
 import '../styles/PostDisplay.css'
-
 
 
 const PostDisplay = ({post, location}) => {
@@ -26,13 +24,11 @@ const PostDisplay = ({post, location}) => {
 
     const {refreshPosts, setRefreshPosts, darkModeOn} = useContext(AppStatesContext); 
 
-
     //state for storing if the currentuser has already liked this post
     const [currentUserLikedPost, setCurrentUserLikedPost] = useState(false); // Like state for individual post
 
     //Id for liking the posts
     const [pressedLikePost, setPressedLikePost] = useState(false); // Like state for individual post
-
 
     const navigate = useNavigate(); 
 
@@ -46,10 +42,14 @@ const PostDisplay = ({post, location}) => {
         // Route to the profile path
         navigate(profilePath); 
     }
-    
+
+    // Temporary state for like animation (in order to remove the "liked" class after 0.3 seconds, to prevent the animation from playing when the user likes another post)
+    const [tempLiked, setTempLiked] = useState(false); // Temporary state for like animation
 
       
     function handleLike(){
+        setTempLiked(true);
+        setTimeout(() => setTempLiked(false), 300); //remove the liked class after 0.3 seconds
         setPressedLikePost(true)
     }
 
@@ -73,7 +73,7 @@ const PostDisplay = ({post, location}) => {
         .then(async result => {
             if (result.ok){
             await result.json();
-            setCurrentUserLikedPost(likedPostIndex === -1); // Update state based on whether the user has liked this post or not
+            setCurrentUserLikedPost(likedPostIndex === -1); //update state based on whether the user has liked this post or not
             console.log("Liked Post!")
             setPressedLikePost(false)
             setRefreshPosts(!refreshPosts)
@@ -91,7 +91,6 @@ const PostDisplay = ({post, location}) => {
         likePost();
         } 
     }, [pressedLikePost]);
-
 
   
 //define the component here, in order to not to repeat the code in the "location === "singular-post-page" ?" statement below
@@ -173,15 +172,16 @@ const PostDisplay = ({post, location}) => {
                                     handleLike();
                                 }}
                                 size="small"
-                                className={`icon-button like-button ${currentUserLikedPost ? 'liked' : ''}`}
+                                 //as "tempLiked" becomes false in 0.3 seconds, liked class will be removed from the button, thus preventing multiple posts from playing the animation at the same time 
+                                className={`icon-button like-button ${currentUserLikedPost && tempLiked ? 'liked' : ''}`}
 
                             >
+
                                 {post.likedby.findIndex(u=>u._id.toString()===currentUser._id.toString())>-1 ?  //find if post is already liked by the user, if user is already in likedby array
                                 (
                                 <Favorite fontSize="small" 
                                 sx={{ 
                                     color: 'rgb(249, 24, 128)', 
-                                    transition: 'transform 0.3s',  
                                 }} />
                                 ) : ( //if it isn't liked, display an empty heart icon
                                 <FavoriteBorder fontSize="small" sx={{ color: 'defaultColor' }} />
@@ -212,6 +212,6 @@ return (
 );
 };
 
-
 export default PostDisplay;
+
 
