@@ -115,13 +115,12 @@
   }
 
   .postImg{
-    max-width: 100%;  /* Ensures the image fits within the width of the modal */
-    height: auto;     /* Maintains the aspect ratio */
-    margin: 0 auto;   /* Centers the image if it’s smaller than the modal */
+    max-width: 100%;  
+    height: auto;     
+    margin: 0 auto;   
   }
 
-
-  /* General post action button styling */
+  /* general post action button styling */
     .icon-button {
         display: flex;
         align-items: center;

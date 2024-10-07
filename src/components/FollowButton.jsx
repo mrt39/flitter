@@ -9,9 +9,11 @@ import '../styles/FollowButton.css';
 const FollowButton = ({ displayedUserOnCard }) => {
 
     const { currentUser } = useContext(UserContext); 
-    const {darkModeOn, pressedFollow, setPressedFollow} = useContext(AppStatesContext); 
 
-    const [loading, setLoading] = useState(false)
+    //pass the follow states from AppStatesContext in App.jsx
+    //sending a post request within the tooltip and it's child components disrupts the display of the tooltip and/or the follow logic, so the follow logic is defined in App.jsx to prevent that.
+    const {darkModeOn, pressedFollow, setPressedFollow, loadingFollow, setLoadingFollow, setDisplayedUserOnCard} = useContext(AppStatesContext); 
+
     const [isFollowing, setIsFollowing] = useState(false)
 
     const [isHovered, setIsHovered] = useState(false);
@@ -30,53 +32,23 @@ const FollowButton = ({ displayedUserOnCard }) => {
 
     function handleFollow(e){
         e.preventDefault()
-        e.stopPropagation(); // Prevent the event from bubbling up to the Tooltip
-        setLoading(true)
-        setPressedFollow(true);
+        e.stopPropagation(); //prevent the event from bubbling up to the Tooltip
+        setDisplayedUserOnCard(displayedUserOnCard)
+        if (!loadingFollow) { //if loading, do not send another request
+          setLoadingFollow(true);
+          setPressedFollow(true);
+      }
       }
       
     
-      //useEffect for handling follow
-        useEffect(() => {
-          async function followUser() { 
-            await fetch(import.meta.env.VITE_BACKEND_URL+'/followUser', {
-              method: "post",
-              body: JSON.stringify({ fromUser: currentUser, toUser: displayedUserOnCard}), 
-              headers: {
-                  'Content-Type': 'application/json',
-                  "Access-Control-Allow-Origin": "*",
-              },
-              credentials:"include" //required for sending the cookie data-authorization check
-          })
-            .then(async result => {
-              if (result.ok){
-                await result.json();
-                console.log("Followed/Unfollowed Succesfully!")
-                setPressedFollow(false)
-                setLoading(false)
-              } else{
-                throw new Error(result)
-              }
-            })
-            .catch(error => {
-              console.error('Error:', error);
-              setPressedFollow(false)
-              setLoading(false)
-            }); 
-          }
-          //only trigger when followed
-          if (pressedFollow ===true){
-            followUser();
-          } 
-        }, [pressedFollow]);
-
+  
 
     return (
         <Button
         variant="outlined"
         size="small"
         onClick={handleFollow}
-        disabled={loading}
+        disabled={loadingFollow}
         className="followButton"
         sx={{
           borderRadius: '9999px', 
@@ -97,8 +69,8 @@ const FollowButton = ({ displayedUserOnCard }) => {
             color: isFollowing ? 'red' : (darkModeOn ? 'black' : 'white'),
           },
         }}
-        onMouseEnter={() => setIsHovered(true)} // Set hovered state to true
-        onMouseLeave={() => setIsHovered(false)} // Set hovered state to false
+        onMouseEnter={() => setIsHovered(true)} //set hovered state to true
+        onMouseLeave={() => setIsHovered(false)} //set hovered state to false
         >
             {isFollowing && isHovered ? 'Unfollow' : isFollowing ? 'Following' : 'Follow'}
         </Button>

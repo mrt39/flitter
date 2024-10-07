@@ -53,7 +53,7 @@ const Profile = () => {
       });
     };
     getUserData();
-    //when user follows/unfollows, this refreshes to display either the follow or unfollow button
+    //when user follows/unfollows, refresh display to have either the follow or unfollow button
     }, [pressedFollow]);
 
 

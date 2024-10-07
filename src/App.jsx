@@ -196,6 +196,47 @@ const App = () => {
 
 
 
+  //FOLLOW STATES AND LOGIC. 
+  //Defining the states and logic here, as the follow button is used in multiple components
+  //also, the follow button is used in the UserCardProfile component, which is a child of the HoverUserCard component that gets displayed as a tooltip when hovering over a user's profile picture. 
+  //sending a post request within the tooltip and it's child components disrupts the display of the tooltip and/or the follow logic, so the follow logic is defined here to prevent that.
+  const [displayedUserOnCard, setDisplayedUserOnCard] = useState()
+  const [loadingFollow, setLoadingFollow] = useState(false)
+
+
+  //useEffect for handling follow
+  useEffect(() => {
+    async function followUser() { 
+      await fetch(import.meta.env.VITE_BACKEND_URL+'/followUser', {
+        method: "post",
+        body: JSON.stringify({ fromUser: currentUser, toUser: displayedUserOnCard}), 
+        headers: {
+            'Content-Type': 'application/json',
+            "Access-Control-Allow-Origin": "*",
+        },
+        credentials:"include" //required for sending the cookie data-authorization check
+    })
+      .then(async result => {
+        if (result.ok){
+          await result.json();
+          console.log("Followed/Unfollowed Succesfully!")
+          setPressedFollow(false)
+          setLoadingFollow(false)
+        } else{
+          throw new Error(result)
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        setPressedFollow(false)
+        setLoadingFollow(false)
+      }); 
+    }
+  // Only trigger when pressedFollow is true and loading is true
+    if (pressedFollow && loadingFollow){
+      followUser();
+    } 
+  }, [pressedFollow, loadingFollow]);
 
 
 
@@ -234,7 +275,7 @@ const App = () => {
           imgSubmittedHomePage, setImgSubmittedHomePage, isSubmittingPost, 
           setisSubmittingPost, pressedSubmitPost, setPressedSubmitPost,
           refreshPosts, setRefreshPosts, darkModeOn, pressedFollow, setPressedFollow,
-          toggleDarkTheme
+          toggleDarkTheme, displayedUserOnCard, setDisplayedUserOnCard, loadingFollow, setLoadingFollow
       }}>
         <UserContext.Provider value={{ currentUser, setCurrentUser, selectedUser, setSelectedUser}}>
 

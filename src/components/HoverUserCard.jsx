@@ -15,8 +15,8 @@ import slugify from 'slugify';
 
 const HoverUserCard = ({ user }) => {
 
-  const {setSelectedUser } = useContext(UserContext); 
-  const {darkModeOn, pressedFollow} = useContext(AppStatesContext); 
+  const {currentUser, setSelectedUser} = useContext(UserContext); 
+  const {darkModeOn, pressedFollow, setPressedFollow} = useContext(AppStatesContext); 
   const [displayedUserOnCard, setDisplayedUserOnCard] = useState(user)
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -60,7 +60,7 @@ const HoverUserCard = ({ user }) => {
       const slug = slugify(clickedOnUser.name, { lower: true }); 
       //combine slug with usershortID to create the unique profile path for the selected user to route to
       const profilePath = `/profile/${slug}-${clickedOnUser.shortId}`
-      // Route to the profile path
+      //route to the profile path
       navigate(profilePath); 
   }
 
@@ -124,9 +124,13 @@ const HoverUserCard = ({ user }) => {
             </Typography>
           </div>
         </span>
+        {/* don't display the follow button when the user hovers on their own name */}
+        {currentUser.shortId !== displayedUserOnCard.shortId 
+        &&
         <FollowButton
           displayedUserOnCard={displayedUserOnCard}
         />
+        }
       </Box>
 
       {/* User's name and bio */}
