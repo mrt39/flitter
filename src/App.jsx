@@ -200,7 +200,7 @@ const App = () => {
   //Defining the states and logic here, as the follow button is used in multiple components
   //also, the follow button is used in the UserCardProfile component, which is a child of the HoverUserCard component that gets displayed as a tooltip when hovering over a user's profile picture. 
   //sending a post request within the tooltip and it's child components disrupts the display of the tooltip and/or the follow logic, so the follow logic is defined here to prevent that.
-  const [displayedUserOnCard, setDisplayedUserOnCard] = useState()
+  const [usertoFollow, setUsertoFollow] = useState()
   const [loadingFollow, setLoadingFollow] = useState(false)
 
 
@@ -209,7 +209,7 @@ const App = () => {
     async function followUser() { 
       await fetch(import.meta.env.VITE_BACKEND_URL+'/followUser', {
         method: "post",
-        body: JSON.stringify({ fromUser: currentUser, toUser: displayedUserOnCard}), 
+        body: JSON.stringify({ fromUser: currentUser, toUser: usertoFollow}), 
         headers: {
             'Content-Type': 'application/json',
             "Access-Control-Allow-Origin": "*",
@@ -275,7 +275,7 @@ const App = () => {
           imgSubmittedHomePage, setImgSubmittedHomePage, isSubmittingPost, 
           setisSubmittingPost, pressedSubmitPost, setPressedSubmitPost,
           refreshPosts, setRefreshPosts, darkModeOn, pressedFollow, setPressedFollow,
-          toggleDarkTheme, displayedUserOnCard, setDisplayedUserOnCard, loadingFollow, setLoadingFollow
+          toggleDarkTheme, usertoFollow, setUsertoFollow, loadingFollow, setLoadingFollow
       }}>
         <UserContext.Provider value={{ currentUser, setCurrentUser, selectedUser, setSelectedUser}}>
 

@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { useState,  useEffect, useContext } from 'react'
-import { UserContext } from '../App.jsx';
+import { UserContext, AppStatesContext } from '../App.jsx';
 import { Link, useNavigate } from "react-router-dom";
 import { Card, CardContent, Typography, Button, Avatar } from '@mui/material';
 import "../styles/Profile.css"
@@ -9,11 +9,13 @@ import slugify from 'slugify';
 
 
 
-const UserCardProfile = ({pressedFollow, setPressedFollow}) => {
+const UserCardProfile = () => {
 
 
   // Pass the UserContext defined in app.jsx
   const {currentUser, selectedUser} = useContext(UserContext); 
+  const {pressedFollow, setPressedFollow, loadingFollow, setLoadingFollow, setUsertoFollow} = useContext(AppStatesContext); 
+
 
 
   const [loading, setLoading] = useState(false)
@@ -34,45 +36,11 @@ const UserCardProfile = ({pressedFollow, setPressedFollow}) => {
 
     
   function handleFollow(){
-    setLoading(true)
+    setUsertoFollow(selectedUser)
+    setLoadingFollow(true)
     setPressedFollow(true);
   }
 
-  
-
-  //useEffect for handling follow
-    useEffect(() => {
-      async function followUser() { 
-        await fetch(import.meta.env.VITE_BACKEND_URL+'/followUser', {
-          method: "post",
-          body: JSON.stringify({ fromUser: currentUser, toUser: selectedUser}), 
-          headers: {
-              'Content-Type': 'application/json',
-              "Access-Control-Allow-Origin": "*",
-          },
-          credentials:"include" //required for sending the cookie data-authorization check
-      })
-        .then(async result => {
-          if (result.ok){
-            await result.json();
-            console.log("Followed/Unfollowed Succesfully!")
-            setPressedFollow(false)
-            setLoading(false)
-          } else{
-            throw new Error(result)
-          }
-        })
-        .catch(error => {
-          console.error('Error:', error);
-          setPressedFollow(false)
-          setLoading(false)
-        }); 
-      }
-      //only trigger when followed
-      if (pressedFollow ===true){
-        followUser();
-      } 
-    }, [pressedFollow]);
 
 
 
@@ -108,7 +76,7 @@ const UserCardProfile = ({pressedFollow, setPressedFollow}) => {
             ? ""
             : 
             <Button
-                disabled={loading? true : false}
+                disabled={loadingFollow}
                 variant="contained"
                 color="primary"
                 sx={{ mt: 2 }}

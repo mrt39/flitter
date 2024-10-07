@@ -93,8 +93,6 @@ const PostDisplay = ({post, location}) => {
     }, [pressedLikePost]);
 
 
-
-    
     const [tooltipOpen, setTooltipOpen] = useState(false);
 
 

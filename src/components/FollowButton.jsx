@@ -12,7 +12,7 @@ const FollowButton = ({ displayedUserOnCard }) => {
 
     //pass the follow states from AppStatesContext in App.jsx
     //sending a post request within the tooltip and it's child components disrupts the display of the tooltip and/or the follow logic, so the follow logic is defined in App.jsx to prevent that.
-    const {darkModeOn, pressedFollow, setPressedFollow, loadingFollow, setLoadingFollow, setDisplayedUserOnCard} = useContext(AppStatesContext); 
+    const {darkModeOn, pressedFollow, setPressedFollow, loadingFollow, setLoadingFollow, setUsertoFollow} = useContext(AppStatesContext); 
 
     const [isFollowing, setIsFollowing] = useState(false)
 
@@ -33,7 +33,7 @@ const FollowButton = ({ displayedUserOnCard }) => {
     function handleFollow(e){
         e.preventDefault()
         e.stopPropagation(); //prevent the event from bubbling up to the Tooltip
-        setDisplayedUserOnCard(displayedUserOnCard)
+        setUsertoFollow(displayedUserOnCard)
         if (!loadingFollow) { //if loading, do not send another request
           setLoadingFollow(true);
           setPressedFollow(true);
