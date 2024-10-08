@@ -238,10 +238,6 @@ const App = () => {
     } 
   }, [pressedFollow, loadingFollow]);
 
-
-
-
-
   
 
   if (loading) {

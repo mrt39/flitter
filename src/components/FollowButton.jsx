@@ -6,9 +6,9 @@ import { UserContext, AppStatesContext} from '../App.jsx';
 
 import '../styles/FollowButton.css';
 
-const FollowButton = ({ displayedUserOnCard }) => {
+const FollowButton = ({ displayedUserOnCard, location, firstRender }) => {
 
-    const { currentUser } = useContext(UserContext); 
+    const { currentUser, selectedUser } = useContext(UserContext); 
 
     //pass the follow states from AppStatesContext in App.jsx
     //sending a post request within the tooltip and it's child components disrupts the display of the tooltip and/or the follow logic, so the follow logic is defined in App.jsx to prevent that.
@@ -23,8 +23,16 @@ const FollowButton = ({ displayedUserOnCard }) => {
     useEffect(() => {
         if(displayedUserOnCard.followedbytheseID.includes(currentUser._id)){
             setIsFollowing(true)
+            //if the followbutton is rendered within the profile page, set the isFollowing state to false to prevent the follow button from displaying the wrong state
+            //check if the usercardprofile component is rendered for the first time as well, to prevent the follow button from displaying the wrong state
+            if(location === 'profilePage'&&firstRender===false){
+                setIsFollowing(false)
+            }
         }else{
             setIsFollowing(false)
+            if(location === 'profilePage'&&firstRender===false){
+              setIsFollowing(true)
+          }
         }
     }, [pressedFollow]);
 
@@ -36,7 +44,7 @@ const FollowButton = ({ displayedUserOnCard }) => {
         setUsertoFollow(displayedUserOnCard)
         if (!loadingFollow) { //if loading, do not send another request
           setLoadingFollow(true);
-          setPressedFollow(true);
+          setPressedFollow((prev) => !prev); // toggle the pressedFollow state
       }
       }
       

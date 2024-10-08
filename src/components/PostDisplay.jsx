@@ -97,12 +97,10 @@ const PostDisplay = ({post, location}) => {
 
 
     const handleTooltipOpen = () => {
-        console.log("Tooltip opened");
         setTooltipOpen(true);
     };
 
     const handleTooltipClose = () => {
-        console.log("Tooltip closed");
         setTooltipOpen(false);
     };
 

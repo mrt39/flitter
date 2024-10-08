@@ -15,10 +15,9 @@ const Profile = () => {
 
   // Pass the UserContext defined in app.js
   const {selectedUser, setSelectedUser } = useContext(UserContext); 
-  const {pressedFollow, setPressedFollow} = useContext(AppStatesContext); 
-  const [loading, setLoading] = useState(true);
+  const {pressedFollow} = useContext(AppStatesContext); 
   const [error, setError] = useState(null);
-
+  const [profilePageLoading, setProfilePageLoading] = useState(true);
 
   //get the last 8 characters of current url (which is the assigned shortid for the selectedUser)
   const location = useLocation();
@@ -43,18 +42,18 @@ const Profile = () => {
       })
       .then(data => {
           setSelectedUser(data[0])
-
-          setLoading(false)
+          console.log(selectedUser)
+          setProfilePageLoading(false)
       })
       .catch(error => {
           setError(error.message);
-          setLoading(false)
+          setProfilePageLoading(false)
           console.error('Error:', error);
       });
     };
     getUserData();
     //when user follows/unfollows, refresh display to have either the follow or unfollow button
-    }, [pressedFollow]);
+    }, [pressedFollow]); 
 
 
 
@@ -62,7 +61,8 @@ const Profile = () => {
 
 
 
-  if (loading) {
+
+  if (profilePageLoading) {
     return <CircularProgress />;
   }
 
@@ -77,12 +77,7 @@ const Profile = () => {
     <>
     <div className="profileContainer">
       
-      <UserCardProfile
-      pressedFollow = {pressedFollow}
-      setPressedFollow = {setPressedFollow}
-      />
-
-      <br /><br /> <br /><br /> <br /><br />
+      <UserCardProfile/>
       <AllPostsDisplay
       fromThisUser = {selectedUser} //instead of displaying all posts, display the posts only from this user
       />

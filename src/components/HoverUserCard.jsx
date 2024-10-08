@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useContext, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Card, CardContent, Avatar, Typography, Box, Button } from '@mui/material';
+import { Card, CardContent, Avatar, Typography, Box, useTheme } from '@mui/material';
 import { AppStatesContext, UserContext} from '../App.jsx';
 import { CircularProgress, Alert } from '@mui/material';
 import FollowButton from './FollowButton.jsx';
@@ -20,6 +20,9 @@ const HoverUserCard = ({ user }) => {
   const [displayedUserOnCard, setDisplayedUserOnCard] = useState(user)
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const theme = useTheme();
+
 
 
   //make a profile call because when the user presses the follow button, data on the card needs to change
@@ -150,13 +153,17 @@ const HoverUserCard = ({ user }) => {
         {/* Follower and Following Counts */}
         <Box display="flex" justifyContent="flex-start" gap="50px">
           <Link className="hoverUserCardFollowersLink" onClick={() => handleFollowersRouting("following")}>
-            <Typography variant="body2" fontWeight="bold">
-              {displayedUserOnCard.followingCount} <span style={{ color: '#657786' }}>Following</span>
+            <Typography variant="body2" color="text.secondary">
+                <span className='userCardFollowerNumber' style={{ color: theme.palette.text.primary}}>
+                  {displayedUserOnCard.followingCount}
+                </span>&#8203; Following  {/* arrange space between the number and the "Following text" */}
             </Typography>
           </Link>
           <Link className="hoverUserCardFollowersLink" onClick={() => handleFollowersRouting("followers")}>
-            <Typography variant="body2" fontWeight="bold">
-              {displayedUserOnCard.followerCount} <span style={{ color: '#657786' }}>Followers</span>
+            <Typography variant="body2" color="text.secondary">
+              <span className='userCardFollowerNumber' style={{ color: theme.palette.text.primary}}>
+                {displayedUserOnCard.followerCount}
+              </span>&#8203; Followers
             </Typography>
           </Link>
         </Box>
