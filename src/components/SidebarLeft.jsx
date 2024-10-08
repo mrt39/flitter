@@ -40,7 +40,7 @@ import slugify from 'slugify'; // for generating the URL path for routing
 const SidebarLeft = () => {
 
     const {darkModeOn, toggleDarkTheme} = useContext(AppStatesContext); 
-    const {currentUser, setCurrentUser} = useContext(UserContext);
+    const {currentUser, setCurrentUser, setSelectedUser} = useContext(UserContext);
 
 
     const [anchorEl, setAnchorEl] = useState(document.querySelector('#sideBarAccountMenu'));
@@ -64,7 +64,9 @@ const SidebarLeft = () => {
     const slug = slugify(currentUser.name, { lower: true }); 
     //combine slug with usershortID to create the unique profile path for the selected currentUser to route to
     const profilePath = `/profile/${slug}-${currentUser.shortId}`
-    return profilePath
+    setSelectedUser(currentUser)
+    //route to the profile path
+    navigate(profilePath);
   }
 
 
@@ -105,9 +107,9 @@ const SidebarLeft = () => {
         <SidebarLink text="Messages" Icon={MailOutlineIcon} />
         <SidebarLink text="Bookmarks" Icon={BookmarkBorderIcon} />
         <SidebarLink text="Lists" Icon={ListAltIcon} />
-        <Link  className="sidebarLink" to={handleProfileRouting()} >
+        <span  className="sidebarLink" onClick={handleProfileRouting} >
             <SidebarLink text="Profile" Icon={PermIdentityIcon} />
-        </Link>
+        </span>
         <Link className="sidebarLink" to="/profileedit">
             <SidebarLink text="More" Icon={MoreHorizIcon}/>
         </Link>

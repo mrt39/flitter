@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useContext, useState, useEffect, useRef } from "react";
 import PostDisplay from './PostDisplay.jsx';
-import { AppStatesContext } from '../App.jsx';
+import { AppStatesContext, UserContext } from '../App.jsx';
 import Box from '@mui/material/Box';
 import { CircularProgress, Alert} from '@mui/material';
 import {List, ListItem} from '@mui/material';
@@ -17,6 +17,7 @@ const AllPostsDisplay = ({fromThisUser}) => {
 
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const {currentUser, selectedUser} = useContext(UserContext); 
 
 
   const [filteredMessages, setFilteredMessages] = useState([])
@@ -64,7 +65,6 @@ const AllPostsDisplay = ({fromThisUser}) => {
     ) {
       setNewPostAdded(true);
       setShouldNotShuffle(true);
-      console.log("new post added")
     }
   
     // If the useEffect has been triggered by the refreshPosts dependency (like or comment), set the shouldNotShuffle state to true
@@ -80,7 +80,7 @@ const AllPostsDisplay = ({fromThisUser}) => {
   // useEffect for sorting messages (shuffle or sort by date)
   useEffect(() => {
     sortMessageDisplay();
-  }, [allPosts]);
+  }, [allPosts, selectedUser]);
 
     
   
@@ -112,6 +112,13 @@ const AllPostsDisplay = ({fromThisUser}) => {
             // Push the post into filteredMessages array
             filteredMessagesinFunc.push(post);
           }
+
+/*           if(selectedUser===currentUser){
+            if (post.from[0]._id === currentUser._id) {
+              // Push the post into filteredMessages array
+              filteredMessagesinFunc.push(post);
+            }
+          } */
         });
   
         //sort filteredMessages array by their dates, descending order
@@ -124,7 +131,6 @@ const AllPostsDisplay = ({fromThisUser}) => {
         } else {
             filteredMessagesinFunc = [...allPosts];
             // Shuffle the posts
-            console.log("shuffling the posts now")
             const order = filteredMessagesinFunc.map((_, index) => index);
             for (let i = filteredMessagesinFunc.length - 1; i >= 0; i--) {
               const j = Math.floor(Math.random() * (i + 1));

@@ -19,6 +19,7 @@ const Profile = () => {
   const [error, setError] = useState(null);
   const [profilePageLoading, setProfilePageLoading] = useState(true);
 
+ 
   //get the last 8 characters of current url (which is the assigned shortid for the selectedUser)
   const location = useLocation();
   // Get the pathname from the location object
@@ -42,7 +43,6 @@ const Profile = () => {
       })
       .then(data => {
           setSelectedUser(data[0])
-          console.log(selectedUser)
           setProfilePageLoading(false)
       })
       .catch(error => {
