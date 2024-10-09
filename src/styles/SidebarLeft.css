@@ -82,3 +82,15 @@
     margin-top: 9px;
     margin-left: auto; /* pushes the three dots to the right */
 }
+
+.sidebarMenuItem{
+    font-size: 14px !important;
+}
+
+.sidebarMenuIcon{
+    margin-bottom: 2px;
+}
+
+.sidebarMenuLogoutIcon{
+    margin-bottom: 1.5px;
+}

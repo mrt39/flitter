@@ -25,6 +25,7 @@ import ListAltIcon from '@mui/icons-material/ListAlt';
 import PermIdentityIcon from '@mui/icons-material/PermIdentity';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import Logout from '@mui/icons-material/Logout';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 
 
 
@@ -176,9 +177,18 @@ const SidebarLeft = () => {
         transformOrigin={{ horizontal: 'left', vertical: 'bottom' }}
         anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
       >
-        <MenuItem onClick={handleSignOut}>
-          <ListItemIcon>
-            <Logout fontSize="small" />
+        <Link className="sidebarLink" to="/profileedit">
+          <MenuItem className='sidebarMenuItem'>
+              <ListItemIcon >
+                <EditOutlinedIcon className='sidebarMenuIcon' fontSize="small" />
+              </ListItemIcon>
+              Edit Profile
+          </MenuItem>
+        </Link>
+
+        <MenuItem className='sidebarMenuItem' onClick={handleSignOut}>
+          <ListItemIcon >
+            <Logout className='sidebarMenuLogoutIcon' fontSize="small" />
           </ListItemIcon>
           Logout
         </MenuItem>

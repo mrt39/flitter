@@ -132,9 +132,9 @@ const PostDisplay = ({post, location}) => {
                         enterDelay={200}
                         leaveDelay={200}
                         placement="bottom"
-                        open={tooltipOpen} // Control the tooltip open state
+/*                         open={tooltipOpen} // Control the tooltip open state
                         onOpen={handleTooltipOpen}
-                        onClose={handleTooltipClose}
+                        onClose={handleTooltipClose} */
                         PopperProps={{
                             modifiers: [
                                 {
