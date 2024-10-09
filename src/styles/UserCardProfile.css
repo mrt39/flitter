@@ -6,96 +6,95 @@
     overflow: hidden;
     background-color: inherit;
     background-image: none !important;
-  }
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
 
-  .top-header{
-    margin: 2px;
-    margin-left: 15px;
-    display: flex;
-  }
+.top-header{
+  margin: 2px;
+  margin-left: 15px;
+  display: flex;
+}
 
-  .top-header-backButton{
-    display: flex;
-    align-items: center;
-    text-align: center;
-  }
+.top-header-backButton{
+  display: flex;
+  align-items: center;
+  text-align: center;
+}
 
-  .back-button {
-    margin-right: 30px !important;
-    height: 70%;
-    width: 50%;
-  }
-  
-  .header-background {
-    width: 100%;
-    height: 200px;
-    background-color: #1DA1F2; /* twitter's blue color */
-  }
+.back-button {
+  margin-right: 30px !important;
+  height: 70%;
+  width: 50%;
+}
 
-  .profile-content {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 16px;
-    position: relative;
-  }
+.header-background {
+  width: 100%;
+  height: 200px;
+  background-color: #1DA1F2; 
+}
 
-  .profile-content-and-followButton-container{
-    display: flex;
-    justify-content: space-between;
-  }
+.profile-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 16px;
+  position: relative;
+  border-radius: 0 !important;
+}
 
-  .follow-button-container{
-    margin: 15px;
-  }
-  
-  .avatar {
-    width: 141.5px !important;
-    height: 141.5px !important;
-    margin-top: -95px;
-    border-radius: 50%;
-    background-color: inherit !important;
-  }
-  
-  .card-content {
-    padding-left: 2px !important;
-    background-color: inherit;
-  }
-  
-  .username {
-    margin-top: 10px;
-    font-weight: bold;
-  }
-  
-  .bio {
-    margin-top: 15px !important;
-    line-height: 2 !important;
-    color: inherit !important;
-  }
+.profile-content-and-followButton-container{
+  display: flex;
+  justify-content: space-between;
+  border-radius: 0 !important;
+}
 
-  .UserCardFollowersLink:hover{
-    text-decoration: underline;
-  }
+.follow-button-container{
+  margin: 15px;
+}
 
-  .userCardFollowerNumber{
-    font-weight: bold;
-    color: inherit;
-  }
+.avatar {
+  width: 141.5px !important;
+  height: 141.5px !important;
+  margin-top: -95px;
+  border-radius: 50%;
+  background-color: inherit !important;
+}
+
+.card-content {
+  padding-left: 2px !important;
+  background-color: inherit;
+}
+
+.username {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.bio {
+  margin-top: 15px !important;
+  line-height: 2 !important;
+  color: inherit !important;
+}
+
+.UserCardFollowersLink:hover{
+  text-decoration: underline;
+}
+
+.userCardFollowerNumber{
+  font-weight: bold;
+  color: inherit;
+}
+
+.follow-info {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px !important;
+  gap:50px;
+}
+
+.follow-link {
+  text-decoration: none;
+  color: #1DA1F2; /* Twitter's blue color */
+}
   
-  .follow-info {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 15px !important;
-    gap:50px;
-  }
-  
-  .follow-link {
-    text-decoration: none;
-    color: #1DA1F2; /* Twitter's blue color */
-  }
-  
-  .follow-button {
-    margin-top: 10px;
-    width: 100px;
-    background-color: #1DA1F2; /* Twitter's blue color */
-  }

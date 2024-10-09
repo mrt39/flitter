@@ -145,17 +145,17 @@ const AllPostsDisplay = ({fromThisUser}) => {
   
   /* ---------------------------INFINITE SCROLL FUNCTIONALITY--------------------------- */
   //state for setting the visible post count, for infinite scroll functionality 
-  const [visiblePosts, setVisiblePosts] = useState(15); // Initial amount of posts to show
-  const [loadingPosts, setLoadingPosts] = useState(false); // Track posts loading state
+  const [visiblePosts, setVisiblePosts] = useState(15); // initial amount of posts to show
+  const [loadingPosts, setLoadingPosts] = useState(false); // track posts loading state
 
-  // Function to load more posts when scrolled to the bottom, with a 1.5-second delay
+  // function to load more posts when scrolled to the bottom, with a 1.5-second delay
   function loadMorePosts () {
     setLoadingPosts(true); // Start loading
 
-    // Delay the loading of the next set of posts by 1.5 seconds
+    // delay the loading of the next set of posts by 1.5 seconds
     setTimeout(() => {
-      setVisiblePosts(visiblePosts + 10); // Increase the visible post count by 10
-      setLoadingPosts(false); // End loading
+      setVisiblePosts(visiblePosts + 10); // increase the visible post count by 10
+      setLoadingPosts(false); // end loading
     }, 1000);
   };
 
@@ -189,9 +189,8 @@ const AllPostsDisplay = ({fromThisUser}) => {
         dataLength={visiblePosts} // length of the currently visible posts
         next={loadMorePosts} // function to call to be load more posts
         hasMore={visiblePosts < filteredMessages.length} // check if there's more to load
-        scrollableTarget={appContainerRef.current} // Set the scrollable target as the appContainerRef (passed from Home.jsx)
-        threshold={1}
-        loader={ // Display while loading more
+        scrollableTarget={appContainerRef.current} // set the scrollable target as the appContainerRef (passed from Home.jsx)
+        loader={ // display while loading more
           loadingPosts && 
           <CircularProgress size="5rem" sx={{"marginBottom":"5rem"}}/>
         } 

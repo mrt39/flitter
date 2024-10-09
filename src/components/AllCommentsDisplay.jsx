@@ -18,7 +18,7 @@ const AllCommentsDisplay = ({post}) => {
 
   const [sortedComments, setSortedComments] = useState([])
 
-  const {darkModeOn} = useContext(AppStatesContext); 
+  const {darkModeOn, appContainerRef} = useContext(AppStatesContext); 
 
 
 
@@ -32,15 +32,15 @@ const AllCommentsDisplay = ({post}) => {
 
   /* ---------------------------INFINITE SCROLL FUNCTIONALITY--------------------------- */
   //state for setting the visible post count, for infinite scroll functionality 
-  const [visibleComments, setVisibleComments] = useState(10); // Initial amount of posts to show
-  const [loadingComments, setLoadingComments] = useState(false); // Track posts loading state
+  const [visibleComments, setVisibleComments] = useState(20); // Initial amount of comments to show
+  const [loadingComments, setLoadingComments] = useState(false); // Track comments loading state
 
 
-  // Function to load more posts when scrolled to the bottom, with a 1.5-second delay
+  // Function to load more comments when scrolled to the bottom, with a 1.5-second delay
   function loadMoreComments () {
     setLoadingComments(true); // Start loading
 
-    // Delay the loading of the next set of posts by 1.5 seconds
+    // Delay the loading of the next set of comments by 1.5 seconds
     setTimeout(() => {
       setVisibleComments(visibleComments + 7); // Increase the visible post count by 10
       setLoadingComments(false); // End loading
@@ -56,10 +56,11 @@ const AllCommentsDisplay = ({post}) => {
   <Box className="comment-feed-container">
     <List className="comment-feed">
       <InfiniteScroll
-        dataLength={visibleComments} // This is the length of the currently visible posts
-        next={loadMoreComments} // Function to call when more posts are to be loaded
-        hasMore={visibleComments < sortedComments.length} // Check if there's more to load
-        loader={ // Display while loading more
+        dataLength={visibleComments} // this is the length of the currently visible comments
+        next={loadMoreComments} // function to call when more comments are to be loaded
+        hasMore={visibleComments < sortedComments.length} // check if there's more to load
+        scrollableTarget={appContainerRef.current} // set the scrollable target as the appContainerRef (passed from Home.jsx)
+        loader={ // display while loading more
           loadingComments && 
           <CircularProgress size="5rem" sx={{"marginBottom":"5rem"}}/>
         } 

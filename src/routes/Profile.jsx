@@ -76,9 +76,7 @@ const Profile = () => {
   return (
     <>
     <div className={`profileContainer ${darkModeOn ? 'dark-mode' : ''}`}>
-      {/* <div className={`profile-userCard-container ${darkModeOn ? 'dark-mode' : ''}`}> */}
         <UserCardProfile/>
-      {/* </div> */}
       <AllPostsDisplay
       fromThisUser = {selectedUser} //instead of displaying all posts, display the posts only from this user
       />

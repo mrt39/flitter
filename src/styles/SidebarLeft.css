@@ -42,10 +42,7 @@
     font-weight: 700;
     text-transform: inherit;
     margin-top: 2rem;
-    border-bottom-left-radius: 9999px;
-    border-bottom-right-radius: 9999px;
-    border-top-left-radius: 9999px;
-    border-top-right-radius: 9999px;
+    border-radius: 9999px;
 }
 
 #sidebarPostBtn:hover{
@@ -71,10 +68,7 @@
     text-transform: inherit;
     margin-bottom: 0.5rem;
     margin-left: 0;
-    border-bottom-left-radius: 9999px;
-    border-bottom-right-radius: 9999px;
-    border-top-left-radius: 9999px;
-    border-top-right-radius: 9999px;
+    border-radius: 9999px;
 }
 
 
