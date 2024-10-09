@@ -1,31 +1,266 @@
 /* eslint-disable react/prop-types */
-import React from 'react';
-import { Modal, Box, Typography, IconButton } from '@mui/material';
+import { useState, useEffect, useContext } from 'react';
+import { Modal, Box, Typography, IconButton, Button, TextField, CircularProgress, Card, CardContent, CardActions, Backdrop } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { AccountProfile } from '../components/account-profile.jsx';
-import { AccountProfileChangeForm } from '../components/account-profile-changeForm.jsx';
+import { AppStatesContext, UserContext } from '../App.jsx';
+import { clean } from 'profanity-cleaner';
+import MuiAvatar from './MuiAvatar';
+import CameraAltIcon from '@mui/icons-material/CameraAlt';
+import "../styles/EditProfileModal.css";
 
 const EditProfileModal = ({ open, handleClose }) => {
+  const { setSnackbarOpenCondition, setSnackbarOpen, setProfileUpdated } = useContext(AppStatesContext);
+  const { currentUser } = useContext(UserContext);
+
+  const [uploadedImg, setUploadedImg] = useState();
+  const [imgSubmitted, setImgSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [values, setValues] = useState({
+    name: currentUser.name,
+    email: currentUser.email,
+    bio: currentUser.bio,
+  });
+  const [clickedOnProfileUpdate, setClickedOnProfileUpdate] = useState(false);
+  const [invalidEmail, setInvalidEmail] = useState(false);
+  const [showSaveImageButton, setShowSaveImageButton] = useState(false);
+
+
+  function handleImageChange(event) {
+    const uploadedImg = event.target.files[0];
+    if (uploadedImg["type"] !== "image/x-png" && uploadedImg["type"] !== "image/png" && uploadedImg["type"] !== "image/jpeg") {
+      console.error("Only image files can be attached!");
+      setSnackbarOpenCondition("notAnImage");
+      setSnackbarOpen(true);
+      return;
+    } else if (uploadedImg["size"] > 1048576) {
+      console.error("Image size is too big!");
+      setSnackbarOpenCondition("sizeTooBig");
+      setSnackbarOpen(true);
+      return;
+    } else {
+      setUploadedImg(event.target.files[0]);
+      setShowSaveImageButton(true);
+    }
+  }
+
+  function submitImg() {
+    setImgSubmitted(true);
+    setLoading(true);
+  }
+
+  useEffect(() => {
+    async function changeProfileImage() {
+      const formData = new FormData();
+      formData.append("image", uploadedImg);
+
+      fetch(import.meta.env.VITE_BACKEND_URL + '/uploadprofilepic/' + currentUser["_id"], {
+        method: "post",
+        body: formData,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+        }
+      })
+        .then(async result => {
+          if (result.ok) {
+            await result.json();
+            console.log("Image uploaded");
+            setUploadedImg(null);
+            /* setImgSubmitted(false); */
+            setProfileUpdated(true);
+          } else {
+            throw new Error(result);
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        })
+        .finally(() => {
+            setLoading(false);
+            setImgSubmitted(false);
+        });
+    }
+
+    if (imgSubmitted === true) {
+      changeProfileImage();
+    }
+  }, [imgSubmitted]);
+
+  function handleChange(event) {
+    setValues({
+      ...values,
+      [event.target.name]: event.target.value
+    });
+  }
+
+  useEffect(() => {
+    if (values.email.includes("@")) {
+      setSnackbarOpen(false);
+      setTimeout(() => {
+        setInvalidEmail(false);
+      }, 200);
+    } else {
+      setSnackbarOpen(false);
+      setTimeout(() => {
+        setInvalidEmail(true);
+      }, 200);
+    }
+  }, [values.email]);
+
+  function handleSubmit(event) {
+    event.preventDefault();
+    if (invalidEmail) {
+      setSnackbarOpenCondition("wrongEmail");
+      setSnackbarOpen(true);
+      return;
+    } else if (values.name.length > 30) {
+      setSnackbarOpenCondition("nameTooLong");
+      setSnackbarOpen(true);
+      return;
+    } else if (values.bio && values.bio.length > 100) {
+      setSnackbarOpenCondition("bioTooLong");
+      setSnackbarOpen(true);
+      return;
+    } else if (values.email.length > 50) {
+      setSnackbarOpenCondition("emailTooLong");
+      setSnackbarOpen(true);
+      return;
+    }
+    setLoading(true);
+    setClickedOnProfileUpdate(true);
+    setProfileUpdated(false);
+  }
+
+  useEffect(() => {
+    async function editProfile() {
+      let filteredName = await clean(values.name, { keepFirstAndLastChar: true, placeholder: '#' });
+      let filteredEmail = await clean(values.email, { keepFirstAndLastChar: true, placeholder: '#' });
+      let filteredBio = values.bio ? await clean(values.bio, { keepFirstAndLastChar: true, placeholder: '#' }) : "";
+
+      fetch(import.meta.env.VITE_BACKEND_URL + '/editprofile/' + currentUser["_id"], {
+        method: 'PATCH',
+        body: JSON.stringify({ name: filteredName, email: filteredEmail, bio: filteredBio }),
+        headers: {
+          'Content-Type': 'application/json',
+          "Access-Control-Allow-Origin": "*",
+        },
+        credentials: "include"
+      })
+        .then(async result => {
+          if (result.ok) {
+            await result.json();
+            console.log("Profile Updated!");
+            await setProfileUpdated(true);
+            await setSnackbarOpenCondition("profileChangeSuccess");
+/*             await setSnackbarOpen(true);
+            setClickedOnProfileUpdate(false); */
+          } else {
+            console.error("There has been an error!");
+            setSnackbarOpenCondition("failure");
+/*             setSnackbarOpen(true);
+            setClickedOnProfileUpdate(false); */
+            setProfileUpdated(false);
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        })
+        .finally(() => {
+            setLoading(false);
+            setClickedOnProfileUpdate(false);
+            setSnackbarOpen(true);
+        });
+    }
+
+    if (clickedOnProfileUpdate === true) {
+      editProfile();
+    }
+  }, [clickedOnProfileUpdate]);
+
   return (
     <Modal open={open} onClose={handleClose}>
-      <Box sx={{ 
-        position: 'absolute', 
-        top: '50%', 
-        left: '50%', 
-        transform: 'translate(-50%, -50%)', 
-        width: 600, 
-        bgcolor: 'background.paper', 
-        boxShadow: 24, 
-        p: 4 
-      }}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <Box className="modalBox">
+        <Box className="modalHeader">
           <Typography variant="h6">Edit Profile</Typography>
           <IconButton onClick={handleClose}>
             <CloseIcon />
           </IconButton>
         </Box>
-        <AccountProfile />
-        <AccountProfileChangeForm />
+        <form autoComplete="off" noValidate onSubmit={handleSubmit}>
+          <Card className="profileCard">
+            <CardContent>
+              <Box className="profileImageBox">
+                <MuiAvatar user={currentUser} profilePageAvatar="yes" />
+                <input
+                  type="file"
+                  className="hidden"
+                  id="image"
+                  name="image"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                />
+                <label htmlFor="image" className="cameraIconLabel">
+                  <CameraAltIcon className="cameraIcon" />
+                </label>
+              </Box>
+              {showSaveImageButton && (
+                <Button
+                  variant="contained"
+                  onClick={submitImg}
+                  className="saveImageButton"
+                >
+                  Save Image
+                </Button>
+              )}
+              <Box className="profileFieldsBox">
+                <TextField
+                  disabled={loading || currentUser.email === "demoacc@demoacc.com"}
+                  fullWidth
+                  label="Name"
+                  name="name"
+                  onChange={handleChange}
+                  required
+                  value={values.name}
+                />
+                <TextField
+                  disabled={loading || currentUser.googleId || currentUser.email === "demoacc@demoacc.com"}
+                  fullWidth
+                  error={invalidEmail}
+                  helperText={invalidEmail ? 'Invalid E-mail address!' : ' '}
+                  label="E-mail Address"
+                  name="email"
+                  type="email"
+                  required
+                  onChange={handleChange}
+                  value={values.email}
+                />
+                <TextField
+                  disabled={loading || currentUser.email === "demoacc@demoacc.com"}
+                  fullWidth
+                  id="bio"
+                  label="Bio"
+                  name="bio"
+                  multiline
+                  rows={4}
+                  placeholder="Enter Your Bio"
+                  onChange={handleChange}
+                  value={values.bio}
+                />
+              </Box>
+            </CardContent>
+            <CardActions className="profileCardActions">
+              <Button
+                disabled={loading || currentUser.email === "demoacc@demoacc.com"}
+                variant="contained"
+                onClick={handleSubmit}
+              >
+                Save details
+              </Button>
+            </CardActions>
+          </Card>
+        </form>
+        <Backdrop open={loading} className="backdrop">
+          <CircularProgress color="inherit" />
+        </Backdrop>
       </Box>
     </Modal>
   );

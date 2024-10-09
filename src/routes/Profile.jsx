@@ -15,7 +15,7 @@ const Profile = () => {
 
   // Pass the UserContext defined in app.js
   const {selectedUser, setSelectedUser } = useContext(UserContext); 
-  const {pressedFollow, darkModeOn} = useContext(AppStatesContext); 
+  const {pressedFollow, profileUpdated, darkModeOn} = useContext(AppStatesContext); 
   const [error, setError] = useState(null);
   const [profilePageLoading, setProfilePageLoading] = useState(true);
 
@@ -53,7 +53,7 @@ const Profile = () => {
     };
     getUserData();
     //when user follows/unfollows, refresh display to have either the follow or unfollow button
-    }, [pressedFollow]); 
+    }, [pressedFollow, profileUpdated]); 
 
 
 

@@ -1,0 +1,68 @@
+.modalBox {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px;
+    background-color: white;
+    box-shadow: 24px;
+    padding: 16px;
+  }
+  
+  .modalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .profileCard {
+    margin-top: 16px;
+  }
+  
+  .profileImageBox {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  
+  .cameraIconLabel {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+    padding: 8px;
+    cursor: pointer;
+  }
+  
+  .cameraIcon {
+    color: white;
+    font-size: 24px;
+  }
+  
+  .hidden {
+    display: none;
+  }
+  
+  .saveImageButton {
+    display: block;
+    margin: 0 auto 16px auto;
+  }
+  
+  .profileFieldsBox {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .profileCardActions {
+    justify-content: flex-end;
+  }
+
+  .backdrop {
+    z-index: 1301; /* Higher than the modal */
+    color: #fff;
+  }

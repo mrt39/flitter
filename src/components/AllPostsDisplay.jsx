@@ -13,7 +13,7 @@ import '../styles/AllPostsDisplay.css'
 const AllPostsDisplay = ({fromThisUser}) => {
 
 
-  const { allPosts, setAllPosts, imgSubmittedNavbar, imgSubmittedHomePage, 
+  const { allPosts, setAllPosts, profileUpdated, imgSubmittedNavbar, imgSubmittedHomePage, 
     pressedSubmitPost, refreshPosts, darkModeOn, appContainerRef} = useContext(AppStatesContext); 
 
   const [error, setError] = useState(null);
@@ -76,7 +76,7 @@ const AllPostsDisplay = ({fromThisUser}) => {
     prevDeps.current = [pressedSubmitPost, imgSubmittedNavbar, imgSubmittedHomePage, refreshPosts];
   
     getMessages();
-  }, [pressedSubmitPost, imgSubmittedNavbar, imgSubmittedHomePage, refreshPosts]);
+  }, [pressedSubmitPost, imgSubmittedNavbar, imgSubmittedHomePage, refreshPosts, profileUpdated]);
   
   // useEffect for sorting messages (shuffle or sort by date)
   useEffect(() => {
