@@ -1,18 +1,21 @@
 .post-feed-container {
   display: flex;
   justify-content: center;
+
 }
 
 .post-feed {
   max-width: 600px;
-  margin: 0 auto; /* Center */
+  margin: 0 auto; 
   padding-top: 0 !important;  
   width: 100%; 
 }
 
 .post-item{
-  border-bottom: 1px solid rgb(239, 243, 244);
   padding: 0 !important;
+  border-style: solid; 
+  border-color: rgb(239, 243, 244);
+  border-width: 1px 0 0 0;
 }
 
 .post-item:first-child {
@@ -20,7 +23,7 @@
 }
 
 .post-item.dark-mode{
-  border-bottom: 1px solid rgb(47, 51, 54);
+  border-color: rgb(47, 51, 54);
 }
 
 .post-item.dark-mode:first-child{

@@ -20,19 +20,18 @@ function Home() {
   return (
     <>
     <div className='homeContainer'>
-      <div className={`homePageTopContainer ${darkModeOn ? 'dark-mode' : ''}`}>
+      <div className={`homePageTop-container ${darkModeOn ? 'dark-mode' : ''}`}>
         <h1>
           THIS IS HOMEPAGE
         </h1>
       </div>
 
-      {/* use different react components for forms in homepage and navbar in order to seperate concerns and avoid state/post logic clashing */}
-      <SubmitPostForm
-       currentUser={currentUser}
-       location="homepage"
-      />
-      <AllPostsDisplay
-      />
+        {/* use different react components for forms in homepage and navbar in order to seperate concerns and avoid state/post logic clashing */}
+        <SubmitPostForm
+          currentUser={currentUser}
+          location="homepage"
+        />
+        <AllPostsDisplay/> 
     </div>
     </>
   )

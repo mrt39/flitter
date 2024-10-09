@@ -13,7 +13,8 @@ import '../styles/AllPostsDisplay.css'
 const AllPostsDisplay = ({fromThisUser}) => {
 
 
-  const { allPosts, setAllPosts, imgSubmittedNavbar, imgSubmittedHomePage, pressedSubmitPost, refreshPosts, darkModeOn} = useContext(AppStatesContext); 
+  const { allPosts, setAllPosts, imgSubmittedNavbar, imgSubmittedHomePage, 
+    pressedSubmitPost, refreshPosts, darkModeOn, appContainerRef} = useContext(AppStatesContext); 
 
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -112,13 +113,6 @@ const AllPostsDisplay = ({fromThisUser}) => {
             // Push the post into filteredMessages array
             filteredMessagesinFunc.push(post);
           }
-
-/*           if(selectedUser===currentUser){
-            if (post.from[0]._id === currentUser._id) {
-              // Push the post into filteredMessages array
-              filteredMessagesinFunc.push(post);
-            }
-          } */
         });
   
         //sort filteredMessages array by their dates, descending order
@@ -151,7 +145,7 @@ const AllPostsDisplay = ({fromThisUser}) => {
   
   /* ---------------------------INFINITE SCROLL FUNCTIONALITY--------------------------- */
   //state for setting the visible post count, for infinite scroll functionality 
-  const [visiblePosts, setVisiblePosts] = useState(10); // Initial amount of posts to show
+  const [visiblePosts, setVisiblePosts] = useState(15); // Initial amount of posts to show
   const [loadingPosts, setLoadingPosts] = useState(false); // Track posts loading state
 
   // Function to load more posts when scrolled to the bottom, with a 1.5-second delay
@@ -160,7 +154,7 @@ const AllPostsDisplay = ({fromThisUser}) => {
 
     // Delay the loading of the next set of posts by 1.5 seconds
     setTimeout(() => {
-      setVisiblePosts(visiblePosts + 7); // Increase the visible post count by 10
+      setVisiblePosts(visiblePosts + 10); // Increase the visible post count by 10
       setLoadingPosts(false); // End loading
     }, 1000);
   };
@@ -188,13 +182,15 @@ const AllPostsDisplay = ({fromThisUser}) => {
 
 
   return (
-    <Box className="post-feed-container">
-      <List className="post-feed">
+    <Box className="post-feed-container" id="post-feed-container">
+      <List className="post-feed" id="post-feed">
 
       <InfiniteScroll
-        dataLength={visiblePosts} // This is the length of the currently visible posts
-        next={loadMorePosts} // Function to call when more posts are to be loaded
-        hasMore={visiblePosts < filteredMessages.length} // Check if there's more to load
+        dataLength={visiblePosts} // length of the currently visible posts
+        next={loadMorePosts} // function to call to be load more posts
+        hasMore={visiblePosts < filteredMessages.length} // check if there's more to load
+        scrollableTarget={appContainerRef.current} // Set the scrollable target as the appContainerRef (passed from Home.jsx)
+        threshold={1}
         loader={ // Display while loading more
           loadingPosts && 
           <CircularProgress size="5rem" sx={{"marginBottom":"5rem"}}/>

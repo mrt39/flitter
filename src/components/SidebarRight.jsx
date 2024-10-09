@@ -19,7 +19,7 @@ const SidebarRight = () => {
 
 
   return (
-    <div className={darkModeOn?"sidebarRight-dark": "sidebarRight"}>
+    <div className={`sidebarRight ${darkModeOn ? 'dark-mode' : ''}`}>
       <IconButton onClick={toggleDarkTheme}>
         {darkModeOn ? 
         <WbSunnyIcon sx={{ fontSize: 30, color: '#1da1f2' }}/> 

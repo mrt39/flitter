@@ -1,18 +1,23 @@
 .sidebarRight{
-    border-left: 1px solid rgb(239, 243, 244);
     width: 250px;
     min-width: 250px;
     padding: 20px 20px;
     margin: 0;
-    position: relative;
+    position: sticky; /* Make the sidebar sticky */
+    top: 0; /* Align to the top of the viewport */
+    height: 100vh; /* Full height of the viewport */
+    overflow-y: hidden; /* Disable vertical scrolling for the sidebar */
+    z-index: 1000; 
 }
 
-.sidebarRight-dark{
-    border-left: 1px solid rgb(47, 51, 54);
-    width: 250px;
-    min-width: 250px;
-    padding: 20px 20px;
-    margin: 0;
-    position: relative;
-}
 
+/* borders */
+.sidebarRight{
+    border-style: solid; 
+    border-color: rgb(239, 243, 244);
+    border-width: 0 0 0 1px;
+}
+  
+.sidebarRight.dark-mode{
+    border-color: rgb(47, 51, 54);
+}

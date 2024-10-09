@@ -15,7 +15,7 @@ const Profile = () => {
 
   // Pass the UserContext defined in app.js
   const {selectedUser, setSelectedUser } = useContext(UserContext); 
-  const {pressedFollow} = useContext(AppStatesContext); 
+  const {pressedFollow, darkModeOn} = useContext(AppStatesContext); 
   const [error, setError] = useState(null);
   const [profilePageLoading, setProfilePageLoading] = useState(true);
 
@@ -75,9 +75,10 @@ const Profile = () => {
   
   return (
     <>
-    <div className="profileContainer">
-      
-      <UserCardProfile/>
+    <div className={`profileContainer ${darkModeOn ? 'dark-mode' : ''}`}>
+      {/* <div className={`profile-userCard-container ${darkModeOn ? 'dark-mode' : ''}`}> */}
+        <UserCardProfile/>
+      {/* </div> */}
       <AllPostsDisplay
       fromThisUser = {selectedUser} //instead of displaying all posts, display the posts only from this user
       />

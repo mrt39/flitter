@@ -3,7 +3,7 @@ import SidebarRight from "./components/SidebarRight.jsx"
 import SidebarLeft from "./components/SidebarLeft.jsx"
 import Snackbar from "./components/Snackbar.jsx"
 import './styles/App.css'
-import { useEffect, useState, createContext} from "react";
+import { useEffect, useState, createContext, useRef} from "react";
 import { Navigate, } from "react-router-dom";
 import Box from '@mui/material/Box';
 import { CircularProgress, Alert } from '@mui/material';
@@ -129,6 +129,8 @@ const App = () => {
   const [pressedSubmitPost, setPressedSubmitPost] = useState(false)
 
   const [isSubmittingPost, setisSubmittingPost] = useState(false); // Track if a submission is already in progress, disable all submit buttons
+
+  const appContainerRef = useRef(null); // Add a reference to the outlet container
 
 
   // get the user data when logged in, also checks if the user is logged in after each refresh
@@ -257,7 +259,8 @@ const App = () => {
 
   return (
 
-    <div className='appContainer'>
+    //add referance to the app container to determine the scrollable target for the infinite scroll
+    <div className='appContainer' ref={appContainerRef}>
 
       {/* mui theme provider */}
       <ThemeProvider theme={darkTheme}>
@@ -271,7 +274,8 @@ const App = () => {
           imgSubmittedHomePage, setImgSubmittedHomePage, isSubmittingPost, 
           setisSubmittingPost, pressedSubmitPost, setPressedSubmitPost,
           refreshPosts, setRefreshPosts, darkModeOn, pressedFollow, setPressedFollow,
-          toggleDarkTheme, usertoFollow, setUsertoFollow, loadingFollow, setLoadingFollow
+          toggleDarkTheme, usertoFollow, setUsertoFollow, loadingFollow, setLoadingFollow,
+          appContainerRef
       }}>
         <UserContext.Provider value={{ currentUser, setCurrentUser, selectedUser, setSelectedUser}}>
 
@@ -286,8 +290,8 @@ const App = () => {
         {currentUser ? 
         <>
           <SidebarLeft/>
-          <div className="outletContainer">
-          <Outlet /> 
+          <div className="outletContainer" >
+            <Outlet /> 
           </div>
           <SidebarRight/>
         </>

@@ -95,7 +95,7 @@ const SidebarLeft = () => {
 
 
   return (
-    <div className={darkModeOn?"sidebarLeft-dark": "sidebarLeft"}>
+    <div className={`sidebarLeft ${darkModeOn ? 'dark-mode' : ''}`}>
         <div className="sidebarLogo">
           <img src={LogoImg} alt="logo" />
         </div>

@@ -2,10 +2,18 @@
     max-width: 30vw !important;
 }
 
-.homePageTopContainer{
-    border-bottom: 1px solid rgb(239, 243, 244);
+.homePageTop-container{
+    margin-bottom: 0;
+    border-style: solid; 
+    border-color: rgb(239, 243, 244);
+    border-width: 0 0 1px 0;
 }
 
-.homePageTopContainer.dark-mode{
-    border-bottom: 1px solid rgb(47, 51, 54);
+.homePageTop-container h1{
+    margin-bottom: 0;
 }
+
+.homePageTop-container.dark-mode{
+    border-color: rgb(47, 51, 54);
+}
+

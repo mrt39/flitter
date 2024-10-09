@@ -1,21 +1,25 @@
 .sidebarLeft{
-    border-right: 1px solid rgb(239, 243, 244);
     width: 250px;
     min-width: 250px;
     padding: 20px 20px;
     margin: 0;
-    position: relative;
+    position: sticky; /* Make the sidebar sticky */
+    top: 0; /* Align to the top of the viewport */
+    height: 100vh; /* Full height of the viewport */
+    overflow-y: hidden; /* Disable vertical scrolling for the sidebar */
+    z-index: 1000; 
 }
 
-.sidebarLeft-dark{
-    border-right: 1px solid rgb(47, 51, 54);
-    width: 250px;
-    min-width: 250px;
-    padding: 20px 20px;
-    margin: 0;
-    position: relative;
+/* borders */
+.sidebarLeft{
+    border-style: solid; 
+    border-color: rgb(239, 243, 244);
+    border-width: 0 1px 0 0;
 }
-
+  
+.sidebarLeft.dark-mode{
+    border-color: rgb(47, 51, 54);
+}
 
 .sidebarLogo img{
     height: 50px;
@@ -82,5 +86,5 @@
 
 #sidebarUserIconBtn3Dot{
     margin-top: 9px;
-    margin-left: auto; /* Pushes the three dots to the right */
+    margin-left: auto; /* pushes the three dots to the right */
 }
