@@ -2,6 +2,7 @@
 import { useState,  useEffect, useContext } from 'react'
 import { UserContext, AppStatesContext } from '../App.jsx';
 import FollowButton from './FollowButton.jsx';
+import EditProfileModal from './EditProfileModal.jsx';
 import { Link, useNavigate } from "react-router-dom";
 import { Card, CardContent, Typography, Avatar, useTheme, Button, IconButton } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -39,6 +40,10 @@ const UserCardProfile = () => {
             setFirstRender(false)
     }, []);
 
+    //handle opening and closing the edit profile modal
+    const [open, setOpen] = useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
 
 
     return (
@@ -101,8 +106,8 @@ const UserCardProfile = () => {
                         />
                     )
                     :
-                    <Link to="/profileedit">
                         <Button
+                        onClick={handleOpen}
                         variant="outlined"
                         size="small"
                         className="editProfileButton"
@@ -120,8 +125,9 @@ const UserCardProfile = () => {
                         >
                             Edit Profile
                         </Button>
-                    </Link>
                     }
+
+                    <EditProfileModal open={open} handleClose={handleClose} />
                 </div>
             </div>
         </Card>
