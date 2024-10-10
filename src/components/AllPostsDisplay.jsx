@@ -10,7 +10,7 @@ import {List, ListItem} from '@mui/material';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import '../styles/AllPostsDisplay.css'
 
-const AllPostsDisplay = ({fromThisUser}) => {
+const AllPostsDisplay = ({fromThisUser, activeTab}) => {
 
 
   const { allPosts, setAllPosts, profileUpdated, imgSubmittedNavbar, imgSubmittedHomePage, 
@@ -201,11 +201,11 @@ const AllPostsDisplay = ({fromThisUser}) => {
         //displaying 10 at a time
         (filteredMessages.slice(0, visiblePosts).map(post => (
 
-      <ListItem key={post._id} className={`post-item ${darkModeOn ? 'dark-mode' : ''}`} alignItems="flex-start">
-        <PostDisplay
-          post={post}
-        />
-      </ListItem>
+        <ListItem key={post._id} className={`post-item ${darkModeOn ? 'dark-mode' : ''}`} alignItems="flex-start">
+          <PostDisplay
+            post={post}
+          />
+        </ListItem>
           
         ))
         ) : (
