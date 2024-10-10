@@ -21,17 +21,20 @@ const EditProfileModal = ({ open, handleClose }) => {
     bio: currentUser.bio,
   });
   const [clickedOnProfileUpdate, setClickedOnProfileUpdate] = useState(false);
+  //check if the e-mail address currentUser puts is invalid
   const [invalidEmail, setInvalidEmail] = useState(false);
   const [showSaveImageButton, setShowSaveImageButton] = useState(false);
 
 
   function handleImageChange(event) {
     const uploadedImg = event.target.files[0];
+    //check the filetype to ensure it's an image. throw error if it isn't
     if (uploadedImg["type"] !== "image/x-png" && uploadedImg["type"] !== "image/png" && uploadedImg["type"] !== "image/jpeg") {
       console.error("Only image files can be attached!");
       setSnackbarOpenCondition("notAnImage");
       setSnackbarOpen(true);
       return;
+       //if image size is > 1mb, throw error
     } else if (uploadedImg["size"] > 1048576) {
       console.error("Image size is too big!");
       setSnackbarOpenCondition("sizeTooBig");
@@ -48,6 +51,7 @@ const EditProfileModal = ({ open, handleClose }) => {
     setLoading(true);
   }
 
+  //handle uploading image
   useEffect(() => {
     async function changeProfileImage() {
       const formData = new FormData();
@@ -80,7 +84,7 @@ const EditProfileModal = ({ open, handleClose }) => {
             setShowSaveImageButton(false)
         });
     }
-
+    //only trigger when image is sent
     if (imgSubmitted === true) {
       changeProfileImage();
     }
@@ -93,9 +97,12 @@ const EditProfileModal = ({ open, handleClose }) => {
     });
   }
 
+  //email validation
   useEffect(() => {
     if (values.email.includes("@")) {
+      //if the snackbar is already opened, close it
       setSnackbarOpen(false);
+      //wait until snackbar closes to change the e-mail invalid state
       setTimeout(() => {
         setInvalidEmail(false);
       }, 200);
@@ -109,6 +116,7 @@ const EditProfileModal = ({ open, handleClose }) => {
 
   function handleSubmit(event) {
     event.preventDefault();
+    //if mail address is invalid, don't update
     if (invalidEmail) {
       setSnackbarOpenCondition("wrongEmail");
       setSnackbarOpen(true);
@@ -131,8 +139,11 @@ const EditProfileModal = ({ open, handleClose }) => {
     setProfileUpdated(false);
   }
 
+  //submit the profile changes
   useEffect(() => {
     async function editProfile() {
+      //on submit, clean the word with the profanity cleaner
+      //https://www.npmjs.com/package/profanity-cleaner
       let filteredName = await clean(values.name, { keepFirstAndLastChar: true, placeholder: '#' });
       let filteredEmail = await clean(values.email, { keepFirstAndLastChar: true, placeholder: '#' });
       let filteredBio = values.bio ? await clean(values.bio, { keepFirstAndLastChar: true, placeholder: '#' }) : "";
@@ -144,7 +155,7 @@ const EditProfileModal = ({ open, handleClose }) => {
           'Content-Type': 'application/json',
           "Access-Control-Allow-Origin": "*",
         },
-        credentials: "include"
+        credentials: "include" //required for sending the cookie data-authorization check
       })
         .then(async result => {
           if (result.ok) {
@@ -152,13 +163,10 @@ const EditProfileModal = ({ open, handleClose }) => {
             console.log("Profile Updated!");
             await setProfileUpdated(true);
             await setSnackbarOpenCondition("profileChangeSuccess");
-/*             await setSnackbarOpen(true);
-            setClickedOnProfileUpdate(false); */
+
           } else {
             console.error("There has been an error!");
             setSnackbarOpenCondition("failure");
-/*             setSnackbarOpen(true);
-            setClickedOnProfileUpdate(false); */
             setProfileUpdated(false);
           }
         })
@@ -172,6 +180,7 @@ const EditProfileModal = ({ open, handleClose }) => {
         });
     }
 
+    //only trigger when profile is updated
     if (clickedOnProfileUpdate === true) {
       editProfile();
     }

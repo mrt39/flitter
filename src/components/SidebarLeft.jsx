@@ -4,6 +4,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AppStatesContext, UserContext } from '../App.jsx';
 import '../styles/SidebarLeft.css';
 import SidebarLink from './SidebarLink.jsx';
+import EditProfileModal from './EditProfileModal.jsx';
 import UserAvatar from './UserAvatar.jsx';
 import SubmitPostModal from './SubmitPostModal.jsx';
 
@@ -57,6 +58,10 @@ const SidebarLeft = () => {
 
     const navigate = useNavigate(); 
 
+    //handle opening and closing the edit profile modal
+    const [openEditProfileModal, setOpenEditProfileModal] = useState(false);
+    const handleOpenEditProfileModal = () => setOpenEditProfileModal(true);
+    const handleCloseEditProfileModal = () => setOpenEditProfileModal(false);
 
 
 
@@ -176,14 +181,14 @@ const SidebarLeft = () => {
         transformOrigin={{ horizontal: 'left', vertical: 'bottom' }}
         anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
       >
-        <Link className="sidebarLink" to="/profileedit">
-          <MenuItem className='sidebarMenuItem'>
+        
+          <MenuItem className='sidebarMenuItem'onClick={handleOpenEditProfileModal}>
               <ListItemIcon >
                 <EditOutlinedIcon className='sidebarMenuIcon' fontSize="small" />
               </ListItemIcon>
               Edit Profile
           </MenuItem>
-        </Link>
+        
 
         <MenuItem className='sidebarMenuItem' onClick={handleSignOut}>
           <ListItemIcon >
@@ -195,10 +200,11 @@ const SidebarLeft = () => {
 
 
 
+      <EditProfileModal open={openEditProfileModal} handleClose={handleCloseEditProfileModal} />
 
     </div>
 
-   
+
   );
 }
 
