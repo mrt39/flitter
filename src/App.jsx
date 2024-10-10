@@ -68,6 +68,9 @@ const App = () => {
         secondary: {
           main: '#131052',
         },
+        background: {
+          default: darkModeOn ? 'black' : '#fff', // change default background color for dark mode
+        },
       },
       components: {
         MuiButton: {

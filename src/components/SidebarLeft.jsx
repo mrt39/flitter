@@ -4,6 +4,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AppStatesContext, UserContext } from '../App.jsx';
 import '../styles/SidebarLeft.css';
 import SidebarLink from './SidebarLink.jsx';
+import UserAvatar from './UserAvatar.jsx';
 import SubmitPostModal from './SubmitPostModal.jsx';
 
 // MUI Imports
@@ -128,13 +129,11 @@ const SidebarLeft = () => {
             aria-haspopup="true"
             aria-expanded={open ? 'true' : undefined}
           >
-            <Avatar 
-                sx={{ width: 32, height: 32 }}
-                alt={currentUser.name}
-                src={currentUser.picture? currentUser.picture : currentUser.uploadedpic}
-            >
+            <UserAvatar 
+                user={currentUser} 
+                source="post"
+            />
 
-            </Avatar>
             <p>{currentUser.name}</p>
             <p id='sidebarUserIconBtn3Dot'>...</p>
         </Button>

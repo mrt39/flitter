@@ -3,6 +3,7 @@ import { useState,  useEffect, useContext } from 'react'
 import { UserContext, AppStatesContext } from '../App.jsx';
 import FollowButton from './FollowButton.jsx';
 import EditProfileModal from './EditProfileModal.jsx';
+import UserAvatar from './UserAvatar.jsx';
 import { Link, useNavigate } from "react-router-dom";
 import { Card, CardContent, Typography, Avatar, useTheme, Button, IconButton } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -66,10 +67,9 @@ const UserCardProfile = () => {
             <div className="header-background"></div>
             <div className="profile-content-and-followButton-container"> 
                 <div className="profile-content">
-                    <Avatar
-                        alt={selectedUser.name}
-                        src={selectedUser.picture ? selectedUser.picture : selectedUser.uploadedpic}
-                        className="avatar"
+                    <UserAvatar
+                        user={selectedUser}
+                        source={"userCardProfile"}
                     />
                     <CardContent className="card-content">
                         <Typography variant="h5" component="div" fontWeight="bold" className="username">

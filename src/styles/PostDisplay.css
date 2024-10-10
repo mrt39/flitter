@@ -10,6 +10,10 @@
   cursor: pointer;
 }
 
+.avatarLink:hover{
+  text-decoration: none !important;
+}
+
 .postDisplayContainer{
   width: 100%;
 }

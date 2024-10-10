@@ -3,10 +3,28 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 600px;
-    background-color: white;
+    width: 90%; /* use percentage for width - responsive design */
+    max-width: 600px; /* set a maximum width  - responsive design */
     box-shadow: 24px;
     padding: 16px;
+    border-radius: 16px;
+    background-color: white;
+  }
+
+  .modalBox.dark-mode{
+    background-color: black;
+  }
+
+  @media (min-width: 768px) {
+    .modalBox {
+      width: 80%; /* adjust width for larger screens */
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .modalBox {
+      width: 60%; /* adjust width for even larger screens */
+    }
   }
   
   .modalHeader {
@@ -14,9 +32,24 @@
     justify-content: space-between;
     align-items: center;
   }
+
+  .editProfileForm{
+    background-color: inherit !important;
+  }
   
   .profileCard {
     margin-top: 16px;
+    background-color: inherit !important;
+    box-shadow: none !important;
+  }
+
+  .profileCard-content{
+    background-color: inherit !important;
+  }
+
+  .editprofile-avatar-and-saveimagebtn-container{
+    display: flex;
+    flex-direction: column;
   }
   
   .profileImageBox {
@@ -32,10 +65,15 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.3);
     border-radius: 50%;
     padding: 8px;
     cursor: pointer;
+    width: 45px; 
+    height: 45px; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
   }
   
   .cameraIcon {
@@ -49,7 +87,7 @@
   
   .saveImageButton {
     display: block;
-    margin: 0 auto 16px auto;
+    margin: 0 auto 16px auto !important;
   }
   
   .profileFieldsBox {
@@ -60,6 +98,8 @@
   
   .profileCardActions {
     justify-content: flex-end;
+    background-color: inherit !important;
+    box-shadow: none !important;
   }
 
   .backdrop {

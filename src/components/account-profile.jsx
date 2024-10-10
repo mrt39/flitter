@@ -7,7 +7,7 @@ import {
 import { useState, useEffect, useContext } from 'react';
 import { AppStatesContext, UserContext } from '../App.jsx';
 import "../styles/Account-Profile.css"
-import MuiAvatar from "./MuiAvatar";
+import UserAvatar from './UserAvatar.jsx';
 
 
 export const AccountProfile = () => {

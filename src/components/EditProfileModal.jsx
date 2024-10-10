@@ -4,12 +4,12 @@ import { Modal, Box, Typography, IconButton, Button, TextField, CircularProgress
 import CloseIcon from '@mui/icons-material/Close';
 import { AppStatesContext, UserContext } from '../App.jsx';
 import { clean } from 'profanity-cleaner';
-import MuiAvatar from './MuiAvatar';
+import UserAvatar from './UserAvatar.jsx';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import "../styles/EditProfileModal.css";
 
 const EditProfileModal = ({ open, handleClose }) => {
-  const { setSnackbarOpenCondition, setSnackbarOpen, setProfileUpdated } = useContext(AppStatesContext);
+  const { setSnackbarOpenCondition, setSnackbarOpen, setProfileUpdated, darkModeOn } = useContext(AppStatesContext);
   const { currentUser } = useContext(UserContext);
 
   const [uploadedImg, setUploadedImg] = useState();
@@ -77,6 +77,7 @@ const EditProfileModal = ({ open, handleClose }) => {
         .finally(() => {
             setLoading(false);
             setImgSubmitted(false);
+            setShowSaveImageButton(false)
         });
     }
 
@@ -177,40 +178,73 @@ const EditProfileModal = ({ open, handleClose }) => {
   }, [clickedOnProfileUpdate]);
 
   return (
-    <Modal open={open} onClose={handleClose}>
-      <Box className="modalBox">
+    <Modal 
+      open={open} 
+      onClose={handleClose}
+      slotProps={{
+        backdrop: {
+          style: { backgroundColor: 'rgba(50, 50, 50, 0.5)' } // change the backdrop background color here
+        }
+      }}
+    >
+      <Box className={`modalBox ${darkModeOn ? 'dark-mode' : ''}`}>
         <Box className="modalHeader">
-          <Typography variant="h6">Edit Profile</Typography>
+          <Typography variant="h6" fontWeight="bold" sx={{ml:"22px"}}>Edit Profile</Typography>
           <IconButton onClick={handleClose}>
             <CloseIcon />
           </IconButton>
         </Box>
-        <form autoComplete="off" noValidate onSubmit={handleSubmit}>
+        <form 
+          autoComplete="off" 
+          noValidate 
+          onSubmit={handleSubmit}
+          className='editProfileForm'
+        >
           <Card className="profileCard">
-            <CardContent>
-              <Box className="profileImageBox">
-                <MuiAvatar user={currentUser} profilePageAvatar="yes" />
-                <input
-                  type="file"
-                  className="hidden"
-                  id="image"
-                  name="image"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                />
-                <label htmlFor="image" className="cameraIconLabel">
-                  <CameraAltIcon className="cameraIcon" />
-                </label>
-              </Box>
-              {showSaveImageButton && (
-                <Button
-                  variant="contained"
-                  onClick={submitImg}
-                  className="saveImageButton"
-                >
-                  Save Image
-                </Button>
-              )}
+            <CardContent className="profileCard-content">
+              <div className='editprofile-avatar-and-saveimagebtn-container'>
+                <Box className="profileImageBox">
+                  <UserAvatar 
+                  user={currentUser} 
+                  source={"editProfileModal"} 
+                  />
+                  <input
+                    type="file"
+                    className="hidden"
+                    id="image"
+                    name="image"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                  />
+                  <label htmlFor="image" className="cameraIconLabel">
+                    <CameraAltIcon className="cameraIcon" />
+                  </label>
+                </Box>
+                {showSaveImageButton && (
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    onClick={submitImg}
+                    disabled={loading}
+                    className="saveImageButton"
+                    sx={{
+                      borderRadius: '9999px', 
+                      textTransform: 'none',
+                      padding: '6px 16px',
+                      borderColor: (darkModeOn ? 'white' : 'gray'),
+                      backgroundColor: (darkModeOn ? 'rgb(239, 243, 244)' : 'rgb(15, 20, 25);'),
+                      color: (darkModeOn ? 'black' : 'white'),
+                      '&:hover': {
+                        backgroundColor:(darkModeOn ? 'rgb(215, 219, 220)' : 'rgb(39, 44, 48);'),
+                          borderColor: (darkModeOn ? 'white' : 'gray'),
+                        color:(darkModeOn ? 'black' : 'white'),
+                      },
+                    }}
+                  >
+                    Save Image
+                  </Button>
+                )}
+              </div>
               <Box className="profileFieldsBox">
                 <TextField
                   disabled={loading || currentUser.email === "demoacc@demoacc.com"}
@@ -248,13 +282,28 @@ const EditProfileModal = ({ open, handleClose }) => {
               </Box>
             </CardContent>
             <CardActions className="profileCardActions">
-              <Button
-                disabled={loading || currentUser.email === "demoacc@demoacc.com"}
-                variant="contained"
-                onClick={handleSubmit}
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={handleSubmit}
+              disabled={loading || currentUser.email === "demoacc@demoacc.com"}
+              className="saveImageButton"
+              sx={{
+                borderRadius: '9999px', 
+                textTransform: 'none',
+                padding: '6px 16px',
+                borderColor: (darkModeOn ? 'white' : 'gray'),
+                backgroundColor: (darkModeOn ? 'rgb(239, 243, 244)' : 'rgb(15, 20, 25);'),
+                color: (darkModeOn ? 'black' : 'white'),
+                '&:hover': {
+                  backgroundColor:(darkModeOn ? 'rgb(215, 219, 220)' : 'rgb(39, 44, 48);'),
+                    borderColor: (darkModeOn ? 'white' : 'gray'),
+                  color:(darkModeOn ? 'black' : 'white'),
+                },
+              }}
               >
-                Save details
-              </Button>
+                Save
+            </Button>
             </CardActions>
           </Card>
         </form>

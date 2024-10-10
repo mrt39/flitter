@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import dayjs from 'dayjs';
 import CommentModal from './CommentModal.jsx';
 import HoverUserCard from './HoverUserCard.jsx';
+import UserAvatar from './UserAvatar.jsx';
 import { UserContext, AppStatesContext} from '../App.jsx';
 import { Avatar } from '@mui/material';
 import { ListItemText,  ListItemAvatar, Box} from '@mui/material';
@@ -108,14 +109,14 @@ const PostDisplay = ({post, location}) => {
 //define the component here, in order to not to repeat the code in the "location === "singular-post-page" ?" statement below
   const PostContent = ({ post, handleProfileRouting, handleLike }) => (
     <span className="postContentContainer">
-        <span className="usernameLinkOnPost" onClick={(e) => {
+        <span className="usernameLinkOnPost avatarLink" onClick={(e) => {
             e.preventDefault();
             handleProfileRouting(post.from[0]);
         }}>
             <ListItemAvatar>
-                <Avatar
-                    alt={post.from[0].name}
-                    src={post.from[0].picture ? post.from[0].picture : post.from[0].uploadedpic}
+                <UserAvatar
+                    user={post.from[0]}
+                    source="post"
                 />
             </ListItemAvatar>
         </span>

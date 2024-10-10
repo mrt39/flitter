@@ -1,0 +1,17 @@
+.post-avatar{
+    height: 40px !important;
+    width: 40px !important;
+}
+
+.userCardProfile-avatar{
+    height: 141.5px !important;
+    width: 141.5px !important;
+    margin-top: -95px !important;
+    border-radius: 50% !important;
+}
+
+.editProfileModal-avatar{
+    height: 141.5px !important;
+    width: 141.5px !important;
+    border-radius: 50% !important;
+}
