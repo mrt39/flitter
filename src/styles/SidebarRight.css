@@ -1,5 +1,5 @@
 .sidebarRight{
-    width: 250px;
+    width: 450px;
     min-width: 250px;
     padding: 20px 20px;
     margin: 0;
@@ -21,3 +21,90 @@
 .sidebarRight.dark-mode{
     border-color: rgb(47, 51, 54);
 }
+
+
+/* CONTENT */
+.sidebarRight-section-card {
+    margin-top: 20px;
+    border-radius: 16px !important;
+    border: 1px solid rgb(239, 243, 244) !important;
+    background-color: inherit !important;
+    --Paper-overlay: none !important; 
+    --Paper-shadow: none !important; 
+    width: 350px;
+    text-align: left;
+  }
+
+  .sidebarRight.dark-mode .sidebarRight-section-card {
+    border: 1px solid rgb(47, 51, 54) !important;
+  }
+
+  .sidebarRight-toggleTheme-card{
+    margin-top: 0;
+  }
+
+  .sidebarRight-toggleTheme-card .MuiCardContent-root {
+    padding-top: 0;
+    padding-left: 0;
+  }
+
+  .sidebarRight-toggleTheme-card .MuiButtonBase-root {
+    padding-left: 0;
+  }
+
+
+  .sidebarRight .sidebarRight-toggleTheme-card {
+    border: none !important;
+  }
+
+  .sidebarRight.dark-mode .sidebarRight-toggleTheme-card {
+    border: none !important;
+  }
+
+  .sidebarRight-section-card .MuiTypography-h6 {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+  
+  .sidebarRight-section-card .MuiListItem-root {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  
+  .sidebarRight-section-card .MuiButton-containedPrimary {
+    background-color: #1da1f2;
+    color: white;
+    border-radius: 20px;
+  }
+  
+  .sidebarRight-section-card .MuiButton-containedPrimary:hover {
+    background-color: #0d8ddb;
+  }
+
+  .sidebarRightTitle{
+    font-size: 20px !important;
+    font-weight: 800 !important;
+    margin-bottom: 20px;
+  }
+
+
+  
+/* 
+
+
+  .app-bar {
+    background-color: transparent !important;
+    box-shadow: none !important;
+  }
+  
+  .app-bar .MuiToolbar-root {
+    justify-content: center;
+  }
+  
+  .toggle-card {
+    border-radius: 16px !important;
+    border: 1px solid rgb(239, 243, 244);
+  }
+  
+  .sidebarRight.dark-mode .toggle-card {
+    border: 1px solid rgb(47, 51, 54); */

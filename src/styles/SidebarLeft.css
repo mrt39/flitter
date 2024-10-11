@@ -12,6 +12,7 @@
 
 /* borders */
 .sidebarLeft{
+    font-weight: 400 !important;
     border-style: solid; 
     border-color: rgb(239, 243, 244);
     border-width: 0 1px 0 0;

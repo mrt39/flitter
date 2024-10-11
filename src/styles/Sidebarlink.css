@@ -3,6 +3,7 @@
     align-items: cover;
     cursor: pointer;
     border-radius: 30px;
+    font-weight: 400 !important;
   }
   .link:hover{
     background-color: #e8f5fe;
@@ -10,7 +11,7 @@
     transition: color 100ms ease-out;
   }
   .link > h2{
-    font-weight: 700;
+    font-weight: 400 !important;
     font-size: 20px;
     margin-right: 20px;
   }
