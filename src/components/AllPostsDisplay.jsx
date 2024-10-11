@@ -49,6 +49,7 @@ const AllPostsDisplay = ({fromThisUser, activeTab}) => {
           // sort data by dates, descending order
           data.sort((a, b) => new Date(b.date) - new Date(a.date));
           setAllPosts(data);
+
           setLoading(false);
         })
         .catch(error => {
@@ -180,6 +181,10 @@ const AllPostsDisplay = ({fromThisUser, activeTab}) => {
     return <Alert severity="error">{error}</Alert>;
   }
 
+    //filter messages based on activeTab before rendering (if activeTab is 'following', only display messages from users the currentUser is following)
+    const messagesToDisplay = activeTab === 'following'
+    ? filteredMessages.filter(post => currentUser.followingtheseID.includes(post.from[0]._id))
+    : filteredMessages;
 
   return (
     <Box className="post-feed-container" id="post-feed-container">
@@ -188,7 +193,7 @@ const AllPostsDisplay = ({fromThisUser, activeTab}) => {
       <InfiniteScroll
         dataLength={visiblePosts} // length of the currently visible posts
         next={loadMorePosts} // function to call to be load more posts
-        hasMore={visiblePosts < filteredMessages.length} // check if there's more to load
+        hasMore={visiblePosts < messagesToDisplay.length} // check if there's more to load
         scrollableTarget={appContainerRef.current} // set the scrollable target as the appContainerRef (passed from Home.jsx)
         loader={ // display while loading more
           loadingPosts && 
@@ -196,11 +201,10 @@ const AllPostsDisplay = ({fromThisUser, activeTab}) => {
         } 
       >
 
-        {/* only display if filteredMessages is populated. */}
-        {filteredMessages && filteredMessages.length > 0 ? 
+        {/* only display if messagesToDisplay is populated. */}
+        {messagesToDisplay && messagesToDisplay.length > 0 ? 
         //displaying 10 at a time
-        (filteredMessages.slice(0, visiblePosts).map(post => (
-
+        (messagesToDisplay.slice(0, visiblePosts).map(post => (
         <ListItem key={post._id} className={`post-item ${darkModeOn ? 'dark-mode' : ''}`} alignItems="flex-start">
           <PostDisplay
             post={post}
@@ -209,7 +213,10 @@ const AllPostsDisplay = ({fromThisUser, activeTab}) => {
           
         ))
         ) : (
-          <p>No posts available.</p>
+          <div className={`no-posts-available-text-container ${darkModeOn ? 'dark-mode' : ''}`}>
+            <p>No posts available.</p>
+            {activeTab === 'following' && <p>Follow people to see their posts here!</p>}
+          </div>
         )}
 
       </InfiniteScroll>
