@@ -120,6 +120,15 @@ const App = () => {
   //refresh posts in the event of like, comment or sending a new post
   const [refreshPosts, setRefreshPosts] = useState(false);
 
+  // active tab in the HomePageTopSection component, to pass onto the AllPostsDisplay's components to filter posts
+  const [activeTab, setActiveTab] = useState('forYou');
+
+  //state for most iterated words in the posts, to display in the "What's happening" section
+  const [mostIteratedWords, setMostIteratedWords] = useState(null);
+  //state for the search word that gets set when the user clicks on a word in the "What's happening" section
+  const [searchWord, setSearchWord] = useState(null);
+
+
   //toggle for pressing the follow button
   const [pressedFollow, setPressedFollow] = useState(false)
 
@@ -280,7 +289,8 @@ const App = () => {
           setisSubmittingPost, pressedSubmitPost, setPressedSubmitPost,
           refreshPosts, setRefreshPosts, darkModeOn, pressedFollow, setPressedFollow,
           toggleDarkTheme, usertoFollow, setUsertoFollow, loadingFollow, setLoadingFollow,
-          appContainerRef, /* allUsers, setAllUsers */
+          appContainerRef, mostIteratedWords, setMostIteratedWords, searchWord, setSearchWord,
+          activeTab, setActiveTab
       }}>
         <UserContext.Provider value={{ currentUser, setCurrentUser, selectedUser, setSelectedUser}}>
 

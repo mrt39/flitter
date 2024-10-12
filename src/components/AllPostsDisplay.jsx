@@ -10,11 +10,11 @@ import {List, ListItem} from '@mui/material';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import '../styles/AllPostsDisplay.css'
 
-const AllPostsDisplay = ({fromThisUser, activeTab}) => {
+const AllPostsDisplay = ({fromThisUser}) => {
 
 
   const { allPosts, setAllPosts, profileUpdated, imgSubmittedNavbar, imgSubmittedHomePage, 
-    pressedSubmitPost, refreshPosts, darkModeOn, appContainerRef} = useContext(AppStatesContext); 
+    pressedSubmitPost, refreshPosts, darkModeOn, appContainerRef, searchWord, activeTab} = useContext(AppStatesContext); 
 
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -82,7 +82,7 @@ const AllPostsDisplay = ({fromThisUser, activeTab}) => {
   // useEffect for sorting messages (shuffle or sort by date)
   useEffect(() => {
     sortMessageDisplay();
-  }, [allPosts, selectedUser]);
+  }, [allPosts, selectedUser, searchWord]);
 
     
   
@@ -123,6 +123,7 @@ const AllPostsDisplay = ({fromThisUser, activeTab}) => {
         if (shouldNotShuffle && shuffledOrder.length > 0) {
           //get the new posts from the allposts array in the stored (under shuffledOrder) order
           filteredMessagesinFunc = shuffledOrder.map(index => allPosts[index]);
+          setShouldNotShuffle(false);
         } else {
             filteredMessagesinFunc = [...allPosts];
             // Shuffle the posts
@@ -161,6 +162,26 @@ const AllPostsDisplay = ({fromThisUser, activeTab}) => {
   };
 
 
+  //filter based on searchWord
+  useEffect(() => {
+    if (searchWord) {
+      const searchWordLower = searchWord.toLowerCase();
+      const filtered = allPosts.filter(post => post.message.toLowerCase().includes(searchWordLower));
+      //shuffle the filtered messages
+      for (let i = filtered.length - 1; i >= 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [filtered[i], filtered[j]] = [filtered[j], filtered[i]];
+      }
+      //set shuffledOrder to the order of the filtered messages
+      const order = filtered.map(post => allPosts.indexOf(post));
+
+      setShuffledOrder(order);
+      setFilteredMessages(filtered);
+    } else {
+      // Reset to all posts if searchWord is cleared
+      return
+    }
+  }, [searchWord]);
 
 
 
@@ -181,7 +202,10 @@ const AllPostsDisplay = ({fromThisUser, activeTab}) => {
     return <Alert severity="error">{error}</Alert>;
   }
 
-    //filter messages based on activeTab before rendering (if activeTab is 'following', only display messages from users the currentUser is following)
+
+
+
+  //filter messages based on activeTab before rendering (if activeTab is 'following', only display messages from users the currentUser is following)
     const messagesToDisplay = activeTab === 'following'
     ? filteredMessages.filter(post => currentUser.followingtheseID.includes(post.from[0]._id))
     : filteredMessages;

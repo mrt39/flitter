@@ -7,13 +7,14 @@ import WbSunnyIcon from '@mui/icons-material/WbSunny';
 import '../styles/SidebarRight.css';
 import UserAvatar from './UserAvatar.jsx';
 import WhotoFollow from './WhotoFollow.jsx';
+import WhatsHappening from './WhatsHappening.jsx';
+
 
 
 
 const SidebarRight = () => {
 
   const {darkModeOn, toggleDarkTheme, /* allUsers, setAllUsers */} = useContext(AppStatesContext); 
-  const {currentUser} = useContext(UserContext); 
 
   const [loading, setLoading] = useState(false);
 
@@ -43,27 +44,10 @@ const SidebarRight = () => {
           </IconButton>
         </CardContent>
       </Card>
-      {/* What's happening section */}
-      <Card className="sidebarRight-section-card">
-        <CardContent>
-          <Typography variant="h6" component="div" className='sidebarRightTitle'>
-            What&apos;s happening
-          </Typography>
-          <List>
-            <ListItem>
-              <ListItemText primary="Event 1" secondary="Description of event 1" />
-            </ListItem>
-            <ListItem>
-              <ListItemText primary="Event 2" secondary="Description of event 2" />
-            </ListItem>
-            <ListItem>
-              <ListItemText primary="Event 3" secondary="Description of event 3" />
-            </ListItem>
-          </List>
-        </CardContent>
-      </Card>
+      
+      <WhatsHappening/>
 
-        <WhotoFollow/>
+      <WhotoFollow/>
       </div>
 
    

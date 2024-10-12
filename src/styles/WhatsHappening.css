@@ -1,0 +1,19 @@
+.sidebarRight-section-card .MuiTypography-h6 {
+    margin: 0;
+    padding: 0;
+}
+
+.whatsHappening-listitem{
+    width: 100%;
+}
+
+.whatsHappening-listitem:hover{
+    background-color: #f5f8fa;
+    cursor: pointer;
+    background-color: rgba(15, 20, 25, 0.1);
+    transition: background-color 0.3s ease;
+}
+
+.whatsHappening-listitem.dark-mode:hover {
+    background-color: rgba(231, 233, 234, 0.1);
+}
