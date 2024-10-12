@@ -1,20 +1,32 @@
 /* eslint-disable react/prop-types */
-import {useContext } from 'react';
-import { AppStatesContext } from '../App.jsx';
-import { IconButton, Card, CardContent, Typography, Avatar, Button, List, ListItem, ListItemAvatar, ListItemText, AppBar, Toolbar } from '@mui/material';
+import {useContext, useEffect, useState } from 'react';
+import { AppStatesContext, UserContext } from '../App.jsx';
+import { IconButton, Box, CircularProgress, Card, CardContent, Typography, Avatar, Button, List, ListItem, ListItemAvatar, ListItemText} from '@mui/material';
 import Brightness2Icon from '@mui/icons-material/Brightness2'; 
 import WbSunnyIcon from '@mui/icons-material/WbSunny';
 import '../styles/SidebarRight.css';
-
+import UserAvatar from './UserAvatar.jsx';
+import WhotoFollow from './WhotoFollow.jsx';
 
 
 
 const SidebarRight = () => {
 
-  const {darkModeOn, toggleDarkTheme} = useContext(AppStatesContext); 
+  const {darkModeOn, toggleDarkTheme, /* allUsers, setAllUsers */} = useContext(AppStatesContext); 
+  const {currentUser} = useContext(UserContext); 
+
+  const [loading, setLoading] = useState(false);
 
 
-   
+  if (loading) {
+    return (
+      <div className='circularProgressContainer'>
+        <Box sx={{ display: 'flex' }}>
+          <CircularProgress size="5rem" />
+        </Box>
+      </div>
+    )
+  }
 
 
   return (
@@ -35,7 +47,7 @@ const SidebarRight = () => {
       <Card className="sidebarRight-section-card">
         <CardContent>
           <Typography variant="h6" component="div" className='sidebarRightTitle'>
-            What's happening
+            What&apos;s happening
           </Typography>
           <List>
             <ListItem>
@@ -51,37 +63,7 @@ const SidebarRight = () => {
         </CardContent>
       </Card>
 
-      {/* Who to follow section */}
-      <Card className="sidebarRight-section-card">
-        <CardContent>
-          <Typography variant="h6" component="div" className='sidebarRightTitle'>
-            Who to follow
-          </Typography>
-          <List>
-            <ListItem>
-              <ListItemAvatar>
-                <Avatar alt="User 1" src="dummy-profile-pic.jpg" />
-              </ListItemAvatar>
-              <ListItemText primary="User 1" />
-              <Button variant="contained" color="primary" size="small">Follow</Button>
-            </ListItem>
-            <ListItem>
-              <ListItemAvatar>
-                <Avatar alt="User 2" src="dummy-profile-pic.jpg" />
-              </ListItemAvatar>
-              <ListItemText primary="User 2" />
-              <Button variant="contained" color="primary" size="small">Follow</Button>
-            </ListItem>
-            <ListItem>
-              <ListItemAvatar>
-                <Avatar alt="User 3" src="dummy-profile-pic.jpg" />
-              </ListItemAvatar>
-              <ListItemText primary="User 3" />
-              <Button variant="contained" color="primary" size="small">Follow</Button>
-            </ListItem>
-          </List>
-        </CardContent>
-      </Card>
+        <WhotoFollow/>
       </div>
 
    

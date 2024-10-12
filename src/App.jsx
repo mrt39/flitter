@@ -101,6 +101,8 @@ const App = () => {
   const [currentUser, setCurrentUser] = useState(null);
   //selected user for displaying their profile
   const [selectedUser, setSelectedUser] = useState();
+  //storing all users
+  const [allUsers, setAllUsers] = useState();
 
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -278,7 +280,7 @@ const App = () => {
           setisSubmittingPost, pressedSubmitPost, setPressedSubmitPost,
           refreshPosts, setRefreshPosts, darkModeOn, pressedFollow, setPressedFollow,
           toggleDarkTheme, usertoFollow, setUsertoFollow, loadingFollow, setLoadingFollow,
-          appContainerRef
+          appContainerRef, /* allUsers, setAllUsers */
       }}>
         <UserContext.Provider value={{ currentUser, setCurrentUser, selectedUser, setSelectedUser}}>
 

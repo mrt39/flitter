@@ -307,6 +307,18 @@ router.patch("/editprofile/:userid", async (req, res) => {
 });
 
 //get a user's info based on their id
+router.get("/getallusers", async (req, res) => {
+
+  try {
+    const allUsers = await User.find();
+    res.send(allUsers);
+
+  } catch (err) {
+    res.send(err);
+  }
+})
+
+//get a user's info based on their id
 router.get("/profile/:userid", async (req, res) => {
 
   const userID = req.params.userid // access URL variable
