@@ -2,6 +2,7 @@
 import { useState, useContext, useEffect } from 'react'
 import { useLocation, Link, useNavigate} from "react-router-dom";
 import { UserContext } from '../App.jsx';
+import UserAvatar from '../components/UserAvatar.jsx';
 import { Avatar, ListItem, ListItemAvatar, ListItemText, Typography, Paper } from '@mui/material';
 import { CircularProgress, Alert } from '@mui/material';
 //import for generating the url path for routing 
@@ -104,7 +105,9 @@ if (loading) {
                 followerData.following.map((follower) => (
                     <ListItem key={follower._id}>
                     <ListItemAvatar>
-                        <Avatar alt={follower.name} src={follower.uploadedpic? follower.uploadedpic : follower.picture} />
+                        <UserAvatar
+                            user={follower}
+                        />
                     </ListItemAvatar>
                     <ListItemText
                         primary={
@@ -123,7 +126,9 @@ if (loading) {
                 followerData.followedby.map((follower) => (
                     <ListItem key={follower._id}>
                     <ListItemAvatar>
-                    <Avatar alt={follower.name} src={follower.uploadedpic? follower.uploadedpic : follower.picture} />
+                        <UserAvatar
+                                user={follower}
+                        />
                     </ListItemAvatar>
                     <ListItemText
                         primary={

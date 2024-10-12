@@ -1,22 +1,26 @@
-.link{
+.sidebarLink{
     display: flex;
     align-items: cover;
     cursor: pointer;
     border-radius: 30px;
     font-weight: 400 !important;
+    transition: background-color 0.3s ease;
+
   }
-  .link:hover{
-    background-color: #e8f5fe;
-    color: #50b7f5;
-    transition: color 100ms ease-out;
+  .sidebarLink:hover{
+    background-color: rgba(15, 20, 25, 0.1);
   }
-  .link > h2{
+  .sidebarLink.dark-mode:hover{
+    background-color: rgba(231, 233, 234, 0.1);
+
+  }
+  .sidebarLink > h2{
     font-weight: 400 !important;
     font-size: 20px;
     margin-right: 20px;
   }
 
-  .link > .MuiSvgIcon-root {
+  .sidebarLink > .MuiSvgIcon-root {
     padding: 20px;
     box-sizing: content-box;
   }

@@ -3,10 +3,10 @@
     min-width: 250px;
     padding: 20px 20px;
     margin: 0;
-    position: sticky; /* Make the sidebar sticky */
-    top: 0; /* Align to the top of the viewport */
-    height: 100vh; /* Full height of the viewport */
-    overflow-y: hidden; /* Disable vertical scrolling for the sidebar */
+    position: sticky; /* make the sidebar sticky */
+    top: 0; /* align to the top of the viewport */
+    height: 100vh; /* full height of the viewport */
+    overflow-y: hidden; /* disable vertical scrolling for the sidebar */
     z-index: 1000; 
 }
 
@@ -87,24 +87,3 @@
     margin-bottom: 20px;
   }
 
-
-  
-/* 
-
-
-  .app-bar {
-    background-color: transparent !important;
-    box-shadow: none !important;
-  }
-  
-  .app-bar .MuiToolbar-root {
-    justify-content: center;
-  }
-  
-  .toggle-card {
-    border-radius: 16px !important;
-    border: 1px solid rgb(239, 243, 244);
-  }
-  
-  .sidebarRight.dark-mode .toggle-card {
-    border: 1px solid rgb(47, 51, 54); */

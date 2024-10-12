@@ -4,6 +4,7 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import dayjs from 'dayjs';
 import CommentModal from './CommentModal.jsx';
+import UserAvatar from './UserAvatar.jsx';
 import { UserContext, AppStatesContext} from '../App.jsx';
 import { Avatar } from '@mui/material';
 import { ListItemText,  ListItemAvatar} from '@mui/material';
@@ -38,16 +39,17 @@ const CommentDisplay = ({comment}) => {
       <>
         <span 
             className="usernameLinkOnComment" 
-            onClick={() => 
+            onClick={(e) => 
                 { 
+                e.preventDefault();
                 handleProfileRouting(comment.from[0] //route to profile instead
                 )}}
         >
             <ListItemAvatar>
-            <Avatar 
-                    alt={comment.from[0].name}
-                    src={comment.from[0].picture? comment.from[0].picture : comment.from[0].uploadedpic}
-                />
+            <UserAvatar
+                    user={comment.from[0]}
+                    source="post"
+      		  />
             </ListItemAvatar>
         </span>
         <ListItemText
@@ -55,8 +57,9 @@ const CommentDisplay = ({comment}) => {
             <div className="comment-header">
               <span 
                   className="usernameLinkOnComment" 
-                  onClick={() => 
+                  onClick={(e) => 
                         { 
+                        e.preventDefault();
                         handleProfileRouting(comment.from[0] //route to profile instead
                         )}}
               >

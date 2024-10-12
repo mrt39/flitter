@@ -15,3 +15,11 @@
     width: 141.5px !important;
     border-radius: 50% !important;
 }
+
+.hoverUserCard-avatar{
+    height: 56px !important;
+    width: 56px !important;
+    border-radius: 50% !important;
+    margin-right: 2px !important;
+    margin-bottom: 4px !important;
+}

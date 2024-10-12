@@ -54,6 +54,8 @@ const UserAvatar = ({user, source}) => {
       setClassname("post-avatar")
     } else if(source === "editProfileModal"){
       setClassname("editProfileModal-avatar")
+    } else if(source === "hoverUserCard"){
+      setClassname("hoverUserCard-avatar")
     }
 }, []);
 

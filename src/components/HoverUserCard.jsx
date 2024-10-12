@@ -5,6 +5,7 @@ import { Card, CardContent, Avatar, Typography, Box, useTheme } from '@mui/mater
 import { AppStatesContext, UserContext} from '../App.jsx';
 import { CircularProgress, Alert } from '@mui/material';
 import FollowButton from './FollowButton.jsx';
+import UserAvatar from './UserAvatar.jsx';
 import '../styles/HoverUserCard.css';
 
 //imports for generating the url path for routing 
@@ -117,10 +118,9 @@ const HoverUserCard = ({ user }) => {
           }}
         >
           <div className="hoverUserCardAvatarandNameContainer">
-            <Avatar
-              alt={displayedUserOnCard.name}
-              src={displayedUserOnCard.picture ? displayedUserOnCard.picture : displayedUserOnCard.uploadedpic}
-              sx={{ width: 56, height: 56, mr: 2 }}
+            <UserAvatar
+              user={displayedUserOnCard}
+              source="hoverUserCard"
             />
             <Typography variant="h6" fontWeight="bold">
               {displayedUserOnCard.name}

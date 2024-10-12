@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import {useState, useEffect, useRef, useContext} from 'react';
 import {AppStatesContext, UserContext} from '../App.jsx';
-import FileInputPopover from "../components/Popover.jsx";
+import UserAvatar from './UserAvatar.jsx';
 import { Alert } from '@mui/material';
 import { TextField, Avatar, Button, Box, Typography,  IconButton } from '@mui/material';
 import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
@@ -159,11 +159,8 @@ export default function SubmitPostForm({location, handleClose }) {
 
     <Box component="form" className="submitPost-form">
     
-      <Avatar
-        alt="User Avatar"
-        src={currentUser? currentUser.picture || currentUser.uploadedpic: ""}
-        sx={{ marginRight: 2 }}
-        className="submitPost-avatar"
+      <UserAvatar
+        user={currentUser? currentUser: ""}
       />
       {/* have different width on navbar */}
       <Box sx={{ width: "100%" }} className="submitPostFormtextAreacontainer">

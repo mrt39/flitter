@@ -42,7 +42,7 @@ import slugify from 'slugify'; // for generating the URL path for routing
 
 const SidebarLeft = () => {
 
-    const {darkModeOn, toggleDarkTheme} = useContext(AppStatesContext); 
+    const {darkModeOn} = useContext(AppStatesContext); 
     const {currentUser, setCurrentUser, setSelectedUser} = useContext(UserContext);
 
 

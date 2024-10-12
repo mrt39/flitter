@@ -3,7 +3,7 @@ import { useState, useEffect, useContext, useRef } from "react";
 import {  Typography,  IconButton } from '@mui/material';
 import {  ChatBubbleOutline } from '@mui/icons-material';
 import { TextField, Avatar, Button, Box  } from '@mui/material';
-import ImageIcon from '@mui/icons-material/Image';
+import UserAvatar from './UserAvatar.jsx';
 import CircularProgress, { circularProgressClasses } from '@mui/material/CircularProgress';
 import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
 
@@ -127,11 +127,8 @@ const CommentForm = ({post, handleClose}) => {
         comment-form-container 
         ${darkModeOn ? 'dark-mode' : ''} 
         ` }>
-      <Avatar
-        alt="User Avatar"
-        src={currentUser.picture || currentUser.uploadedpic}
-        sx={{ marginRight: 2 }}
-        className="comment-avatar"
+      <UserAvatar
+        user={currentUser}
       />
       <Box sx={{ flexGrow: 1 }}>
         <textarea
