@@ -52,14 +52,16 @@
     max-height: 200px;  
   }
   
-  /* Light mode scrollbars */
+  /* light mode color and scrollbars */
   .submitPost-input {
+    color: rgb(15, 20, 25);
     scrollbar-color: rgb(185, 202, 211) rgb(247, 249, 249); 
     scrollbar-width: thin; 
   }
   
-  /* Dark mode scrollbars */
+  /* dark mode color and scrollbars */
   .submitPost-input.dark-mode {
+    color: rgba(255, 255, 255, 0.7);
     scrollbar-color: rgb(62, 65, 68) rgb(22, 24, 28);
   }
   

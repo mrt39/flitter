@@ -135,7 +135,7 @@ const CommentForm = ({post, handleClose}) => {
           ref={textareaRef} 
           required
           //if dark theme on, add dark-theme class
-          className={`comment-input ${darkModeOn ? 'dark-theme' : ''}`}
+          className={`comment-input ${darkModeOn ? 'dark-mode' : ''}`}
           placeholder="Post your comment."
           value={value}
           onChange={(e) => {

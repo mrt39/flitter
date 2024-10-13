@@ -1,0 +1,29 @@
+.top-header-followersTopSection{
+    margin: 15px;
+    margin-left: 15px;
+    display: flex;
+}
+
+.back-button-followersTopSection{
+    height: 100%;
+    width: 100%;
+}
+
+.top-header-text-followersTopSection{
+    display: flex;
+    align-items: center;
+    margin-left: 15px;
+}
+
+
+.followersTopSection-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 1px solid rgb(239, 243, 244);
+}
+
+.followersTopSection-container.dark-mode {
+    border-bottom: 1px solid rgb(47, 51, 54);
+}
+

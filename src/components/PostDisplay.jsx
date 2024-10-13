@@ -153,14 +153,14 @@ const PostDisplay = ({post, location}) => {
 
                         </span>
                     </Tooltip>
-                    <Typography variant="body2" color="textSecondary" className="post-date">
+                    <Typography variant="body2" color="textSecondary" className={`post-date ${darkModeOn ? 'dark-mode' : ''}`}>
                         {dayjs(new Date(post.date)).format('MMM D, H:mm')}
                     </Typography>
                 </div>
             )}
             secondary={(
                 <>
-                    <Typography component="span" variant="body1" className="post-content"
+                    <Typography component="span" variant="body1" className={`post-content ${darkModeOn ? 'dark-mode' : ''}`}
                     >
                         {post.image ? (
                             <img className="postImg" src={post.image} alt="image" />
@@ -189,10 +189,10 @@ const PostDisplay = ({post, location}) => {
                                     color: 'rgb(249, 24, 128)', 
                                 }} />
                                 ) : ( //if it isn't liked, display an empty heart icon
-                                <FavoriteBorder fontSize="small" sx={{ color: 'defaultColor' }} />
+                                <FavoriteBorder fontSize="small" sx={{ color: darkModeOn ? 'rgb(113, 118, 123)' : 'rgb(83, 100, 113)' }} />
                                 )}
 
-                                <Typography component="span" variant="body2" className="postLikeCommentCount">
+                                <Typography component="span" variant="body2" className={`postLikeCommentCount ${darkModeOn ? 'dark-mode' : ''}`}>
                                     {post.likeCount}
                                 </Typography>
                             </IconButton>

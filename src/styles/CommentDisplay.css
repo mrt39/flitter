@@ -16,20 +16,29 @@
 }
 
 .comment-name {
-    font-weight: bold;
+    font-weight: 600 !important;
 }
 
 .comment-date {
+    color: rgb(83, 100, 113) !important;
     margin-left: 10px;
 }
 
+.comment-date.dark-mode {
+    color: rgb(113, 118, 123) !important;
+}
+
 .comment-content {
+    color: rgb(15, 20, 25, 0.9);
     margin-top: 5px;
     display: block;
     margin-bottom: 1em; 
     padding: 0;
 }
 
+.comment-content.dark-mode {
+    color: rgba(255, 255, 255, 0.7);
+  }
 
 .comment-item:last-child {
     border-bottom: none;

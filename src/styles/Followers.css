@@ -1,0 +1,38 @@
+.followers-paper{
+    background-color: inherit !important;
+     --Paper-overlay: none !important;
+     --Paper-shadow: none !important;
+     margin: 0 !important;
+     padding: 0 !important;
+}
+
+.followers-listitem{
+    transition: background-color 0.3s ease;
+}
+
+.followers-listitem:hover{
+    cursor: pointer;
+    background-color: rgba(0, 0, 0, 0.03) !important;
+}
+
+.followers-listitem.dark-mode:hover{
+    background-color: rgba(255, 255, 255, 0.03) !important;
+}
+
+.followers-listitemtext{
+    margin-top: 7px !important; 
+}
+
+.followers-centered-text{
+    margin-top: 15px !important;
+}
+
+.followers-name{
+    font-size: 15px !important;
+    font-weight: 700 !important;
+    width: fit-content !important;
+}
+
+.followers-name:hover{
+    text-decoration: underline;
+}

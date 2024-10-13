@@ -103,22 +103,30 @@
   }
   
   .post-name {
-    font-weight: 500 !important;
+    font-weight: 600 !important;
   }
   
   .post-date {
+    color: rgb(83, 100, 113) !important;
     margin-left: 10px;
+  }
+
+  .post-date.dark-mode {
+    color: rgb(113, 118, 123) !important;
   }
   
   .post-content {
+    color: rgb(15, 20, 25, 0.9);
     margin-top: 5px;
     display: block;
     margin-bottom: 1em; 
     padding: 0;
   }
 
+  .post-content.dark-mode {
+    color: rgba(255, 255, 255, 0.7);
+  }
 
-  
   .post-actions {
     display: flex;
     justify-content: space-evenly;
@@ -127,7 +135,12 @@
   
 
   .postLikeCommentCount{
+    color: rgb(83, 100, 113) !important;
     margin-left: 5px !important;
+  }
+
+  .postLikeCommentCount.dark-mode {
+    color: rgb(113, 118, 123) !important;
   }
 
   .postImg{

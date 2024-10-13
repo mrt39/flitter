@@ -43,8 +43,8 @@ export default function CommentModal({ post }) {
   return (
     <>
       <IconButton onClick={handleOpen} size="small" className="icon-button comment-button">
-        <ChatBubbleOutline fontSize="small" />
-        <Typography component="span" variant="body2" className="postLikeCommentCount">
+        <ChatBubbleOutline fontSize="small" sx={{ color: darkModeOn ? 'rgb(113, 118, 123)' : 'rgb(83, 100, 113)' }} />
+        <Typography component="span" variant="body2" className={`postLikeCommentCount ${darkModeOn ? 'dark-mode' : ''}`}>
           {post.commentCount}
         </Typography>
       </IconButton>

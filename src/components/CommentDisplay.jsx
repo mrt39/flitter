@@ -22,6 +22,9 @@ const CommentDisplay = ({comment}) => {
     //Pass the UserContext defined in app.jsx
     const { currentUser, setSelectedUser } = useContext(UserContext); 
 
+    const {darkModeOn} = useContext(AppStatesContext); 
+
+
     const navigate = useNavigate(); 
 
     //handle generating the url path for routing to /profile/:slug
@@ -114,14 +117,14 @@ const CommentDisplay = ({comment}) => {
 
               </Tooltip>
 
-              <Typography variant="body2" color="textSecondary" className="comment-date">
+              <Typography variant="body2" color="textSecondary" className={`comment-date ${darkModeOn ? 'dark-mode' : ''}`}>
               {dayjs(new Date(comment.date)).format('MMM D, H:mm')}
               </Typography>
             </div>
             }
             secondary={
                 <>
-                    <Typography component="span" variant="body1" className="comment-content">
+                    <Typography component="span" variant="body1" className={`comment-content ${darkModeOn ? 'dark-mode' : ''}`}>
                         {comment.comment}
                     </Typography>
                 </>

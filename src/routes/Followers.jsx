@@ -1,18 +1,21 @@
 /* eslint-disable react/prop-types */
 import { useState, useContext, useEffect } from 'react'
 import { useLocation, Link, useNavigate} from "react-router-dom";
-import { UserContext } from '../App.jsx';
+import { UserContext, AppStatesContext } from '../App.jsx';
+import FollowersTopSection from '../components/FollowersTopSection.jsx'; 
 import UserAvatar from '../components/UserAvatar.jsx';
-import { Avatar, ListItem, ListItemAvatar, ListItemText, Typography, Paper } from '@mui/material';
-import { CircularProgress, Alert } from '@mui/material';
+import { ListItem, ListItemAvatar, ListItemText, Typography, Paper, CircularProgress, Alert, Box, Tabs, Tab } from '@mui/material';
 //import for generating the url path for routing 
 import slugify from 'slugify';
+
+import '../styles/Followers.css';
 
 
 const Followers = () => {
 
   // Pass the UserContext defined in app.jsx
-  const { setSelectedUser } = useContext(UserContext); 
+  const { setSelectedUser, selectedUser } = useContext(UserContext); 
+  const { darkModeOn } = useContext(AppStatesContext); 
 
 
   const [loading, setLoading] = useState(true);
@@ -51,7 +54,6 @@ const Followers = () => {
             })
             .then(data => {
                 setFollowerData(data[0])
-                console.log(data[0])
                 setLoading(false)
             })
             .catch(error => {
@@ -90,59 +92,51 @@ if (loading) {
     }
 
   return (
-    <Paper elevation={3} style={{ padding: '20px', maxWidth: '400px', margin: '20px auto' }}>
-      <Typography variant="h6" component="div" gutterBottom>
-        {currentPath==="following"
-        ? 
-        "Following"
-        :
-        "Followers"
-        }
-      </Typography>
-      {currentPath==="following"
-        ? 
-        followerData&&followerData.following.length>0?
-                followerData.following.map((follower) => (
-                    <ListItem key={follower._id}>
-                    <ListItemAvatar>
-                        <UserAvatar
-                            user={follower}
-                        />
-                    </ListItemAvatar>
-                    <ListItemText
-                        primary={
-                            <Link onClick={() => handleProfileRouting(follower)} style={{ textDecoration: 'none', color: 'inherit' }}>
-                            <h3>{follower.name}</h3>
-                            </Link>
-                        }
-                        secondary={follower.bio}
-                    />
-                </ListItem>
-                ))
-                
-            : <p>This user isn't following anyone.</p>
-        :
-        followerData&&followerData.followedby.length>0?
-                followerData.followedby.map((follower) => (
-                    <ListItem key={follower._id}>
-                    <ListItemAvatar>
-                        <UserAvatar
-                                user={follower}
-                        />
-                    </ListItemAvatar>
-                    <ListItemText
-                        primary={
-                            <Link onClick={() => handleProfileRouting(follower)} style={{ textDecoration: 'none', color: 'inherit' }}>
-                            <h3>{follower.name}</h3>
-                            </Link>
-                        }
-                        secondary={follower.bio}
-                        />
-                </ListItem>
-                ))
-            : <p>This user isn't followed by anyone.</p>
-        }
+    <Paper elevation={3} className="followers-paper" style={{ padding: '20px', maxWidth: '600px', margin: '20px auto' }}>
+      <FollowersTopSection
+        currentPath={currentPath}
+        setCurrentPath={setCurrentPath}
+      />
+      {currentPath === "following"
+        ? followerData.following && followerData.following.length > 0
+          ? followerData.following.map((follower) => (
+            <Link onClick={() => handleProfileRouting(follower)} className={`followers-link ${darkModeOn ? 'dark-mode' : ''}`} style={{ textDecoration: 'none', color: 'inherit' }} key={follower._id}>
+              <ListItem className={`followers-listitem ${darkModeOn ? 'dark-mode' : ''}`}  alignItems="flex-start">
+                <ListItemAvatar>
+                  <UserAvatar user={follower} />
+                </ListItemAvatar>
+                <ListItemText 
+                  className={`followers-listitemtext ${!follower.bio ? 'followers-centered-text' : ''}`}
+                  primary={
+                      <Typography variant="h6" className='followers-name'>{follower.name}</Typography>
+                  }
+                  secondary={follower.bio}
+                />
+              </ListItem>
+            </Link>
 
+          ))
+          : <Typography variant="body1" sx={{marginTop:"10px"}}>This user isn't following anyone.</Typography>
+          
+        : followerData.followedby && followerData.followedby.length > 0
+          ? followerData.followedby.map((follower) => (
+            <Link onClick={() => handleProfileRouting(follower)} className={`followers-link ${darkModeOn ? 'dark-mode' : ''}`} style={{ textDecoration: 'none', color: 'inherit' }} key={follower._id}>
+              <ListItem className={`followers-listitem ${darkModeOn ? 'dark-mode' : ''}`}  alignItems="flex-start">
+                <ListItemAvatar>
+                  <UserAvatar user={follower} />
+                </ListItemAvatar>
+                <ListItemText
+                  className={`followers-listitemtext ${!follower.bio ? 'followers-centered-text' : ''}`}
+                  primary={
+                      <Typography variant="h6" className='followers-name'>{follower.name}</Typography>
+                  }
+                  secondary={follower.bio}
+                />
+              </ListItem>
+            </Link>
+          ))
+          : <Typography variant="body1" sx={{marginTop:"10px"}}>This user isn't followed by anyone.</Typography>
+      }
     </Paper>
   );
 };
