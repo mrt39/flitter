@@ -75,7 +75,7 @@ const UserCardProfile = () => {
                         <Typography variant="h5" component="div" fontWeight="bold" className="username">
                         {selectedUser.name}
                         </Typography>
-                        <Typography variant="body2" color="text.secondary" className="bio">
+                        <Typography variant="body2" className={`userBio ${darkModeOn ? 'dark-mode' : ''}`}>
                         {selectedUser.bio}
                         </Typography>
                         <div className="follow-info">
@@ -112,10 +112,12 @@ const UserCardProfile = () => {
                         size="small"
                         className="editProfileButton"
                         sx={{
+                        fontWeight: 'bold',
+                        fontSize: '15px',
                         borderRadius: '9999px', 
                         textTransform: 'none',
                         padding: '6px 16px',
-                        borderColor: (darkModeOn ? 'white' : 'gray'),
+                        borderColor: (darkModeOn ? 'rgb(83, 100, 113);' : 'gray'),
                         backgroundColor: 'transparent',
                         color: darkModeOn ? 'white' : 'black', 
                         '&:hover': {

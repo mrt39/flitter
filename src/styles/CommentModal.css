@@ -1,3 +1,13 @@
+.comment-modal{
+    background-color: white;
+    border: 1px solid gray;
+}
+
+.comment-modal.dark-mode{
+    background-color: black;
+    border: 1px solid black;
+}
+
 .commentModalReplyingToTextContainer{
     display: flex;
     align-items: center; 

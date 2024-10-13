@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { AppStatesContext } from '../App.jsx';
 import PostDisplay from '../components/PostDisplay.jsx';
 import CommentForm from './CommentForm.jsx';
 import Backdrop from '@mui/material/Backdrop';
@@ -27,6 +28,10 @@ const style = {
 };
 
 export default function CommentModal({ post }) {
+
+
+  const {darkModeOn} = useContext(AppStatesContext);
+
   // modal states
   const [open, setOpen] = useState(false);
   const handleOpen = (e) => {
@@ -55,11 +60,15 @@ export default function CommentModal({ post }) {
         slotProps={{
           backdrop: {
             timeout: 500,
+            style: { backgroundColor: 'rgba(50, 50, 50, 0.5)' } // change the background color of the backdrop
           },
         }}
       >
         <Fade in={open}>
-            <Box sx={style}>
+            <Box 
+            sx={style}
+            className={`comment-modal ${darkModeOn ? 'dark-mode' : ''}`}
+            >
                 <IconButton
                   aria-label="close"
                   onClick={handleClose}

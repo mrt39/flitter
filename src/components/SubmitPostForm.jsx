@@ -257,17 +257,18 @@ export default function SubmitPostForm({location, handleClose }) {
           </Box>
           <Button
               variant="contained"
-              type="submit" // Make this button the form submission button
+              type="submit" // make this button the form submission button
               onClick={handleSubmit}
               className="reply-button"
               disabled={remainingCharacters<0 ||isSubmittingPost}
               sx={{
                 backgroundColor: '#1da1f2',
+                fontWeight: 'bold',
+                fontSize: '15px',
                 color: 'white',
                 textTransform: 'none',
                 borderRadius: '9999px',
-                padding: '4px 16px', // Adjusted padding for a more compact button
-                fontWeight: 'bold', // Make text bold
+                padding: '4px 16px', 
                 '&:hover': {
                   backgroundColor: '#1a91da',
                 },

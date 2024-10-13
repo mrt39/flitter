@@ -83,16 +83,6 @@ const App = () => {
             },
           },
         },
-        MuiCssBaseline: {
-          styleOverrides: {
-            '.singularPostLinkOnPost': {
-              transition: 'background-color 0.3s ease',
-              '&:hover': {
-                backgroundColor: darkModeOn ? '#1C1C1C' : '#F7F9F9',
-              },
-            },
-          },
-        },
       },
     });
 

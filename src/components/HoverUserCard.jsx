@@ -101,11 +101,11 @@ const HoverUserCard = ({ user, handleTooltipClose}) => {
         width: 270,
         borderRadius: 3,
         boxShadow: darkModeOn 
-        ? '0px 0px 8px rgba(255, 255, 255, 0.4)'  // White shadow for dark mode
-        : '0px 0px 15px rgba(0, 0, 0, 0.15)',      // Gray shadow for light mode,
+        ? '0px 0px 8px rgba(255, 255, 255, 0.4)'  // white shadow for dark mode
+        : '0px 0px 15px rgba(0, 0, 0, 0.15)',      // gray shadow for light mode,
         padding: 2,
       }}
-      className="userCardonHover"
+      className={`userCardonHover ${darkModeOn ? 'dark-mode' : ''}`}
     >
       {/* Flex container for avatar and follow button */}
       <Box display="flex" justifyContent="space-between" alignItems="flex-start" sx={{ mb: 2 }}>
@@ -122,7 +122,7 @@ const HoverUserCard = ({ user, handleTooltipClose}) => {
               user={displayedUserOnCard}
               source="hoverUserCard"
             />
-            <Typography variant="h6" fontWeight="bold">
+            <Typography variant="h6" fontWeight="bold" className="hoverUserCard-username">
               {displayedUserOnCard.name}
             </Typography>
           </div>
@@ -147,7 +147,7 @@ const HoverUserCard = ({ user, handleTooltipClose}) => {
         }}
       >
         {/* User Bio */}
-        <Typography variant="body2" color="text.primary">
+        <Typography variant="body2" className={`userBio ${darkModeOn ? 'dark-mode' : ''}`}>
           {displayedUserOnCard.bio}
         </Typography>
 

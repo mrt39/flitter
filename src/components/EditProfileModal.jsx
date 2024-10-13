@@ -192,7 +192,7 @@ const EditProfileModal = ({ open, handleClose }) => {
       onClose={handleClose}
       slotProps={{
         backdrop: {
-          style: { backgroundColor: 'rgba(50, 50, 50, 0.5)' } // change the backdrop background color here
+          style: { backgroundColor: 'rgba(50, 50, 50, 0.5)' } // change the background color of the backdrop
         }
       }}
     >

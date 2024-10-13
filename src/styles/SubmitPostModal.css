@@ -1,0 +1,19 @@
+.submitPost-modal{
+    position: absolute;
+    top: 50%;
+    left: 49.52%;
+    transform: translate(-50%, -50%);
+    width: 600px;
+    height: 220px;
+    border: 1px solid gray;
+    box-shadow: 24px;
+    padding-top: 24px;
+    border-radius: 16px;
+    background-color: white !important;
+}
+
+.submitPost-modal.dark-mode{
+    background-color: black !important;
+    border: 1px solid black;
+
+}

@@ -1,8 +1,8 @@
 
 .usernameLinkOnPost{
-    color: inherit;
-    font-weight: inherit;
-    text-decoration: inherit;
+  color: inherit;
+  font-weight: inherit;
+  text-decoration: inherit;
 }
 
 .usernameLinkOnPost:hover{
@@ -17,6 +17,7 @@
 .postDisplayContainer{
   width: 100%;
 }
+
 
 .singularPostLinkOnPost{
   color: inherit;
@@ -48,6 +49,14 @@
   -webkit-box-align: flex-start;
   -ms-flex-align: flex-start;
   align-items: flex-start;
+}
+
+.singularPostLinkOnPost:hover{
+  background-color: rgba(0, 0, 0, 0.03) !important;
+}
+
+.singularPostLinkOnPost.dark-mode:hover{
+  background-color: rgba(255, 255, 255, 0.03) !important;
 }
 
 .postContentContainer{
@@ -82,10 +91,11 @@
   align-items: flex-start;
 }
 
-.postContentContainer{
-  border-bottom-color: rgb(47, 51, 54);
-  border-bottom-width: 1px;
-}
+  .postContentContainer{
+    border-bottom-color: rgb(47, 51, 54);
+    border-bottom-width: 1px;
+  }
+
   
   .post-header {
     display: flex;
@@ -93,7 +103,7 @@
   }
   
   .post-name {
-    font-weight: bold;
+    font-weight: 500 !important;
   }
   
   .post-date {
@@ -106,6 +116,8 @@
     margin-bottom: 1em; 
     padding: 0;
   }
+
+
   
   .post-actions {
     display: flex;

@@ -96,7 +96,7 @@ const PostDisplay = ({post, location}) => {
   
 //define the component here, in order to not to repeat the code in the "location === "singular-post-page" ?" statement below
   const PostContent = ({ post, handleProfileRouting, handleLike }) => (
-    <span className="postContentContainer">
+    <span className={`postContentContainer ${darkModeOn ? 'dark-mode' : ''}`}>
         <span className="usernameLinkOnPost avatarLink" onClick={(e) => {
             e.preventDefault();
             handleProfileRouting(post.from[0]);
@@ -135,7 +135,7 @@ const PostDisplay = ({post, location}) => {
                               '.MuiTooltip-tooltip': {
                                 backgroundColor: 'transparent',
                                 boxShadow: 'none', 
-                                padding: 0, 
+                                padding: 0,
                               },
                             },
                           }}        
@@ -160,7 +160,8 @@ const PostDisplay = ({post, location}) => {
             )}
             secondary={(
                 <>
-                    <Typography component="span" variant="body1" className="post-content">
+                    <Typography component="span" variant="body1" className="post-content"
+                    >
                         {post.image ? (
                             <img className="postImg" src={post.image} alt="image" />
                         ) : (
@@ -208,7 +209,7 @@ return (
         {location === "singular-post-page" ? (
             <PostContent post={post} handleProfileRouting={handleProfileRouting} handleLike={handleLike} />
         ) : (
-            <Link className="singularPostLinkOnPost" to={`/post/${post._id}`}>
+            <Link className={`singularPostLinkOnPost ${darkModeOn ? 'dark-mode' : ''}`} to={`/post/${post._id}`}>
                 <PostContent post={post} handleProfileRouting={handleProfileRouting} handleLike={handleLike} />
             </Link>
         )}

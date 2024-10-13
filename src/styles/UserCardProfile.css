@@ -64,10 +64,15 @@
   font-weight: bold;
 }
 
-.bio {
+.userBio {
   margin-top: 15px !important;
   line-height: 2 !important;
-  color: inherit !important;
+  font-size: 15px !important;
+  color: rgb(15, 20, 25) !important;
+}
+
+.userBio.dark-mode{
+  color: rgb(231, 233, 234) !important;
 }
 
 .UserCardFollowersLink:hover{
