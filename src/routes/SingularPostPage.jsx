@@ -18,7 +18,7 @@ import '../styles/SingularPostPage.css'
 const SingularPostPage = ({}) => {
 
 
-  const { refreshPosts} = useContext(AppStatesContext); 
+  const { refreshPosts, darkModeOn} = useContext(AppStatesContext); 
 
   const [singularPost, setSingularPost] = useState(null)
 
@@ -66,8 +66,6 @@ const SingularPostPage = ({}) => {
  
 
 
-  
-
   if (loading) {
     return (
       <div className='circularProgressContainer'>
@@ -86,7 +84,7 @@ const SingularPostPage = ({}) => {
   return (
    <>
    <div className="singularPostPage">
-   <AppBar position="static" elevation={0} color="default">
+   <AppBar className={`singularPostPage-appbar ${darkModeOn ? 'dark-mode' : ''}`} position="static" elevation={0} color="default">
       <Toolbar>
         <IconButton
           edge="start"

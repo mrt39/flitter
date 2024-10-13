@@ -93,18 +93,6 @@ const PostDisplay = ({post, location}) => {
         } 
     }, [pressedLikePost]);
 
-
-    const [tooltipOpen, setTooltipOpen] = useState(false);
-
-
-    const handleTooltipOpen = () => {
-        setTooltipOpen(true);
-    };
-
-    const handleTooltipClose = () => {
-        setTooltipOpen(false);
-    };
-
   
 //define the component here, in order to not to repeat the code in the "location === "singular-post-page" ?" statement below
   const PostContent = ({ post, handleProfileRouting, handleLike }) => (
@@ -127,15 +115,15 @@ const PostDisplay = ({post, location}) => {
                     <Tooltip 
                         title={
                             <Box sx={{ minWidth: 280 }}> 
-                                <HoverUserCard user={post.from[0]} />
+                                <HoverUserCard 
+                                user={post.from[0]} 
+                                />
+                                
                             </Box>
                         }
                         enterDelay={200}
                         leaveDelay={200}
                         placement="bottom"
-/*                         open={tooltipOpen} // Control the tooltip open state
-                        onOpen={handleTooltipOpen}
-                        onClose={handleTooltipClose} */
                         PopperProps={{
                             modifiers: [
                                 {

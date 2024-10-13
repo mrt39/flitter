@@ -6,7 +6,7 @@ import { UserContext, AppStatesContext} from '../App.jsx';
 
 import '../styles/FollowButton.css';
 
-const FollowButton = ({ displayedUserOnCard, location, firstRender }) => {
+const FollowButton = ({ displayedUserOnCard, location, firstRender, handleTooltipClose }) => {
 
     const { currentUser, selectedUser } = useContext(UserContext); 
 
@@ -39,6 +39,10 @@ const FollowButton = ({ displayedUserOnCard, location, firstRender }) => {
 
 
     function handleFollow(e){
+      //if handleTooltipClose is passed as a prop (from the tooltip that displays the HoverUserCard), call it
+      if(handleTooltipClose){
+        handleTooltipClose()
+      }
         e.preventDefault()
         e.stopPropagation(); //prevent the event from bubbling up to the Tooltip
         setUsertoFollow(displayedUserOnCard)

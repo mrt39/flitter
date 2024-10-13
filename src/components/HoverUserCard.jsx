@@ -14,7 +14,7 @@ import slugify from 'slugify';
 
 
 
-const HoverUserCard = ({ user }) => {
+const HoverUserCard = ({ user, handleTooltipClose}) => {
 
   const {currentUser, setSelectedUser} = useContext(UserContext); 
   const {darkModeOn, pressedFollow, setPressedFollow} = useContext(AppStatesContext); 
@@ -130,9 +130,10 @@ const HoverUserCard = ({ user }) => {
         {/* don't display the follow button when the user hovers on their own name */}
         {currentUser.shortId !== displayedUserOnCard.shortId 
         &&
-        <FollowButton
-          displayedUserOnCard={displayedUserOnCard}
-        />
+          <FollowButton
+            displayedUserOnCard={displayedUserOnCard}
+            handleTooltipClose={handleTooltipClose}
+          />
         }
       </Box>
 
