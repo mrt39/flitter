@@ -20,6 +20,10 @@
     width: 100%;
 }
 
+.whotofollow-header{
+    width: fit-content;
+}
+
 .whotofollow-name{
     font-size: 15px !important;
     font-weight: 500 !important;

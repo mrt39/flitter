@@ -1,11 +1,12 @@
 /* eslint-disable react/prop-types */
 import { useState, useContext, useEffect } from 'react'
 import { useLocation, Link, useNavigate} from "react-router-dom";
+import HoverUserCard from '../components/HoverUserCard.jsx';
 import { UserContext, AppStatesContext } from '../App.jsx';
 import FollowersTopSection from '../components/FollowersTopSection.jsx'; 
 import UserAvatar from '../components/UserAvatar.jsx';
 import FollowButton from '../components/FollowButton.jsx';
-import { ListItem, ListItemAvatar, ListItemText, Typography, Paper, CircularProgress, Alert, Box, Tabs, Tab } from '@mui/material';
+import { ListItem, ListItemAvatar, ListItemText, Typography, Paper, CircularProgress, Alert, Box, Tabs, Tab, Tooltip } from '@mui/material';
 //import for generating the url path for routing 
 import slugify from 'slugify';
 
@@ -15,7 +16,7 @@ import '../styles/Followers.css';
 const Followers = () => {
 
   // Pass the UserContext defined in app.jsx
-  const { setSelectedUser, selectedUser } = useContext(UserContext); 
+  const { setSelectedUser, currentUser } = useContext(UserContext); 
   const { darkModeOn, pressedFollow, handleProfileRouting } = useContext(AppStatesContext); 
 
 
@@ -96,13 +97,47 @@ if (loading) {
                 <ListItemText 
                   className={`followers-listitemtext`}
                   primary={
-                      <Typography variant="h6" className='followers-name'>{follower.name}</Typography>
+                    <div className="followers-header">
+                      {/* MUI tooltip that will display a user card on hover */}
+                      <Tooltip 
+                        title={
+                            <Box sx={{ minWidth: 280 }}> 
+                                <HoverUserCard 
+                                  user={follower} 
+                                />
+                            </Box>
+                        }
+                        enterDelay={200}
+                        leaveDelay={200}
+                        placement="bottom"
+
+                        PopperProps={{
+                            modifiers: [
+                                {
+                                    name: 'arrow',
+                                    enabled: false, 
+                                },
+                            ],
+                            sx: {
+                              '.MuiTooltip-tooltip': {
+                                backgroundColor: 'transparent',
+                                boxShadow: 'none', 
+                                padding: 0, 
+                              },
+                            },
+                        }}        
+                      > 
+                        <Typography variant="h6" className='followers-name'>{follower.name}</Typography>
+                      </Tooltip>
+                  </div>
                   }
                   secondary={follower.bio}
                 />
+                {follower._id!=currentUser._id &&
                 <div className="followers-followbutton-container">
                   <FollowButton displayedUserOnCard={follower} />
                 </div>
+                }
               </ListItem>
             </Link>
 
@@ -119,13 +154,47 @@ if (loading) {
                 <ListItemText
                   className={`followers-listitemtext`}
                   primary={
-                      <Typography variant="h6" className='followers-name'>{follower.name}</Typography>
+                    <div className="followers-header">
+                      {/* MUI tooltip that will display a user card on hover */}
+                      <Tooltip 
+                        title={
+                            <Box sx={{ minWidth: 280 }}> 
+                                <HoverUserCard 
+                                  user={follower} 
+                                />
+                            </Box>
+                        }
+                        enterDelay={200}
+                        leaveDelay={200}
+                        placement="bottom"
+
+                        PopperProps={{
+                            modifiers: [
+                                {
+                                    name: 'arrow',
+                                    enabled: false, 
+                                },
+                            ],
+                            sx: {
+                              '.MuiTooltip-tooltip': {
+                                backgroundColor: 'transparent',
+                                boxShadow: 'none', 
+                                padding: 0, 
+                              },
+                            },
+                        }}        
+                      > 
+                        <Typography variant="h6" className='followers-name'>{follower.name}</Typography>
+                      </Tooltip>
+                  </div>
                   }
                   secondary={follower.bio}
                 />
+                {follower._id!=currentUser._id &&
                 <div className="followers-followbutton-container">
                   <FollowButton displayedUserOnCard={follower} />
                 </div>
+                }
               </ListItem>
             </Link>
           ))

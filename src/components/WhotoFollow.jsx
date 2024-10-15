@@ -1,8 +1,9 @@
 /* eslint-disable react/prop-types */
 import {useContext, useEffect, useState } from 'react';
 import { useLocation, Link, useNavigate} from "react-router-dom";
+import HoverUserCard from './HoverUserCard.jsx';
 import { AppStatesContext, UserContext } from '../App.jsx';
-import {  Box, CircularProgress, Card, CardContent, Typography, List, ListItem, ListItemAvatar, ListItemText} from '@mui/material';
+import {  Box, CircularProgress, Card, CardContent, Typography, List, ListItem, ListItemAvatar, ListItemText, Tooltip} from '@mui/material';
 import '../styles/SidebarRight.css';
 import UserAvatar from './UserAvatar.jsx';
 import FollowButton from './FollowButton.jsx';
@@ -26,10 +27,6 @@ const WhotoFollow = () => {
 
   const [loading, setLoading] = useState(true);
   const [firstrender, setFirstrender] = useState(true);
-
-  const navigate = useNavigate(); 
-
-
 
   useEffect(() => {
     fetch(import.meta.env.VITE_BACKEND_URL + '/getallusers', {
@@ -103,10 +100,43 @@ const WhotoFollow = () => {
                     <ListItemAvatar>
                         <UserAvatar user={user} />
                     </ListItemAvatar>
+                    
                     <div className="whotofollow-list-item-content">
                       <ListItemText 
                         primary={
-                          <Typography variant="h6" className='whotofollow-name'>{user.name}</Typography>
+                          <div className="whotofollow-header">
+                              {/* MUI tooltip that will display a user card on hover */}
+                              <Tooltip 
+                              title={
+                                  <Box sx={{ minWidth: 280 }}> 
+                                      <HoverUserCard 
+                                        user={user} 
+                                      />
+                                  </Box>
+                              }
+                              enterDelay={200}
+                              leaveDelay={200}
+                              placement="bottom"
+
+                              PopperProps={{
+                                  modifiers: [
+                                      {
+                                          name: 'arrow',
+                                          enabled: false, 
+                                      },
+                                  ],
+                                  sx: {
+                                    '.MuiTooltip-tooltip': {
+                                      backgroundColor: 'transparent',
+                                      boxShadow: 'none', 
+                                      padding: 0, 
+                                    },
+                                  },
+                                }}        
+                            > 
+                            <Typography variant="h6" className='whotofollow-name'>{user.name}</Typography>
+                          </Tooltip>
+                          </div>
                         }
                       />
 
