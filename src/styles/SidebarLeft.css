@@ -10,6 +10,75 @@
     z-index: 1000; 
 }
 
+  /* below 1300px width */
+  @media (max-width: 1300px) {
+
+    .sidebarLeft{
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        min-width: auto;
+        width: auto;
+    }
+    .sidebarLogo {
+        display: flex;
+        justify-content: flex-end;
+    }
+    .sidebarLogo img{
+        height: 50px;
+        width: 50px;
+        margin-right: 10px;
+        margin-bottom: 10px !important;
+    }
+
+    #sidebarUserIconBtn p{
+        display: none;
+    }
+
+    #sidebarUserIconBtn {
+        width: fit-content !important;
+        left: auto !important;
+        right: 15px !important;
+    }
+
+    #sidebarUserIconBtn img{
+    }
+    
+  }
+
+  /* Below 650px width */ 
+@media (max-width: 650px){
+    .sidebarLeft {
+        overflow-y: auto;
+        overflow-x: auto ;
+        padding: 20px 10px 20px 30px;
+    } 
+
+    .sidebarLogo img{
+        height: 50px;
+        width: 50px;
+        margin-right: 8px;
+        margin-bottom: 10px !important;
+    }
+
+    #sidebarUserIconBtn {
+        right: 5px !important;
+    }
+}
+
+  /* Below 400px width */ 
+  @media (max-width: 400px){
+    .sidebarLeft {
+        padding: 20px 0px 20px 100px;
+    } 
+
+    #sidebarUserIconBtn {
+        right: -5px !important;
+    }
+}
+
+  
+
 /* borders */
 .sidebarLeft{
     font-weight: 400 !important;

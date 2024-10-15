@@ -10,15 +10,22 @@
     z-index: 1000; 
 }
 
+/* below 1050px width */
+@media (max-width: 1050px) {
+  .sidebarRight {
+    display: none;
+  }
+}
+
 
 /* borders */
-.sidebarRight{
+.sidebarRight-container{
     border-style: solid; 
     border-color: rgb(239, 243, 244);
     border-width: 0 0 0 1px;
 }
   
-.sidebarRight.dark-mode{
+.sidebarRight-container.dark-mode{
     border-color: rgb(47, 51, 54);
 }
 

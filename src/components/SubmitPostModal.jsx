@@ -9,7 +9,7 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import SubmitPostForm from './SubmitPostForm.jsx';
-
+import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
 
 import "../styles/SubmitPostModal.css"
 
@@ -39,6 +39,16 @@ export default function SubmitPostModal() {
       >
         Post
       </Button>
+      <IconButton
+        className='leftSideBar-postIcon'
+        sx={{
+          color: 'rgb(29, 155, 240)',
+          padding: '20px',
+        }}
+        onClick={handleOpen}
+      >
+        <CreateOutlinedIcon sx={{ fontSize: 30 }} />
+      </IconButton>
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"

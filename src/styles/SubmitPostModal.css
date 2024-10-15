@@ -3,7 +3,8 @@
     top: 50%;
     left: 49.52%;
     transform: translate(-50%, -50%);
-    width: 600px;
+    width: 80%;
+    max-width: 500px;
     height: 220px;
     border: 1px solid gray;
     box-shadow: 24px;
@@ -17,3 +18,26 @@
     border: 1px solid black;
 
 }
+
+.submitPost-modal .submitPost-form-container{
+    padding-left: 20px
+}
+
+
+/* Below 1300px width */
+@media (max-width: 1300px) {
+    #sidebarPostBtn {
+      display: none; /* Hide the button */
+    }
+  
+    .leftSideBar-postIcon {
+      display: block !important; /* Show the icon */
+    }
+  }
+  
+  /* Above 1300px width */
+  @media (min-width: 1301px) {
+    .leftSideBar-postIcon {
+      display: none !important; /* Hide the icon */
+    }
+  }

@@ -6,21 +6,49 @@
     font-weight: 400 !important;
     transition: background-color 0.3s ease;
 
-  }
-  .sidebarLink:hover{
-    background-color: rgba(15, 20, 25, 0.1);
-  }
-  .sidebarLink.dark-mode:hover{
-    background-color: rgba(231, 233, 234, 0.1);
+}
+
+  /* below 1300px width */
+  @media (max-width: 1300px) {
+    .sidebarLink h2 {
+      display: none;
+    }
+    .sidebarLink{
+      justify-content: flex-end;
+      width: fit-content;
+    }
+
+    .sidebarLink > .MuiSvgIcon-root{
+      height: 1.3em;
+      width: auto;
+    }
 
   }
-  .sidebarLink > h2{
-    font-weight: 400 !important;
-    font-size: 20px;
-    margin-right: 20px;
-  }
 
-  .sidebarLink > .MuiSvgIcon-root {
-    padding: 20px;
-    box-sizing: content-box;
-  }
+    /* Below 650px width */ 
+@media (max-width: 650px){
+  .sidebarLink > .MuiSvgIcon-root{
+    height: 1.1em;
+    width: auto;
+}
+}
+
+.sidebarLink:hover{
+  background-color: rgba(15, 20, 25, 0.1);
+}
+.sidebarLink.dark-mode:hover{
+  background-color: rgba(231, 233, 234, 0.1);
+
+}
+.sidebarLink > h2{
+  font-weight: 400 !important;
+  font-size: 20px;
+  margin-right: 20px;
+}
+
+
+
+.sidebarLink > .MuiSvgIcon-root {
+  padding: 20px;
+  box-sizing: content-box;
+}

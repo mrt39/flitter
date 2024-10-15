@@ -19,7 +19,8 @@ const style = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 500,
+  width: "80%", //responsive width
+  maxWidth: "500px",
   bgcolor: 'background.paper',
   boxShadow: 24,
   p: 2,

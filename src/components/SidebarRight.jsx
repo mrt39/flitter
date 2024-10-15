@@ -31,23 +31,25 @@ const SidebarRight = () => {
 
 
   return (
-    <div className={`sidebarRight ${darkModeOn ? 'dark-mode' : ''}`}>
+    <div className={`sidebarRight-container ${darkModeOn ? 'dark-mode' : ''}`}>
+      <div className={`sidebarRight ${darkModeOn ? 'dark-mode' : ''}`}>
 
-      <Card className='sidebarRight-section-card sidebarRight-toggleTheme-card'>
-        <CardContent>
-          <IconButton onClick={toggleDarkTheme} edge="end">
-            {darkModeOn ? (
-              <WbSunnyIcon sx={{ fontSize: 30, color: '#1da1f2' }} />
-            ) : (
-              <Brightness2Icon sx={{ fontSize: 30, color: '#1da1f2' }} />
-            )}
-          </IconButton>
-        </CardContent>
-      </Card>
-      
-      <WhatsHappening/>
+        <Card className='sidebarRight-section-card sidebarRight-toggleTheme-card'>
+          <CardContent>
+            <IconButton onClick={toggleDarkTheme} edge="end">
+              {darkModeOn ? (
+                <WbSunnyIcon sx={{ fontSize: 30, color: '#1da1f2' }} />
+              ) : (
+                <Brightness2Icon sx={{ fontSize: 30, color: '#1da1f2' }} />
+              )}
+            </IconButton>
+          </CardContent>
+        </Card>
+        
+        <WhatsHappening/>
 
-      <WhotoFollow/>
+        <WhotoFollow/>
+        </div>
       </div>
 
    
