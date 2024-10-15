@@ -4,12 +4,10 @@ import SidebarLeft from "./components/SidebarLeft.jsx"
 import Snackbar from "./components/Snackbar.jsx"
 import './styles/App.css'
 import { useEffect, useState, createContext, useRef} from "react";
-import { Navigate, } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import Box from '@mui/material/Box';
 import { CircularProgress, Alert } from '@mui/material';
-import IconButton from '@mui/material/IconButton';
-import Brightness2Icon from '@mui/icons-material/Brightness2';
-import WbSunnyIcon from '@mui/icons-material/WbSunny'; 
+import slugify from 'slugify';
 
 
 //----------------------MUI DARK THEME---------------------------
@@ -17,7 +15,6 @@ import WbSunnyIcon from '@mui/icons-material/WbSunny';
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 //----------------------MUI DARK THEME END---------------------------
-
 
 //context for carrying user related states
 export const UserContext = createContext({
@@ -31,7 +28,6 @@ export const UserContext = createContext({
 export const AppStatesContext = createContext();
 
 
-
 const App = () => {
 
   //theme (dark/light)
@@ -39,7 +35,6 @@ const App = () => {
 
 /*   const [theme, setTheme] = useState(savedTheme);
  */
-
 
 
   //----------------------MUI DARK THEME---------------------------
@@ -70,6 +65,9 @@ const App = () => {
         },
         background: {
           default: darkModeOn ? 'black' : '#fff', // change default background color for dark mode
+        },
+        text: {
+          primary: darkModeOn ? 'rgb(231, 233, 234)' : 'rgb(15, 20, 25)',
         },
       },
       components: {
@@ -118,10 +116,8 @@ const App = () => {
   //state for the search word that gets set when the user clicks on a word in the "What's happening" section
   const [searchWord, setSearchWord] = useState(null);
 
-
   //toggle for pressing the follow button
   const [pressedFollow, setPressedFollow] = useState(false)
-
 
 
 
@@ -135,7 +131,6 @@ const App = () => {
   const [isSubmittingPost, setisSubmittingPost] = useState(false); // Track if a submission is already in progress, disable all submit buttons
 
   const appContainerRef = useRef(null); // Add a reference to the outlet container
-
 
   // get the user data when logged in, also checks if the user is logged in after each refresh
   useEffect(() => {
@@ -170,7 +165,6 @@ const App = () => {
     }
   }, []); 
 
-
   //upon user editing their profile, change the user data from the stored user data in the session, to the actual user data in the db 
   useEffect(() => {
     const getUserOnUpdate = () => {
@@ -202,13 +196,25 @@ const App = () => {
 
 
 
+  const navigate = useNavigate();
+
+  //handle generating the url path for routing to /profile/:slug
+  function handleProfileRouting(clickedOnUser){
+    setSelectedUser(clickedOnUser)
+    //slugify the username, e.g:"john-doe"
+    const slug = slugify(clickedOnUser.name, { lower: true }); 
+    //combine slug with usershortID to create the unique profile path for the selected user to route to
+    const profilePath = `/profile/${slug}-${clickedOnUser.shortId}`
+    // Route to the profile path
+    navigate(profilePath); 
+}
+
   //FOLLOW STATES AND LOGIC. 
   //Defining the states and logic here, as the follow button is used in multiple components
   //also, the follow button is used in the UserCardProfile component, which is a child of the HoverUserCard component that gets displayed as a tooltip when hovering over a user's profile picture. 
   //sending a post request within the tooltip and it's child components disrupts the display of the tooltip and/or the follow logic, so the follow logic is defined here to prevent that.
   const [usertoFollow, setUsertoFollow] = useState()
   const [loadingFollow, setLoadingFollow] = useState(false)
-
 
   //useEffect for handling follow
   useEffect(() => {
@@ -270,7 +276,6 @@ const App = () => {
       <ThemeProvider theme={darkTheme}>
       <CssBaseline />
 
-
       <AppStatesContext.Provider value={{ 
           allPosts, setAllPosts, snackbarOpen, setSnackbarOpen, 
           snackbarOpenCondition, setSnackbarOpenCondition, 
@@ -280,7 +285,7 @@ const App = () => {
           refreshPosts, setRefreshPosts, darkModeOn, pressedFollow, setPressedFollow,
           toggleDarkTheme, usertoFollow, setUsertoFollow, loadingFollow, setLoadingFollow,
           appContainerRef, mostIteratedWords, setMostIteratedWords, searchWord, setSearchWord,
-          activeTab, setActiveTab
+          activeTab, setActiveTab, handleProfileRouting
       }}>
         <UserContext.Provider value={{ currentUser, setCurrentUser, selectedUser, setSelectedUser}}>
 
@@ -289,7 +294,6 @@ const App = () => {
           snackbarOpen={snackbarOpen}
           setSnackbarOpen={setSnackbarOpen}
         />
-
 
 
         {currentUser ? 
@@ -306,7 +310,6 @@ const App = () => {
           <Navigate to="/login" /> 
         </>} 
 
-
         </UserContext.Provider>
 
       </AppStatesContext.Provider>
@@ -315,8 +318,9 @@ const App = () => {
 
     </div>
 
-
   );
 };
 
 export default App;
+
+

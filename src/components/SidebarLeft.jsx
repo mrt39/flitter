@@ -42,7 +42,7 @@ import slugify from 'slugify'; // for generating the URL path for routing
 
 const SidebarLeft = () => {
 
-    const {darkModeOn} = useContext(AppStatesContext); 
+    const {darkModeOn, handleProfileRouting} = useContext(AppStatesContext); 
     const {currentUser, setCurrentUser, setSelectedUser} = useContext(UserContext);
 
 
@@ -66,7 +66,7 @@ const SidebarLeft = () => {
 
 
   //handle generating the url path for routing to /profile/:slug
-  function handleProfileRouting(){
+/*   function handleProfileRouting(){
     //slugify the username, e.g:"john-doe"
     const slug = slugify(currentUser.name, { lower: true }); 
     //combine slug with usershortID to create the unique profile path for the selected currentUser to route to
@@ -74,7 +74,7 @@ const SidebarLeft = () => {
     setSelectedUser(currentUser)
     //route to the profile path
     navigate(profilePath);
-  }
+  } */
 
 
   function handleSignOut(){
@@ -114,12 +114,10 @@ const SidebarLeft = () => {
         <SidebarLink text="Messages" Icon={MailOutlineIcon} />
         <SidebarLink text="Bookmarks" Icon={BookmarkBorderIcon} />
         <SidebarLink text="Lists" Icon={ListAltIcon} />
-        <span  className="sidebarLink" onClick={handleProfileRouting} >
+        <span  className="sidebarLink" onClick={() => handleProfileRouting(currentUser)} >
             <SidebarLink text="Profile" Icon={PermIdentityIcon} />
         </span>
-        <Link className="sidebarLink" to="/profileedit">
             <SidebarLink text="More" Icon={MoreHorizIcon}/>
-        </Link>
 
         {/* use different react components for forms in homepage and navbar in order to seperate concerns and avoid state/post logic clashing */}
         <SubmitPostModal/>

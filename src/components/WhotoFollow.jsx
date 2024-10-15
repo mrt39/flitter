@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import {useContext, useEffect, useState } from 'react';
-import { useNavigate } from "react-router-dom";
+import { useLocation, Link, useNavigate} from "react-router-dom";
 import { AppStatesContext, UserContext } from '../App.jsx';
 import {  Box, CircularProgress, Card, CardContent, Typography, List, ListItem, ListItemAvatar, ListItemText} from '@mui/material';
 import '../styles/SidebarRight.css';
@@ -17,7 +17,7 @@ import slugify from 'slugify';
 
 const WhotoFollow = () => {
 
-  const {pressedFollow /* allUsers, setAllUsers */} = useContext(AppStatesContext); 
+  const {pressedFollow, darkModeOn, handleProfileRouting} = useContext(AppStatesContext); 
   const {currentUser, setSelectedUser} = useContext(UserContext); 
 
   const [allUsers, setAllUsers] = useState(null);
@@ -77,17 +77,6 @@ const WhotoFollow = () => {
     }
   }, [allUsers]);
 
-    //handle generating the url path for routing to /profile/:slug
-    function handleProfileRouting(clickedOnUser){
-        setSelectedUser(clickedOnUser)
-        //slugify the username, e.g:"john-doe"
-        const slug = slugify(clickedOnUser.name, { lower: true }); 
-        //combine slug with usershortID to create the unique profile path for the selected user to route to
-        const profilePath = `/profile/${slug}-${clickedOnUser.shortId}`
-        // Route to the profile path
-        navigate(profilePath); 
-    }   
-
 
 
   if (loading) {
@@ -103,31 +92,28 @@ const WhotoFollow = () => {
 
   return (
       <Card className="sidebarRight-section-card">
-        <CardContent>
+        <CardContent className="sidebarRight-section-cardContent">
           <Typography variant="h6" component="div" className='sidebarRightTitle'>
             Who to follow
           </Typography>
           <List>
           {sortedUsers.map((user) => (
-                <ListItem className='whotoFollowListItem' key={user._id}>
-                    <span className="usernameLinkOnPost avatarLink" onClick={(e) => {
-                        e.preventDefault();
-                        handleProfileRouting(user);
-                    }}>
-                        <ListItemAvatar>
-                            <UserAvatar user={user} />
-                        </ListItemAvatar>
-                    </span>
+              <Link onClick={(e) => {handleProfileRouting(user); e.preventDefault();}} className={`followers-link ${darkModeOn ? 'dark-mode' : ''}`} style={{ textDecoration: 'none', color: 'inherit' }} key={user._id}>
+                  <ListItem className={`whotoFollowListItem ${darkModeOn ? 'dark-mode' : ''}`} key={user._id}>
+                    <ListItemAvatar>
+                        <UserAvatar user={user} />
+                    </ListItemAvatar>
                     <div className="whotofollow-list-item-content">
-                        <span className="usernameLinkOnPost avatarLink" onClick={(e) => {
-                            e.preventDefault();
-                            handleProfileRouting(user);
-                        }}>
-                            <ListItemText primary={user.name} />
-                        </span>
-                        <FollowButton displayedUserOnCard={user}/>
-                  </div>
-                </ListItem>
+                      <ListItemText 
+                        primary={
+                          <Typography variant="h6" className='whotofollow-name'>{user.name}</Typography>
+                        }
+                      />
+
+                    <FollowButton displayedUserOnCard={user}/>
+                    </div>
+                  </ListItem>
+              </Link>
             ))}
             {sortedUsers.length === 0 && 
                 <Typography variant="body2" component="div" >

@@ -1,11 +1,30 @@
 .whotoFollowListItem{
     display: flex;
     align-items: center;
+    padding: 10px 16px !important;
 }
+
+.whotoFollowListItem:hover{
+    background-color: rgba(0, 0, 0, 0.03) !important;
+}
+
+.whotoFollowListItem.dark-mode:hover{
+    background-color: rgba(255, 255, 255, 0.03) !important;
+}
+
 
 .whotofollow-list-item-content{
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: 100%;
+}
+
+.whotofollow-name{
+    font-size: 15px !important;
+    font-weight: 500 !important;
+}
+
+.whotofollow-name:hover{
+    text-decoration: underline;
 }

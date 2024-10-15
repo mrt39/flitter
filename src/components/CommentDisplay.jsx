@@ -1,43 +1,25 @@
 /* eslint-disable react/prop-types */
 import { useContext, useState, useEffect } from "react";
-import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import dayjs from 'dayjs';
 import HoverUserCard from './HoverUserCard.jsx';
 import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 import UserAvatar from './UserAvatar.jsx';
-import { UserContext, AppStatesContext} from '../App.jsx';
+import {AppStatesContext} from '../App.jsx';
 import { Avatar } from '@mui/material';
 import { ListItemText,  ListItemAvatar, Box} from '@mui/material';
 import {  Typography,  IconButton,  } from '@mui/material';
 import { FavoriteBorder} from '@mui/icons-material';
 
-//import for generating the url path for routing 
-import slugify from 'slugify';
+
 import '../styles/CommentDisplay.css'
 
 
 const CommentDisplay = ({comment}) => {
 
     //Pass the UserContext defined in app.jsx
-    const { currentUser, setSelectedUser } = useContext(UserContext); 
 
-    const {darkModeOn} = useContext(AppStatesContext); 
-
-
-    const navigate = useNavigate(); 
-
-    //handle generating the url path for routing to /profile/:slug
-    function handleProfileRouting(clickedOnUser){
-      setSelectedUser(clickedOnUser)
-      //slugify the username, e.g:"john-doe"
-      const slug = slugify(clickedOnUser.name, { lower: true }); 
-      //combine slug with usershortID to create the unique profile path for the selected user to route to
-      const profilePath = `/profile/${slug}-${clickedOnUser.shortId}`
-      // Route to the profile path
-      navigate(profilePath); 
-    }
-
+    const {darkModeOn, handleProfileRouting} = useContext(AppStatesContext); 
 
     const [tooltipOpen, setTooltipOpen] = useState(false);
 
@@ -53,19 +35,19 @@ const CommentDisplay = ({comment}) => {
     return (
       <>
         <span 
-            className="usernameLinkOnComment" 
-            onClick={(e) => 
-                { 
-                e.preventDefault();
-                handleProfileRouting(comment.from[0] //route to profile instead
-                )}}
+          className="usernameLinkOnComment" 
+          onClick={(e) => 
+          { 
+          e.preventDefault();
+          handleProfileRouting(comment.from[0] //route to profile
+          )}}
         >
-            <ListItemAvatar>
-            <UserAvatar
-                    user={comment.from[0]}
-                    source="post"
-      		  />
-            </ListItemAvatar>
+          <ListItemAvatar>
+          <UserAvatar
+                  user={comment.from[0]}
+                  source="post"
+          />
+          </ListItemAvatar>
         </span>
         <ListItemText
             primary={
@@ -107,7 +89,7 @@ const CommentDisplay = ({comment}) => {
                       onClick={(e) => 
                             { 
                             e.preventDefault();
-                            handleProfileRouting(comment.from[0] //route to profile instead
+                            handleProfileRouting(comment.from[0] //route to profile
                             )}}
                   >
                     <Typography variant="subtitle1" className="comment-name">

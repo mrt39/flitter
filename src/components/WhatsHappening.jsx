@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import {useContext, useEffect, useState } from 'react';
 import { AppStatesContext, UserContext } from '../App.jsx';
-import { Box, CircularProgress, Card, CardContent, Typography, List, ListItem, ListItemText} from '@mui/material';
+import { Alert, Box, CircularProgress, Card, CardContent, Typography, List, ListItem, ListItemText} from '@mui/material';
 
 import '../styles/WhatsHappening.css';
 
@@ -11,11 +11,45 @@ import '../styles/WhatsHappening.css';
 
 const WhatsHappening = () => {
 
-  const {allPosts, mostIteratedWords, setActiveTab, setMostIteratedWords, darkModeOn, setSearchWord} = useContext(AppStatesContext); 
-  const {currentUser} = useContext(UserContext); 
+  const {allPosts, setAllPosts, mostIteratedWords, setActiveTab, setMostIteratedWords, darkModeOn, setSearchWord} = useContext(AppStatesContext); 
 
 
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+
+    //if allPosts array isn't populated (user has not been to the homepage to get the fetch in AllPostsDisplay), fetch all posts
+    useEffect(() => {
+        const getPosts = () => {
+        fetch(import.meta.env.VITE_BACKEND_URL + '/getallposts', {
+            method: 'GET',
+        })
+            .then(response => {
+            if (response.ok) {
+                return response.json(); // Parse JSON when the response is successful
+            }
+            throw new Error('Network response was not ok.');
+            })
+            .then(data => {
+            // sort data by dates, descending order
+            data.sort((a, b) => new Date(b.date) - new Date(a.date));
+            setAllPosts(data);
+
+            setLoading(false);
+            })
+            .catch(error => {
+            setError(error.message);
+            console.error('Error:', error);
+            setLoading(false);
+            });
+        };
+        //only attempt to fetch posts if allPosts array is empty
+        if (allPosts.length === 0) {
+            getPosts();
+        }
+    }, []);
+
+
 
     useEffect(() => {
         if (allPosts.length === 0) {
@@ -74,17 +108,21 @@ const WhatsHappening = () => {
         )
     }
 
+    if (error) {
+        return <Alert severity="error">{error}</Alert>;
+    }
+
 
     return (
         <Card className="sidebarRight-section-card">
-            <CardContent>
+            <CardContent className="sidebarRight-section-cardContent">
             <Typography variant="h6" component="div" className='sidebarRightTitle'>
                 What&apos;s happening
             </Typography>
             <List>
-                {mostIteratedWords.map((word, index) => (
-                <ListItem key={index}>
-                    <span className={`whatsHappening-listitem ${darkModeOn && 'dark-mode'}`} onClick={() => sortSearchWord(word.word)}>
+                {mostIteratedWords && mostIteratedWords.map((word, index) => (
+                <ListItem className="whatsHappening-listitem" key={index}>
+                    <span className={`whatsHappening-listitem-span ${darkModeOn && 'dark-mode'}`} onClick={() => sortSearchWord(word.word)}>
                         <ListItemText
                             primary={
                             <>

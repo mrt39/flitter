@@ -1,15 +1,3 @@
-
-.usernameLinkOnComment{
-    color: inherit;
-    font-weight: inherit;
-    text-decoration: inherit;
-}
-
-.usernameLinkOnComment:hover{
-    cursor: pointer;
-}
-
-
 .comment-header {
     display: flex;
     justify-content: space-between;

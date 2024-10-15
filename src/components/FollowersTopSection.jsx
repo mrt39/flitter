@@ -26,9 +26,9 @@ const FollowersTopSection = ({currentPath, setCurrentPath}) => {
     //handle generating the url path for routing to /profile/:slug-shortid/followers or /profile/:slug-shortid/following
     function handleFollowersRouting(path){
         //combine the url without the current path with the path
-        const profilePath = `${urlWithoutCurrentpath}/${path}`
+        const followersPath = `${urlWithoutCurrentpath}/${path}`
         // Route to the profile path
-        navigate(profilePath); 
+        navigate(followersPath); 
     }
 
     //handle generating the url path when the user clicks on the back button (/profile/:slug-shortid/)

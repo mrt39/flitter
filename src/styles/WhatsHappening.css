@@ -3,16 +3,30 @@
     padding: 0;
 }
 
-.whatsHappening-listitem{
-    width: 100%;
-    transition: background-color 0.3s ease;
+.sidebarRight-section-cardContent{
+    padding: 0 !important;
 }
 
-.whatsHappening-listitem:hover{
+.sidebarRightTitle{
+    padding: 16px !important;
+    padding-bottom: 8px !important;
+}
+
+.whatsHappening-listitem{
+    padding: 0 !important;
+}
+
+.whatsHappening-listitem-span{
+    width: 100%;
+    transition: background-color 0.3s ease;
+    padding: 6px 16px;
+}
+
+.whatsHappening-listitem-span:hover{
     cursor: pointer;
     background-color: rgba(0, 0, 0, 0.03) !important;
 }
 
-.whatsHappening-listitem.dark-mode:hover {
+.whatsHappening-listitem-span.dark-mode:hover {
     background-color: rgba(255, 255, 255, 0.03) !important;
 }

@@ -4,6 +4,7 @@ import { useLocation, Link, useNavigate} from "react-router-dom";
 import { UserContext, AppStatesContext } from '../App.jsx';
 import FollowersTopSection from '../components/FollowersTopSection.jsx'; 
 import UserAvatar from '../components/UserAvatar.jsx';
+import FollowButton from '../components/FollowButton.jsx';
 import { ListItem, ListItemAvatar, ListItemText, Typography, Paper, CircularProgress, Alert, Box, Tabs, Tab } from '@mui/material';
 //import for generating the url path for routing 
 import slugify from 'slugify';
@@ -15,7 +16,7 @@ const Followers = () => {
 
   // Pass the UserContext defined in app.jsx
   const { setSelectedUser, selectedUser } = useContext(UserContext); 
-  const { darkModeOn } = useContext(AppStatesContext); 
+  const { darkModeOn, pressedFollow, handleProfileRouting } = useContext(AppStatesContext); 
 
 
   const [loading, setLoading] = useState(true);
@@ -63,23 +64,10 @@ const Followers = () => {
             });
         };
         getFollowerData();
-        }, []); 
+        }, [pressedFollow]); 
 
 
     
-    const navigate = useNavigate(); 
-
-    //handle generating the url path for routing to /profile/:slug
-    function handleProfileRouting(clickedOnUser){
-        setSelectedUser(clickedOnUser)
-        //slugify the username, e.g:"john-doe"
-        const slug = slugify(clickedOnUser.name, { lower: true }); 
-        //combine slug with usershortID to create the unique profile path for the selected user to route to
-        const profilePath = `/profile/${slug}-${clickedOnUser.shortId}`
-        // Route to the profile path
-        navigate(profilePath); 
-    }
-
 
 if (loading) {
     return <CircularProgress />;
@@ -102,16 +90,19 @@ if (loading) {
           ? followerData.following.map((follower) => (
             <Link onClick={() => handleProfileRouting(follower)} className={`followers-link ${darkModeOn ? 'dark-mode' : ''}`} style={{ textDecoration: 'none', color: 'inherit' }} key={follower._id}>
               <ListItem className={`followers-listitem ${darkModeOn ? 'dark-mode' : ''}`}  alignItems="flex-start">
-                <ListItemAvatar>
+                <ListItemAvatar className='followers-avatar'>
                   <UserAvatar user={follower} />
                 </ListItemAvatar>
                 <ListItemText 
-                  className={`followers-listitemtext ${!follower.bio ? 'followers-centered-text' : ''}`}
+                  className={`followers-listitemtext`}
                   primary={
                       <Typography variant="h6" className='followers-name'>{follower.name}</Typography>
                   }
                   secondary={follower.bio}
                 />
+                <div className="followers-followbutton-container">
+                  <FollowButton displayedUserOnCard={follower} />
+                </div>
               </ListItem>
             </Link>
 
@@ -122,16 +113,19 @@ if (loading) {
           ? followerData.followedby.map((follower) => (
             <Link onClick={() => handleProfileRouting(follower)} className={`followers-link ${darkModeOn ? 'dark-mode' : ''}`} style={{ textDecoration: 'none', color: 'inherit' }} key={follower._id}>
               <ListItem className={`followers-listitem ${darkModeOn ? 'dark-mode' : ''}`}  alignItems="flex-start">
-                <ListItemAvatar>
+                <ListItemAvatar className='followers-avatar'>
                   <UserAvatar user={follower} />
                 </ListItemAvatar>
                 <ListItemText
-                  className={`followers-listitemtext ${!follower.bio ? 'followers-centered-text' : ''}`}
+                  className={`followers-listitemtext`}
                   primary={
                       <Typography variant="h6" className='followers-name'>{follower.name}</Typography>
                   }
                   secondary={follower.bio}
                 />
+                <div className="followers-followbutton-container">
+                  <FollowButton displayedUserOnCard={follower} />
+                </div>
               </ListItem>
             </Link>
           ))

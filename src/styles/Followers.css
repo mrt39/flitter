@@ -7,6 +7,9 @@
 }
 
 .followers-listitem{
+    display: flex;
+    align-items: center !important; /* Center items vertically */
+    justify-content: space-between !important; /* Space out the avatar, text, and button */
     transition: background-color 0.3s ease;
 }
 
@@ -19,12 +22,12 @@
     background-color: rgba(255, 255, 255, 0.03) !important;
 }
 
-.followers-listitemtext{
-    margin-top: 7px !important; 
+.followers-avatar{
+    margin-top: 0 !important;
 }
 
-.followers-centered-text{
-    margin-top: 15px !important;
+.followers-listitemtext{
+    margin-top: 7px !important; 
 }
 
 .followers-name{
@@ -35,4 +38,11 @@
 
 .followers-name:hover{
     text-decoration: underline;
+}
+
+.followers-followbutton-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
 }

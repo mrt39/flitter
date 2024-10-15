@@ -12,14 +12,12 @@ import '../styles/AllPostsDisplay.css'
 
 const AllPostsDisplay = ({fromThisUser}) => {
 
-
   const { allPosts, setAllPosts, profileUpdated, imgSubmittedNavbar, imgSubmittedHomePage, 
     pressedSubmitPost, refreshPosts, darkModeOn, appContainerRef, searchWord, activeTab} = useContext(AppStatesContext); 
 
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const {currentUser, selectedUser} = useContext(UserContext); 
-
 
   const [filteredMessages, setFilteredMessages] = useState([])
 
@@ -161,7 +159,6 @@ const AllPostsDisplay = ({fromThisUser}) => {
     }, 1000);
   };
 
-
   //filter based on searchWord
   useEffect(() => {
     if (searchWord) {
@@ -186,7 +183,6 @@ const AllPostsDisplay = ({fromThisUser}) => {
 
 
 
-
   if (loading) {
     return (
       <div className='circularProgressContainer'>
@@ -201,7 +197,6 @@ const AllPostsDisplay = ({fromThisUser}) => {
   if (error) {
     return <Alert severity="error">{error}</Alert>;
   }
-
 
 
 

@@ -23,26 +23,13 @@ const PostDisplay = ({post, location}) => {
     //Pass the UserContext defined in app.jsx
     const { currentUser, setSelectedUser } = useContext(UserContext); 
 
-    const {refreshPosts, setRefreshPosts, darkModeOn} = useContext(AppStatesContext); 
+    const {refreshPosts, setRefreshPosts, darkModeOn, handleProfileRouting} = useContext(AppStatesContext); 
 
     //state for storing if the currentuser has already liked this post
     const [currentUserLikedPost, setCurrentUserLikedPost] = useState(false); // Like state for individual post
 
     //Id for liking the posts
     const [pressedLikePost, setPressedLikePost] = useState(false); // Like state for individual post
-
-    const navigate = useNavigate(); 
-
-    //handle generating the url path for routing to /profile/:slug
-    function handleProfileRouting(clickedOnUser){
-        setSelectedUser(clickedOnUser)
-        //slugify the username, e.g:"john-doe"
-        const slug = slugify(clickedOnUser.name, { lower: true }); 
-        //combine slug with usershortID to create the unique profile path for the selected user to route to
-        const profilePath = `/profile/${slug}-${clickedOnUser.shortId}`
-        // Route to the profile path
-        navigate(profilePath); 
-    }
 
     // Temporary state for like animation (in order to remove the "liked" class after 0.3 seconds, to prevent the animation from playing when the user likes another post)
     const [tempLiked, setTempLiked] = useState(false); // Temporary state for like animation

@@ -1,0 +1,11 @@
+.usernameLinkOnComment{
+    color: inherit;
+    font-weight: inherit;
+    text-decoration: inherit;
+}
+
+.usernameLinkOnComment:hover{
+    cursor: pointer !important;
+    text-decoration: underline !important;
+}
+

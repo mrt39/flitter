@@ -17,7 +17,7 @@ import slugify from 'slugify';
 const HoverUserCard = ({ user, handleTooltipClose}) => {
 
   const {currentUser, setSelectedUser} = useContext(UserContext); 
-  const {darkModeOn, pressedFollow, setPressedFollow} = useContext(AppStatesContext); 
+  const {darkModeOn, pressedFollow, handleProfileRouting} = useContext(AppStatesContext); 
   const [displayedUserOnCard, setDisplayedUserOnCard] = useState(user)
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -56,18 +56,6 @@ const HoverUserCard = ({ user, handleTooltipClose}) => {
 
 
   const navigate = useNavigate(); 
-
-  //handle generating the url path for routing to /profile/:slug
-  function handleProfileRouting(clickedOnUser){
-      setSelectedUser(clickedOnUser)
-      //slugify the username, e.g:"john-doe"
-      const slug = slugify(clickedOnUser.name, { lower: true }); 
-      //combine slug with usershortID to create the unique profile path for the selected user to route to
-      const profilePath = `/profile/${slug}-${clickedOnUser.shortId}`
-      //route to the profile path
-      navigate(profilePath); 
-  }
-
 
     //handle generating the url path for routing to /profile/:slug/followers
     function handleFollowersRouting(string){
