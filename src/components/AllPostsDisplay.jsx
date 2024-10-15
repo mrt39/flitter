@@ -74,7 +74,12 @@ const AllPostsDisplay = ({fromThisUser}) => {
   
     prevDeps.current = [pressedSubmitPost, imgSubmittedNavbar, imgSubmittedHomePage, refreshPosts];
   
-    getMessages();
+    //if there is a searchWord (from WhatsHappening.jsx), do not fetch all posts (which will disrupt the search filter), set loading to false
+    if (!searchWord) {
+      getMessages();
+    } else {
+      setLoading(false);
+    }
   }, [pressedSubmitPost, imgSubmittedNavbar, imgSubmittedHomePage, refreshPosts, profileUpdated]);
   
   // useEffect for sorting messages (shuffle or sort by date)

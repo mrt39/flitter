@@ -15,7 +15,7 @@ const Profile = () => {
 
   // Pass the UserContext defined in app.js
   const {selectedUser, setSelectedUser } = useContext(UserContext); 
-  const {pressedFollow, profileUpdated, darkModeOn} = useContext(AppStatesContext); 
+  const {pressedFollow, profileUpdated, darkModeOn, setActiveTab, setSearchWord} = useContext(AppStatesContext); 
   const [error, setError] = useState(null);
   const [profilePageLoading, setProfilePageLoading] = useState(true);
 
@@ -26,6 +26,12 @@ const Profile = () => {
   const currentPath = location.pathname;
   // Extract the last 8 characters
   const last8Chars = currentPath.slice(-8);
+
+  //when the /profile route is accessed, set the active tab to "forYou" and set searchWord to null, in order to display the correct posts on user's profile
+  useEffect(() => {
+    setActiveTab("forYou");
+    setSearchWord(null);
+  },[]);
 
 
   //make a profile call because the selectedUser state will empty once the user refreshes the page

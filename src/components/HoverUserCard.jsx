@@ -141,14 +141,14 @@ const HoverUserCard = ({ user, handleTooltipClose}) => {
 
         {/* Follower and Following Counts */}
         <Box display="flex" justifyContent="flex-start" gap="50px">
-          <Link className="hoverUserCardFollowersLink" onClick={() => handleFollowersRouting("following")}>
+          <Link className="hoverUserCardFollowersLink" onClick={(e) => {e.preventDefault(); e.stopPropagation(); handleFollowersRouting("following")}}>
             <Typography variant="body2" color="text.secondary">
                 <span className='userCardFollowerNumber' style={{ color: theme.palette.text.primary}}>
                   {displayedUserOnCard.followingCount}
                 </span>&#8203; Following  {/* arrange space between the number and the "Following text" */}
             </Typography>
           </Link>
-          <Link className="hoverUserCardFollowersLink" onClick={() => handleFollowersRouting("followers")}>
+          <Link className="hoverUserCardFollowersLink" onClick={(e) => {e.preventDefault(); e.stopPropagation(); handleFollowersRouting("followers")}}>
             <Typography variant="body2" color="text.secondary">
               <span className='userCardFollowerNumber' style={{ color: theme.palette.text.primary}}>
                 {displayedUserOnCard.followerCount}

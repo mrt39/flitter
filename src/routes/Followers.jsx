@@ -17,7 +17,7 @@ const Followers = () => {
 
   // Pass the UserContext defined in app.jsx
   const { setSelectedUser, currentUser } = useContext(UserContext); 
-  const { darkModeOn, pressedFollow, handleProfileRouting } = useContext(AppStatesContext); 
+  const { darkModeOn, pressedFollow, handleProfileRouting, setActiveTab, setSearchWord } = useContext(AppStatesContext); 
 
 
   const [loading, setLoading] = useState(true);
@@ -32,53 +32,61 @@ const Followers = () => {
   // Extract the last 8 characters
   const shortID = path.slice(-18, -10);
 
+  //when the /followers route is accessed, set the active tab to "forYou" and set searchWord to null, in order to display the correct posts on user's profile
+  useEffect(() => {
+    setActiveTab("forYou");
+    setSearchWord(null);
+  },[]);
 
 
-    //get whether it's /following or /followers path and store it in currentPath state
-    useEffect(() => {
-        setCurrentPath(path.slice(-9));
-        }, []); 
 
-
-    
-
-    //fetch for getting the follower data of the user, based on their id
-    useEffect(() => {
-        const getFollowerData = () => {
-            fetch(import.meta.env.VITE_BACKEND_URL+'/followers/'+shortID, {
-            method: 'GET',
-            })
-            .then(response => {
-                if (response.ok) {
-                return response.json(); // Parse JSON when the response is successful
-                }
-                throw new Error('Network response was not ok.');
-            })
-            .then(data => {
-                setFollowerData(data[0])
-                setLoading(false)
-            })
-            .catch(error => {
-                setError(error.message);
-                setLoading(false)
-                console.error('Error:', error);
-            });
-        };
-        getFollowerData();
-        }, [pressedFollow]); 
+  //get whether it's /following or /followers path and store it in currentPath state
+  useEffect(() => {
+      setCurrentPath(path.slice(-9));
+      }, []); 
 
 
     
 
-if (loading) {
+  //fetch for getting the follower data of the user, based on their id
+  useEffect(() => {
+      const getFollowerData = () => {
+          fetch(import.meta.env.VITE_BACKEND_URL+'/followers/'+shortID, {
+          method: 'GET',
+          })
+          .then(response => {
+              if (response.ok) {
+              return response.json(); // Parse JSON when the response is successful
+              }
+              throw new Error('Network response was not ok.');
+          })
+          .then(data => {
+              setFollowerData(data[0])
+              setLoading(false)
+          })
+          .catch(error => {
+              setError(error.message);
+              setLoading(false)
+              console.error('Error:', error);
+          });
+      };
+      getFollowerData();
+      }, [pressedFollow]); 
+
+
+
+
+    
+
+  if (loading) {
     return <CircularProgress />;
-    }
+  }
 
 
 
-    if (error) {
+  if (error) {
     return <Alert severity="error">{error}</Alert>;
-    }
+  }
 
   return (
     <Paper elevation={3} className="followers-paper" style={{ padding: '20px', maxWidth: '600px', margin: '20px auto' }}>

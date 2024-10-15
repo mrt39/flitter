@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 import {useContext, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AppStatesContext, UserContext } from '../App.jsx';
 import { Alert, Box, CircularProgress, Card, CardContent, Typography, List, ListItem, ListItemText} from '@mui/material';
 
@@ -16,6 +17,8 @@ const WhatsHappening = () => {
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
+
 
 
     //if allPosts array isn't populated (user has not been to the homepage to get the fetch in AllPostsDisplay), fetch all posts
@@ -92,10 +95,10 @@ const WhatsHappening = () => {
 
     
     //set the search word to the word clicked on
-    function sortSearchWord(word) {
+    async function sortSearchWord(word) {
         //set the active tab to "forYou" when a word is clicked on, so that it displays the posts from everyone that contains the word
-        setActiveTab('forYou')
-        setSearchWord(word);
+        await setActiveTab('forYou')
+        await setSearchWord(word);
     }
 
     if (loading) {
@@ -122,7 +125,7 @@ const WhatsHappening = () => {
             <List>
                 {mostIteratedWords && mostIteratedWords.map((word, index) => (
                 <ListItem className="whatsHappening-listitem" key={index}>
-                    <span className={`whatsHappening-listitem-span ${darkModeOn && 'dark-mode'}`} onClick={() => sortSearchWord(word.word)}>
+                    <span className={`whatsHappening-listitem-span ${darkModeOn && 'dark-mode'}`} onClick={() => { sortSearchWord(word.word); navigate('/');}}>
                         <ListItemText
                             primary={
                             <>
