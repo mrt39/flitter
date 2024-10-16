@@ -23,7 +23,7 @@ const Followers = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [followerData, setFollowerData] = useState({});
-  const [currentPath, setCurrentPath] = useState({});
+  const [currentPathFollowers, setCurrentPathFollowers] = useState({});
 
   //get the shortid of the user from the current URL
   const location = useLocation();
@@ -41,9 +41,10 @@ const Followers = () => {
 
 
   //get whether it's /following or /followers path and store it in currentPath state
+  //change the currentPath state when the user clicks on the tabs or clicks on "followers" or "following" link on HoverUserCard
   useEffect(() => {
-      setCurrentPath(path.slice(-9));
-      }, []); 
+    setCurrentPathFollowers(path.slice(-9));
+      }, [location]); 
 
 
     
@@ -70,8 +71,9 @@ const Followers = () => {
               console.error('Error:', error);
           });
       };
+      //change followerData state when the user clicks on the profile tab or clicks on "followers" or "following" link on HoverUserCard
       getFollowerData();
-      }, [pressedFollow]); 
+      }, [pressedFollow, shortID]); 
 
 
 
@@ -91,10 +93,10 @@ const Followers = () => {
   return (
     <Paper elevation={3} className="followers-paper" style={{ padding: '20px', maxWidth: '600px', margin: '20px auto' }}>
       <FollowersTopSection
-        currentPath={currentPath}
-        setCurrentPath={setCurrentPath}
+        currentPathFollowers={currentPathFollowers}
+        setCurrentPathFollowers={setCurrentPathFollowers}
       />
-      {currentPath === "following"
+      {currentPathFollowers === "following"
         ? followerData.following && followerData.following.length > 0
           ? followerData.following.map((follower) => (
             <Link onClick={() => handleProfileRouting(follower)} className={`followers-link ${darkModeOn ? 'dark-mode' : ''}`} style={{ textDecoration: 'none', color: 'inherit' }} key={follower._id}>

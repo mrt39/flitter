@@ -10,7 +10,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import '../styles/FollowersTopSection.css';
 
 
-const FollowersTopSection = ({currentPath, setCurrentPath}) => {
+const FollowersTopSection = ({currentPathFollowers, setCurrentPathFollowers}) => {
 
     const {darkModeOn} = useContext(AppStatesContext); 
 
@@ -56,21 +56,21 @@ const FollowersTopSection = ({currentPath, setCurrentPath}) => {
         <div className={`followersTopSection-container ${darkModeOn ? 'dark-mode' : ''}`}>
             <div className="tabs">
                 <div
-                className={`tab ${darkModeOn ? 'dark-mode' : ''} ${currentPath === 'followers' ? 'active' : ''}`}
-                onClick={() => {setCurrentPath('followers'); handleFollowersRouting("followers")}}
+                className={`tab ${darkModeOn ? 'dark-mode' : ''} ${currentPathFollowers === 'followers' ? 'active' : ''}`}
+                onClick={() => {setCurrentPathFollowers('followers'); handleFollowersRouting("followers")}}
                 >
                     <div className='topsection-text-and-underline-container'>
                         <span>Followers</span>
-                        {currentPath === 'followers' && <div className="underline"></div>}
+                        {currentPathFollowers === 'followers' && <div className="underline"></div>}
                     </div>
                 </div>
                 <div
-                className={`tab ${darkModeOn ? 'dark-mode' : ''} ${currentPath === 'following' ? 'active' : ''}`}
-                onClick={() => {setCurrentPath('following'); handleFollowersRouting("following")}}
+                className={`tab ${darkModeOn ? 'dark-mode' : ''} ${currentPathFollowers === 'following' ? 'active' : ''}`}
+                onClick={() => {setCurrentPathFollowers('following'); handleFollowersRouting("following")}}
                 >
                     <div className='topsection-text-and-underline-container'>
                         <span>Following</span>
-                        {currentPath === 'following' && <div className="underline"></div>}
+                        {currentPathFollowers === 'following' && <div className="underline"></div>}
                     </div>
                 </div>
             </div>

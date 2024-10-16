@@ -9,7 +9,6 @@ import Box from '@mui/material/Box';
 import { CircularProgress, Alert } from '@mui/material';
 import slugify from 'slugify';
 
-
 //----------------------MUI DARK THEME---------------------------
 //MUI DARK THEME
 import { ThemeProvider, createTheme } from "@mui/material/styles";
@@ -27,15 +26,7 @@ export const UserContext = createContext({
 //context for carrying all the other app states 
 export const AppStatesContext = createContext();
 
-
 const App = () => {
-
-  //theme (dark/light)
-  //load the theme from localstorage so that the user selection persists. use light theme as default.
-
-/*   const [theme, setTheme] = useState(savedTheme);
- */
-
 
   //----------------------MUI DARK THEME---------------------------
     //load the theme from localstorage so that the user selection persists. use dark theme as default.
@@ -89,8 +80,6 @@ const App = () => {
   const [currentUser, setCurrentUser] = useState(null);
   //selected user for displaying their profile
   const [selectedUser, setSelectedUser] = useState();
-  //storing all users
-  const [allUsers, setAllUsers] = useState();
 
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -118,7 +107,6 @@ const App = () => {
 
   //toggle for pressing the follow button
   const [pressedFollow, setPressedFollow] = useState(false)
-
 
 
   //user presses "send" after selecting the image
@@ -193,7 +181,6 @@ const App = () => {
     }
   // when first fetch is complete or profile is updated, update the currentUser state 
   }, [profileUpdated, firstTimeLoading]); 
-
 
 
   const navigate = useNavigate();
@@ -295,7 +282,6 @@ const App = () => {
           setSnackbarOpen={setSnackbarOpen}
         />
 
-
         {currentUser ? 
         <>
           <SidebarLeft/>
@@ -322,5 +308,6 @@ const App = () => {
 };
 
 export default App;
+
 
 

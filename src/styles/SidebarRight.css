@@ -3,11 +3,6 @@
     min-width: 250px;
     padding: 20px 20px;
     margin: 0;
-    position: sticky; /* make the sidebar sticky */
-    top: 0; /* align to the top of the viewport */
-    height: 100vh; /* full height of the viewport */
-    overflow-y: hidden; /* disable vertical scrolling for the sidebar */
-    z-index: 1000; 
 }
 
 /* below 1050px width */
@@ -23,6 +18,11 @@
     border-style: solid; 
     border-color: rgb(239, 243, 244);
     border-width: 0 0 0 1px;
+    position: sticky; /* make the sidebar sticky */
+    top: 0; /* align to the top of the viewport */
+    height: 100vh; /* full height of the viewport */
+    overflow-y: hidden; /* disable vertical scrolling for the sidebar */
+    z-index: 1000; 
 }
   
 .sidebarRight-container.dark-mode{

@@ -14,7 +14,7 @@ import WhatsHappening from './WhatsHappening.jsx';
 
 const SidebarRight = () => {
 
-  const {darkModeOn, toggleDarkTheme, /* allUsers, setAllUsers */} = useContext(AppStatesContext); 
+  const {darkModeOn, toggleDarkTheme,} = useContext(AppStatesContext); 
 
   const [loading, setLoading] = useState(false);
 

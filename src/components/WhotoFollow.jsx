@@ -40,7 +40,6 @@ const WhotoFollow = () => {
       })
       .then(data => {
         setAllUsers(data);
-        console.log('Fetched users:', data); // Log the fetched data
         setLoading(false);
       })
       .catch(error => {
