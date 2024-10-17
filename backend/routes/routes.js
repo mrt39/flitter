@@ -642,6 +642,12 @@ router.post('/uploadprofilepic/:userid', upload.single('image'), async (req, res
 //image sent in message input
 router.post("/imagesent", upload.single('image'), async (req, res) => {
 
+  console.log('File received:', req.file); // Add this line
+
+  if (!req.file) {
+      return res.status(400).send('No file uploaded.');
+  }
+
   //req.file.buffer to access the image data that's stored in the memory. we have stored it into memory in multer config in passport.js 
   const b64 = Buffer.from(req.file.buffer).toString("base64");
   //make data readable/usable

@@ -5,7 +5,6 @@ import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
 import FileInputPopover from "./Popover.jsx";
 import { AppStatesContext, UserContext} from '../App.jsx';
 
-
 export default function ImageUploadButton({ location, handleClose, setError}) {
   const { setImgSubmittedNavbar, setImgSubmittedHomePage, isSubmittingPost, 
     imgSubmittedNavbar, imgSubmittedHomePage, setSnackbarOpenCondition, 
@@ -13,13 +12,11 @@ export default function ImageUploadButton({ location, handleClose, setError}) {
 
     const {currentUser} = useContext(UserContext); 
 
-
   //use ref to be able to select an element within a function (for displaying popover)
   const fileInputRef = useRef(null);
 
   //anchor for popover
   const [popOveranchorEl, setPopOverAnchorEl] = useState(null);
-
 
   const [imageFile, setImageFile] = useState(null);
 
@@ -127,7 +124,6 @@ export default function ImageUploadButton({ location, handleClose, setError}) {
   }, [imgSubmittedNavbar, imgSubmittedHomePage]);
 
 
-
   return (
     <Box>
       {/* hidden file input */}
@@ -162,3 +158,4 @@ export default function ImageUploadButton({ location, handleClose, setError}) {
     </Box>
   );
 }
+

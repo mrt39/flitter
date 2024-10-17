@@ -10,12 +10,9 @@ import CircularProgress, { circularProgressClasses } from '@mui/material/Circula
 import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
 import { clean } from 'profanity-cleaner';
 
-
 import ImageUploadButton from "../components/ImageUploadButton.jsx";
 
-
 import '../styles/SubmitPostForm.css'
-
 
 import data from '@emoji-mart/data'
 import Picker from '@emoji-mart/react'
@@ -30,11 +27,9 @@ export default function SubmitPostForm({location, handleClose }) {
 
   const {currentUser} = useContext(UserContext); 
 
-
   //value in the form for submitting posts
   const [value, setValue] = useState("");
   const [error, setError] = useState(null);
-
 
   //state for storing when the user clicks on the textarea
   const [isFocused, setIsFocused] = useState(false);
@@ -71,7 +66,6 @@ export default function SubmitPostForm({location, handleClose }) {
     handleChange({ target: { value: value + emoji.native } });
     setShowEmojiPicker(false);
   };
-
 
   //not using useEffect for the sending posts fetch api in order to not make both homepage form and navbar form trigger at the same time
   // Submit the post
@@ -123,7 +117,6 @@ export default function SubmitPostForm({location, handleClose }) {
     }
   }
 
-
   //function for populating db with post data
 
 /*   async function populate(){
@@ -149,11 +142,9 @@ export default function SubmitPostForm({location, handleClose }) {
       } 
   } */
 
-
   return (
     <>
     {/* <button onClick={populate}>POPULATE</button> */}
-
 
     <Box className="submitPost-form-container">
 
@@ -289,8 +280,8 @@ export default function SubmitPostForm({location, handleClose }) {
 
 
 
-
       {error && <Alert severity="error">{error.message}</Alert>}
     </>
   );
 }
+

@@ -168,7 +168,7 @@ const AllPostsDisplay = ({fromThisUser}) => {
   useEffect(() => {
     if (searchWord) {
       const searchWordLower = searchWord.toLowerCase();
-      const filtered = allPosts.filter(post => post.message.toLowerCase().includes(searchWordLower));
+      const filtered = allPosts.filter(post => post.message&&post.message.toLowerCase().includes(searchWordLower));
       //shuffle the filtered messages
       for (let i = filtered.length - 1; i >= 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));

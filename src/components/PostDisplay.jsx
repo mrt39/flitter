@@ -1,6 +1,5 @@
 /* eslint-disable react/prop-types */
 import { useContext, useState, useEffect } from "react";
-import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import dayjs from 'dayjs';
 import CommentModal from './CommentModal.jsx';
@@ -12,6 +11,8 @@ import { ListItemText,  ListItemAvatar, Box} from '@mui/material';
 import {  Typography,  IconButton,  } from '@mui/material';
 import { Favorite, FavoriteBorder} from '@mui/icons-material';
 import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
+// Import the link-preview-js library at the top of the file
+import { getLinkPreview } from 'link-preview-js';
 
 //imports for generating the url path for routing 
 import slugify from 'slugify';
@@ -80,8 +81,120 @@ const PostDisplay = ({post, location}) => {
         } 
     }, [pressedLikePost]);
 
+
+/* ---------------------------------- EMBED YOUTUBE VIDEO AND LINK PREVIEW LOGIC ---------------------------------- */
+//extract YouTube video ID from URL
+const extractYouTubeID = (url) => {
+    const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+    //match the regex with the url
+    const match = url.match(regex);
+    return match ? match[1] : null;
+};
+
+//state to store link preview data
+const [linkPreviewData, setLinkPreviewData] = useState(null);
+
+
+//function to fetch link preview data
+const fetchLinkPreview = async (url) => {
+    try {
+        //using the link-preview-js library (getLinkPreview function) to fetch the link preview data
+        const data = await getLinkPreview(url);
+        return data;
+    } catch (error) {
+        console.error('Error fetching link preview:', error);
+        return null;
+    }
+};
+
+//function to extract the first URL from the post content
+const extractURLFromContent = (content) => {
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    const urls = content.match(urlRegex);
+    return urls ? urls[0] : null; // return the first URL found
+};
+
+//useEffect to fetch link previews
+useEffect(() => {
+    const fetchPreview = async () => {
+        const url = extractURLFromContent(post.message); //extract URL from post content
+        if (url) {
+            const previewData = await fetchLinkPreview(url);
+            setLinkPreviewData(previewData); //store the preview data in state
+        }
+    };
+    fetchPreview();
+}, [post.message]); //trigger the effect when the post message changes
+
+// combine youTube embed and link preview rendering logic into a single function
+const renderContentWithPreviews = (content, previewData) => {
+    //regular expression to detect URLs
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    //split the content by URLs
+    const parts = content.split(urlRegex);
+
+    return (
+        <>
+            {parts.map((part, index) => {
+                //check if the part is a URL
+                if (urlRegex.test(part)) {
+                    const videoID = extractYouTubeID(part);
+                    if (videoID) {
+                        //render YouTube video if URL is a youtube link
+                        return (
+                            <div key={index} className="youtube-video-container">
+                                <iframe
+                                    width="500"
+                                    height="315"
+                                    src={`https://www.youtube.com/embed/${videoID}`}
+                                    frameBorder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowFullScreen
+                                    title="Embedded YouTube Video"
+                                ></iframe>
+                            </div>
+                        );
+                    } else {
+                        //render the URL as an <a> element for non-youtube links
+                        return (
+                            <a key={index} href={part} target="_blank" rel="noopener noreferrer">
+                                {part}
+                            </a>
+                        );
+                    }
+                }
+                //render the rest of the message as plain text
+                return <span key={index}>{part} </span>;
+            })}
+            {/* render the link preview if available and not a youtube link */}
+            {previewData && !extractYouTubeID(previewData.url) && (
+                <div className="link-preview-container">
+                    {/* display the first image from the preview data */}
+                    {previewData.images && previewData.images.length > 0 && (
+                        <img src={previewData.images[0]} alt="Link preview" className="link-preview-image" />
+                    )}
+                    <div className="link-preview-details">
+                        <Typography variant="subtitle1" className="link-preview-title">
+                            {previewData.title}
+                        </Typography>
+                        <Typography variant="body2" className="link-preview-description">
+                            {previewData.description}
+                        </Typography>
+                        <Typography variant="body2" className="link-preview-url">
+                            {previewData.url}
+                        </Typography>
+                    </div>
+                </div>
+            )}
+        </>
+    );
+};
+
+
+
+
   
-//define the component here, in order to not to repeat the code in the "location === "singular-post-page" ?" statement below
+//define the main post component here, in order to not to repeat the code in the "location === "singular-post-page" ?" statement below
   const PostContent = ({ post, handleProfileRouting, handleLike }) => (
     <span className={`postContentContainer ${darkModeOn ? 'dark-mode' : ''}`}>
         <span className="usernameLinkOnPost avatarLink" onClick={(e) => {
@@ -152,7 +265,10 @@ const PostDisplay = ({post, location}) => {
                         {post.image ? (
                             <img className="postImg" src={post.image} alt="image" />
                         ) : (
-                            <span>{post.message}</span>
+                            <>
+                                {renderContentWithPreviews(post.message, linkPreviewData)} {/* // render the link preview and youtube URL if available */}
+                            </>
+
                         )}
                     </Typography>
                     {location && location === "comment-modal" ? "" : (

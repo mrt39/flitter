@@ -61,6 +61,10 @@ const WhatsHappening = () => {
         //find the three words that are the most iterated in the posts and the number of times they are iterated
         let words = []; //structure: {word: word, timesIterated: number of times iterated} 
         allPosts.forEach(post => {
+            //if there is no text in the post (if it is an image), return
+            if (!post.message) {
+                return;
+            }
             post.message.split(' ').forEach(wordinallPosts => {
                 let wordFound = false;
                 words.forEach(word => {
