@@ -2,10 +2,8 @@
 import { useContext } from 'react';
 import { useLocation, useNavigate} from "react-router-dom";
 import { AppStatesContext } from '../App.jsx';
-import '../styles/HomepageTopSection.css';
 import { Typography, IconButton } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-//import for generating the url path for routing 
 
 import '../styles/FollowersTopSection.css';
 

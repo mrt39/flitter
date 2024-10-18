@@ -76,16 +76,16 @@ export default function ImageUploadButton({ location, handleClose, setError}) {
       }
   }
 
-  // Effect for sending image
+  //handle sending image
   useEffect(() => {
-    if (isSubmittingPost) return; // Prevent multiple submissions
+    if (isSubmittingPost) return; //prevent multiple submissions
 
     async function sendImage() {
-        setisSubmittingPost(true); // Mark submission as in progress
+        setisSubmittingPost(true); //mark submission as in progress
         const formData = new FormData();
         formData.append("image", imageFile);
         formData.append("from", JSON.stringify({ currentUser }));
-        formData.append("date", JSON.stringify(new Date().toISOString()));  // Stringify 'date'
+        formData.append("date", JSON.stringify(new Date().toISOString()));  //stringify 'date'
 
         try {
             const result = await fetch(import.meta.env.VITE_BACKEND_URL + '/imagesent', {
@@ -106,7 +106,7 @@ export default function ImageUploadButton({ location, handleClose, setError}) {
             console.error('Error:', error);
             setError(error);
         } finally {
-            setisSubmittingPost(false); // Reset submission state
+            setisSubmittingPost(false); //reset submission state
             if (location === "navbar") {
                 setImgSubmittedNavbar(false);
                 if (handleClose) handleClose();
@@ -131,7 +131,7 @@ export default function ImageUploadButton({ location, handleClose, setError}) {
         type="file"
         ref={fileInputRef}
         className='fileInputMessageBox' 
-        style={{ display: 'none' }} // Hide the input
+        style={{ display: 'none' }} // hide the input
         onChange={handleFileInputChange}
         accept="image/*" 
       />
@@ -144,7 +144,7 @@ export default function ImageUploadButton({ location, handleClose, setError}) {
         <ImageOutlinedIcon sx={{ color: isSubmittingPost? "#B0B0B0":'#1da1f2' }} />
       </IconButton>
 
-      {/* Render popover if image is selected */}
+      {/*render popover if image is selected */}
       {imageSelected && (
         <FileInputPopover 
         popOveranchorEl={popOveranchorEl}

@@ -3,15 +3,15 @@
     min-width: 250px;
     padding: 20px 20px;
     margin: 0;
-    position: sticky; /* Make the sidebar sticky */
-    top: 0; /* Align to the top of the viewport */
-    height: 100vh; /* Full height of the viewport */
-    overflow-y: hidden; /* Disable vertical scrolling for the sidebar */
+    position: sticky; /* make the sidebar sticky */
+    top: 0; /* align to the top of the viewport */
+    height: 100vh; /* full height of the viewport */
+    overflow-y: hidden; /* disable vertical scrolling */
     z-index: 1000; 
 }
 
-  /* below 1300px width */
-  @media (max-width: 1300px) {
+/* below 1300px width */
+@media (max-width: 1300px) {
 
     .sidebarLeft{
         display: flex;
@@ -44,9 +44,9 @@
     #sidebarUserIconBtn img{
     }
     
-  }
+}
 
-  /* Below 650px width */ 
+/*below 650px width */ 
 @media (max-width: 650px){
     .sidebarLeft {
         overflow-y: auto;
@@ -66,8 +66,8 @@
     }
 }
 
-  /* Below 400px width */ 
-  @media (max-width: 400px){
+/*below 400px width */ 
+@media (max-width: 400px){
     .sidebarLeft {
         padding: 20px 0px 20px 100px;
     } 
@@ -150,7 +150,7 @@
 
 #sidebarUserIconBtn3Dot{
     margin-top: 9px;
-    margin-left: auto; /* pushes the three dots to the right */
+    margin-left: auto; /* push the three dots to the right */
 }
 
 .sidebarMenuItem{

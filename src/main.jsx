@@ -23,13 +23,7 @@ const router = createBrowserRouter([
       { index: true, element: <Home/> }, 
       { path: "login", element: <Login />},
       { path: "signup", element: <SignUp />},
-      { path: "profile/:slugID", 
-        element: <Profile /> ,
-/*         children: [
-          { path: "following", element: <Followers />},
-          { path: "followedby", element: <Followers />},
-        ] */
-      },
+      { path: "profile/:slugID", element: <Profile /> },
       { path: "profile/:slugID/following", element: <Followers />},
       { path: "profile/:slugID/followers", element: <Followers />},
       { path: "post/:postID", element: <SingularPostPage />},

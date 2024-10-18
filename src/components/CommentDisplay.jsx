@@ -1,15 +1,11 @@
 /* eslint-disable react/prop-types */
-import { useContext, useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useContext, useState} from "react";
 import dayjs from 'dayjs';
 import HoverUserCard from './HoverUserCard.jsx';
-import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
+import Tooltip from '@mui/material/Tooltip';
 import UserAvatar from './UserAvatar.jsx';
 import {AppStatesContext} from '../App.jsx';
-import { Avatar } from '@mui/material';
-import { ListItemText,  ListItemAvatar, Box} from '@mui/material';
-import {  Typography,  IconButton,  } from '@mui/material';
-import { FavoriteBorder} from '@mui/icons-material';
+import { ListItemText,  ListItemAvatar, Box, Typography} from '@mui/material';
 
 
 import '../styles/CommentDisplay.css'
@@ -17,8 +13,7 @@ import '../styles/CommentDisplay.css'
 
 const CommentDisplay = ({comment}) => {
 
-    //Pass the UserContext defined in app.jsx
-
+    //pass the userContext defined in app.jsx
     const {darkModeOn, handleProfileRouting} = useContext(AppStatesContext); 
 
     const [tooltipOpen, setTooltipOpen] = useState(false);

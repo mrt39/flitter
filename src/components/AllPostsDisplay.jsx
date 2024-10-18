@@ -5,9 +5,7 @@ import { AppStatesContext, UserContext } from '../App.jsx';
 import Box from '@mui/material/Box';
 import { CircularProgress, Alert} from '@mui/material';
 import {List, ListItem} from '@mui/material';
-
-//infinite scroll 
-import InfiniteScroll from 'react-infinite-scroll-component';
+import InfiniteScroll from 'react-infinite-scroll-component'; //infinite scroll 
 import '../styles/AllPostsDisplay.css'
 
 const AllPostsDisplay = ({fromThisUser}) => {
@@ -227,7 +225,7 @@ const AllPostsDisplay = ({fromThisUser}) => {
 
         {/* only display if messagesToDisplay is populated. */}
         {messagesToDisplay && messagesToDisplay.length > 0 ? 
-        //displaying 10 at a time
+        //displaying posts 10 at a time
         (messagesToDisplay.slice(0, visiblePosts).map(post => (
         <ListItem key={post._id} className={`post-item ${darkModeOn ? 'dark-mode' : ''}`} alignItems="flex-start">
           <PostDisplay

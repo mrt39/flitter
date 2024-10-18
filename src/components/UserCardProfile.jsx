@@ -5,7 +5,7 @@ import FollowButton from './FollowButton.jsx';
 import EditProfileModal from './EditProfileModal.jsx';
 import UserAvatar from './UserAvatar.jsx';
 import { Link, useNavigate } from "react-router-dom";
-import { Card, CardContent, Typography, Avatar, useTheme, Button, IconButton } from '@mui/material';
+import { Card, CardContent, Typography, useTheme, Button, IconButton } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import "../styles/Profile.css"
 //imports for generating the url path for routing 
@@ -16,7 +16,7 @@ import '../styles/UserCardProfile.css';
 const UserCardProfile = () => {
 
 
-    // Pass the UserContext defined in app.jsx
+    //pass the UserContext defined in app.jsx
     const {currentUser, selectedUser} = useContext(UserContext); 
     const {allPosts, darkModeOn} = useContext(AppStatesContext); 
 
@@ -30,7 +30,7 @@ const UserCardProfile = () => {
             const slug = slugify(selectedUser.name, { lower: true }); 
             //combine slug with usershortID to create the unique profile path for the selected user to route to
             const profilePath = `/profile/${slug}-${selectedUser.shortId}/${string}`
-            // Route to the profile path
+            // route to the profile path
             navigate(profilePath); 
         }
 

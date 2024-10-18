@@ -103,6 +103,6 @@
   }
 
   .backdrop {
-    z-index: 1301; /* Higher than the modal */
+    z-index: 1301; /* higher than the modal */
     color: #fff;
   }

@@ -5,6 +5,11 @@
 
 .comment-name {
     font-weight: 600 !important;
+    cursor: pointer;
+}
+
+.comment-name:hover {
+    text-decoration: underline;
 }
 
 .comment-date {

@@ -1,25 +1,17 @@
 /* eslint-disable react/prop-types */
 import {useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AppStatesContext, UserContext } from '../App.jsx';
+import { AppStatesContext} from '../App.jsx';
 import { Alert, Box, CircularProgress, Card, CardContent, Typography, List, ListItem, ListItemText} from '@mui/material';
 
 import '../styles/WhatsHappening.css';
 
-
-
-
-
 const WhatsHappening = () => {
 
-  const {allPosts, setAllPosts, mostIteratedWords, setActiveTab, setMostIteratedWords, darkModeOn, setSearchWord} = useContext(AppStatesContext); 
-
-
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const navigate = useNavigate();
-
-
+    const {allPosts, setAllPosts, mostIteratedWords, setActiveTab, setMostIteratedWords, darkModeOn, setSearchWord} = useContext(AppStatesContext); 
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const navigate = useNavigate();
 
     //if allPosts array isn't populated (user has not been to the homepage to get the fetch in AllPostsDisplay), fetch all posts
     useEffect(() => {

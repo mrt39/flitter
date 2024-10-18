@@ -24,20 +24,20 @@
 }
 
 
-/* Below 1300px width */
+/*below 1300px width */
 @media (max-width: 1300px) {
     #sidebarPostBtn {
-      display: none; /* Hide the button */
+      display: none; /*hide the button */
     }
   
     .leftSideBar-postIcon {
-      display: block !important; /* Show the icon */
+      display: block !important; /*show the icon */
     }
-  }
+}
   
-  /* Above 1300px width */
-  @media (min-width: 1301px) {
-    .leftSideBar-postIcon {
-      display: none !important; /* Hide the icon */
-    }
+/* above 1300px width */
+@media (min-width: 1301px) {
+  .leftSideBar-postIcon {
+    display: none !important; /* hide the icon */
   }
+}

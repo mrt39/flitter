@@ -1,16 +1,14 @@
 /* eslint-disable react/prop-types */
-import { useState, useEffect, useContext, useRef } from "react";
-import {  Typography,  IconButton } from '@mui/material';
-import {  ChatBubbleOutline } from '@mui/icons-material';
-import { TextField, Avatar, Button, Box  } from '@mui/material';
+import {useState, useEffect, useContext, useRef} from "react";
+import { UserContext, AppStatesContext } from '../App.jsx';
 import UserAvatar from './UserAvatar.jsx';
+import {Typography, IconButton, Button, Box} from '@mui/material';
 import CircularProgress, { circularProgressClasses } from '@mui/material/CircularProgress';
 import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
-
+//emoji picker
 import data from '@emoji-mart/data'
 import Picker from '@emoji-mart/react'
 
-import { UserContext, AppStatesContext } from '../App.jsx';
 import { clean } from 'profanity-cleaner';
 import '../styles/CommentForm.css'
 
@@ -24,34 +22,31 @@ const CommentForm = ({post, handleClose}) => {
 
   const [value, setValue] = useState("")
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-  const [clickedPostComment, setClickedPostComment] = useState(false); // State to toggle form visibility
+  const [clickedPostComment, setClickedPostComment] = useState(false); // state to toggle form visibility
 
   //state for storing when the user clicks on the textarea
   const [isFocused, setIsFocused] = useState(false);
 
   const textareaRef = useRef(null);
 
-  // Adjust the textarea height dynamically
+  //adjust the textarea height dynamically
   const autoResize = () => {
     const textarea = textareaRef.current;
     if (textarea) {
-      textarea.style.height = 'auto';  // Reset the height
-      textarea.style.height = `${textarea.scrollHeight}px`; // Set to scroll height
+      textarea.style.height = 'auto';  //reset the height
+      textarea.style.height = `${textarea.scrollHeight}px`; //set to scroll height
 
     }
   };
 
-
-
-
-  // Character counter
+  //character counter
   const maxCharacters = 280;
   const [remainingCharacters, setRemainingCharacters] = useState(maxCharacters);
   function handleChange(event) {
     const newValue = event.target.value;
     setValue(newValue);
     setRemainingCharacters(maxCharacters - newValue.length);
-    autoResize(); // Resize on every input change
+    autoResize(); // resize on every input change
   }
 
 
@@ -74,11 +69,11 @@ const CommentForm = ({post, handleClose}) => {
 
 
 
-  //useeffect to handle submitting comments on posts
+  //handle submitting comments on posts
   useEffect(() => {
     async function sendCommentonPost() {
 
-      if (value.length > maxCharacters) return; // Prevent from submitting if above 280 characters.
+      if (value.length > maxCharacters) return; //prevent from submitting if above 280 characters.
 
       //on submit, clean the words with the profanity cleaner package
       //https://www.npmjs.com/package/profanity-cleaner
@@ -98,7 +93,6 @@ const CommentForm = ({post, handleClose}) => {
         if (result.ok){
           await result.json();
           console.log("Commented on the Succesfully!")
-          setClickedPostComment(false)
           setValue("")
           setRefreshPosts(!refreshPosts)
         } else{
@@ -107,8 +101,10 @@ const CommentForm = ({post, handleClose}) => {
       })
       .catch(error => {
         console.error('Error:', error);
+      })
+      .finally(() => {
         setClickedPostComment(false)
-      }); 
+      });
     }
     //only trigger when comment is posted
     if (clickedPostComment ===true){
@@ -140,7 +136,7 @@ const CommentForm = ({post, handleClose}) => {
           value={value}
           onChange={(e) => {
             handleChange(e);  
-            autoResize();     // Adjust the size on input change
+            autoResize();  //adjust the size on input change
           }}
           onFocus={() => setIsFocused(true)}  
           onBlur={() => setIsFocused(false)} 
@@ -159,7 +155,7 @@ const CommentForm = ({post, handleClose}) => {
           <IconButton
             onClick={() => setShowEmojiPicker(!showEmojiPicker)}
             className="emoji-button"
-            type="button" // Prevent this button from triggering the form submission
+            type="button" // prevent this button from triggering the form submission
           >
             <SentimentSatisfiedAltIcon sx={{ color: '#1da1f2' }} />
 
@@ -168,27 +164,27 @@ const CommentForm = ({post, handleClose}) => {
             {/* character counter */}
             <Box sx={{ position: 'relative', display: 'inline-flex', marginLeft: 2 }}>
               <Box sx={{ position: 'relative', display: 'inline-flex', alignItems: "center"}}>
-                {/* Background Circle (Gray) */}
+                {/* background Circle (gray) */}
                 <CircularProgress
                   variant="determinate"
-                  value={100} // Always fully rendered for the gray background
+                  value={100} // always fully rendered for the gray background
                   size={24}
                   thickness={4}
                   sx={{
-                    color: darkModeOn ? '#424242' : '#d3d3d3', // Gray color for unfilled part
+                    color: darkModeOn ? '#424242' : '#d3d3d3', //gray color for unfilled part
                   }}
                 />
                 
-                {/* Foreground Circle (Filling with Blue/Yellow/Red) */}
+                {/* foreground circle (filling with blue/yellow/red) */}
                 <CircularProgress
                   variant="determinate"
-                  value={100 - (remainingCharacters / maxCharacters) * 100} // Filling progress based on remaining characters
+                  value={100 - (remainingCharacters / maxCharacters) * 100} // filling progress based on remaining characters
                   size={24}
                   thickness={4}
                   sx={{
-                    position: 'absolute', // Stacking on top of the gray circle
+                    position: 'absolute', // stacking on top of the gray circle
                     left: 0,
-                    color: remainingCharacters < 0 ? '#e0245e' : remainingCharacters <= 20 ? '#f5a623' : '#1da1f2', // Filled part: red/yellow/blue
+                    color: remainingCharacters < 0 ? '#e0245e' : remainingCharacters <= 20 ? '#f5a623' : '#1da1f2', // filled part: red/yellow/blue
                     [`& .${circularProgressClasses.circle}`]: {
                       strokeLinecap: 'round',
                     },

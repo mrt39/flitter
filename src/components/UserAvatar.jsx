@@ -8,6 +8,7 @@ function stringToColor(string) {
   let hash = 0;
   let i;
 
+  //give a color to the string
   if (string){
     /* eslint-disable no-bitwise */
     for (i = 0; i < string.length; i += 1) {
@@ -64,7 +65,7 @@ const UserAvatar = ({user, source}) => {
 }, []);
 
   return (
-    /* if the user has an uploadedpic or picture(from google), use it. otherwise, create an avatar from the initials and color algorithm above. */
+    /* if the user has an uploadedpic or picture(from google or twitter), use it. otherwise, create an avatar from the initials and color algorithm above. */
        user.uploadedpic || user.picture? 
        <Avatar 
           src={user.uploadedpic? user.uploadedpic : user.picture} 

@@ -1,13 +1,12 @@
 /* eslint-disable react/prop-types */
-import {useContext, useEffect, useState } from 'react';
-import { AppStatesContext, UserContext } from '../App.jsx';
-import { IconButton, Box, CircularProgress, Card, CardContent, Typography, Avatar, Button, List, ListItem, ListItemAvatar, ListItemText} from '@mui/material';
+import {useContext, useState } from 'react';
+import { AppStatesContext } from '../App.jsx';
+import { IconButton, Box, CircularProgress, Card, CardContent} from '@mui/material';
 import Brightness2Icon from '@mui/icons-material/Brightness2'; 
 import WbSunnyIcon from '@mui/icons-material/WbSunny';
-import '../styles/SidebarRight.css';
-import UserAvatar from './UserAvatar.jsx';
 import WhotoFollow from './WhotoFollow.jsx';
 import WhatsHappening from './WhatsHappening.jsx';
+import '../styles/SidebarRight.css';
 
 
 
@@ -16,7 +15,7 @@ const SidebarRight = () => {
 
   const {darkModeOn, toggleDarkTheme,} = useContext(AppStatesContext); 
 
-  const [loading, setLoading] = useState(false);
+  const [loading] = useState(false);
 
 
   if (loading) {
@@ -28,7 +27,6 @@ const SidebarRight = () => {
       </div>
     )
   }
-
 
   return (
     <div className={`sidebarRight-container ${darkModeOn ? 'dark-mode' : ''}`}>

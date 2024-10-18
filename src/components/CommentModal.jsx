@@ -70,29 +70,28 @@ export default function CommentModal({ post }) {
             sx={style}
             className={`comment-modal ${darkModeOn ? 'dark-mode' : ''}`}
             >
-                <IconButton
-                  aria-label="close"
-                  onClick={handleClose}
-                  sx={{
-                    position: 'absolute',
-                    top: 6,
-                    right: 23,
-                  }}
-                >
-                  <CloseIcon />
-                </IconButton>
-                <PostDisplay 
-                post={post} 
-                location={"comment-modal"}
-                />
-                
-                <Box className="commentModalReplyingToTextContainer" >
-                        <Typography className="commentModalReplyingText" variant="body2" color="textSecondary">
-                        Commenting to <Typography component="span" sx={{ color: '#1da1f2', fontSize: "13px" }}>@{post.from[0].name}</Typography>
-                        </Typography>
-                </Box> 
-
-                <CommentForm post={post} handleClose={handleClose} />
+              <IconButton
+                aria-label="close"
+                onClick={handleClose}
+                sx={{
+                  position: 'absolute',
+                  top: 6,
+                  right: 23,
+                }}
+              >
+                <CloseIcon />
+              </IconButton>
+              <PostDisplay 
+              post={post} 
+              location={"comment-modal"}
+              />
+              
+              <Box className="commentModalReplyingToTextContainer" >
+                <Typography className="commentModalReplyingText" variant="body2" color="textSecondary">
+                Commenting to <Typography component="span" sx={{ color: '#1da1f2', fontSize: "13px" }}>@{post.from[0].name}</Typography>
+                </Typography>
+              </Box> 
+              <CommentForm post={post} handleClose={handleClose} />
           </Box>
         </Fade>
       </Modal>

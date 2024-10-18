@@ -1,12 +1,11 @@
 /* eslint-disable react/prop-types */
-import { useLocation} from "react-router-dom";
 import { useState, useContext, useEffect } from 'react'
+import { useLocation} from "react-router-dom";
 import { UserContext, AppStatesContext} from '../App.jsx';
 import { CircularProgress, Alert } from '@mui/material';
-import "../styles/Profile.css"
 import UserCardProfile from "../components/UserCardProfile.jsx";
 import AllPostsDisplay from '../components/AllPostsDisplay.jsx';
-//import for generating the url path for routing 
+import "../styles/Profile.css"
 
 
 
@@ -15,7 +14,7 @@ const Profile = () => {
 
   // Pass the UserContext defined in app.js
   const {selectedUser, setSelectedUser } = useContext(UserContext); 
-  const {pressedFollow, profileUpdated, darkModeOn, setActiveTab, setSearchWord} = useContext(AppStatesContext); 
+  const {pressedFollow, profileUpdated, setActiveTab, setSearchWord} = useContext(AppStatesContext); 
   const [error, setError] = useState(null);
   const [profilePageLoading, setProfilePageLoading] = useState(true);
 
@@ -62,12 +61,7 @@ const Profile = () => {
     }, [pressedFollow, profileUpdated]); 
 
 
-
-
-
-
-
-
+    
   if (profilePageLoading) {
     return <CircularProgress />;
   }

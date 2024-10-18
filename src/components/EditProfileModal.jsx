@@ -69,7 +69,6 @@ const EditProfileModal = ({ open, handleClose }) => {
             await result.json();
             console.log("Image uploaded");
             setUploadedImg(null);
-            /* setImgSubmitted(false); */
             setProfileUpdated(true);
           } else {
             throw new Error(result);

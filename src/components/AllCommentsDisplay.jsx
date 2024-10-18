@@ -4,12 +4,8 @@ import {AppStatesContext } from '../App.jsx';
 import CommentDisplay from './CommentDisplay.jsx';
 import {ListItem,} from '@mui/material';
 import Box from '@mui/material/Box';
-import { CircularProgress, Alert, Avatar } from '@mui/material';
-import { TextField, Button, List, ListItemText, Paper, ListItemAvatar} from '@mui/material';
-
-
-//infinite scroll 
-import InfiniteScroll from 'react-infinite-scroll-component';
+import { CircularProgress, List} from '@mui/material';
+import InfiniteScroll from 'react-infinite-scroll-component'; //infinite scroll 
 import '../styles/AllCommentsDisplay.css'
 
 
@@ -20,15 +16,11 @@ const AllCommentsDisplay = ({post}) => {
 
   const {darkModeOn, appContainerRef} = useContext(AppStatesContext); 
 
-
-
   useEffect(() => {
     //sort comments by dates, descending order
     post.comments.sort((comment1,comment2) => (comment1.date < comment2.date) ? 1 : ((comment2.date < comment1.date) ? -1 : 0))
     setSortedComments(post.comments)
   }, [post])
-
-
 
   /* ---------------------------INFINITE SCROLL FUNCTIONALITY--------------------------- */
   //state for setting the visible post count, for infinite scroll functionality 
@@ -47,11 +39,6 @@ const AllCommentsDisplay = ({post}) => {
     }, 1000);
   };
 
-
-
-
-
-
   return (
   <Box className="comment-feed-container">
     <List className="comment-feed">
@@ -66,7 +53,7 @@ const AllCommentsDisplay = ({post}) => {
         } 
       >
         {sortedComments.length > 0 ? 
-        //displaying 10 at a time
+        //displaying comments 10 at a time
         (sortedComments.slice(0, visibleComments).map(comment => (
           <ListItem 
           key={comment._id} 
@@ -79,14 +66,10 @@ const AllCommentsDisplay = ({post}) => {
             />
 
           </ListItem>
-
-          
         ))
         ) : (
         ""
         )}
-
-
       </InfiniteScroll>
     </List>
   </Box>

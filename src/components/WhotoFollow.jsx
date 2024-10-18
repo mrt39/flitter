@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import {useContext, useEffect, useState } from 'react';
-import { useLocation, Link, useNavigate} from "react-router-dom";
+import {Link} from "react-router-dom";
 import HoverUserCard from './HoverUserCard.jsx';
 import { AppStatesContext, UserContext } from '../App.jsx';
 import {  Box, CircularProgress, Card, CardContent, Typography, List, ListItem, ListItemAvatar, ListItemText, Tooltip} from '@mui/material';
@@ -11,18 +11,16 @@ import FollowButton from './FollowButton.jsx';
 import "../styles/WhotoFollow.css";
 
 
-//imports for generating the url path for routing 
-import slugify from 'slugify';
 
 
 
 const WhotoFollow = () => {
 
   const {pressedFollow, darkModeOn, handleProfileRouting} = useContext(AppStatesContext); 
-  const {currentUser, setSelectedUser} = useContext(UserContext); 
+  const {currentUser} = useContext(UserContext); 
 
   const [allUsers, setAllUsers] = useState(null);
-  //sorted users to display
+  //store the sorted users to display
   const [sortedUsers, setSortedUsers] = useState([]);
 
   const [loading, setLoading] = useState(true);
@@ -34,7 +32,7 @@ const WhotoFollow = () => {
     })
       .then(response => {
         if (response.ok) {
-          return response.json(); // Parse JSON when the response is successful
+          return response.json();
         }
         throw new Error('Network response was not ok.');
       })
@@ -52,18 +50,18 @@ const WhotoFollow = () => {
   useEffect(() => {
     if (allUsers) {
       const whoToFollow = [];
-      // Exclude the current user
+      //exclude the current user
       const temp = allUsers.filter(user => user.shortId !== currentUser.shortId);
 
-      // Exclude the users the current user is already following
+      //exclude the users the current user is already following
       temp.forEach(user => {
         if (!user.followedbytheseID.includes(currentUser._id)) {
           whoToFollow.push(user);
         }
       });
 
-      // Set three random users to follow
-      // do the randomization only on first render and only if there are users to follow
+      //set three random users to follow
+      //do the randomization only on first render and only if there are users to follow
       if (firstrender && whoToFollow.length > 0){
         setSortedUsers(whoToFollow.sort(() => 0.5 - Math.random()).slice(0, 3));
       } else{

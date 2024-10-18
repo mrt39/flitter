@@ -9,11 +9,9 @@ import Box from '@mui/material/Box';
 import { CircularProgress, Alert } from '@mui/material';
 import slugify from 'slugify';
 
-//----------------------MUI DARK THEME---------------------------
 //MUI DARK THEME
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
-//----------------------MUI DARK THEME END---------------------------
 
 //context for carrying user related states
 export const UserContext = createContext({
@@ -197,7 +195,7 @@ const App = () => {
 }
 
   //FOLLOW STATES AND LOGIC. 
-  //Defining the states and logic here, as the follow button is used in multiple components
+  //define the states and logic here, as the follow button is used in multiple components
   //also, the follow button is used in the UserCardProfile component, which is a child of the HoverUserCard component that gets displayed as a tooltip when hovering over a user's profile picture. 
   //sending a post request within the tooltip and it's child components disrupts the display of the tooltip and/or the follow logic, so the follow logic is defined here to prevent that.
   const [usertoFollow, setUsertoFollow] = useState()

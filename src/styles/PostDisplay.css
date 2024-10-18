@@ -185,7 +185,7 @@
     }
 
   
-  /* Like button hover effect */
+  /*like button hover effect */
   .like-button:hover {
     color: #f91880;
     text-shadow: 0 0 10px #f91880;
@@ -200,7 +200,7 @@
     text-shadow: 0 0 10px #f91880;
   }
   
-  /* Comment button hover effect */
+  /*comment button hover effect */
   .comment-button:hover {
     color: #1d9bf0;
     text-shadow: 0 0 10px #1d9bf0;
@@ -232,20 +232,24 @@
 }
 
 .link-preview-details {
+  display: block;
   padding: 10px;
 }
 
 .link-preview-title {
+  display: block;
   font-weight: bold;
   margin-bottom: 5px;
 }
 
 .link-preview-description {
+  display: block;
   color: #555;
   margin-bottom: 5px;
 }
 
-.link-preview-url {
+.link-preview-link {
+  display: block;
   color: #888;
   font-size: 0.9em;
 }

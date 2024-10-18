@@ -74,11 +74,11 @@
 }
 
 .reply-button {
-  border-radius: 9999px; /* Fully rounded button */
+  border-radius: 9999px; 
   background-color: #1da1f2;
   color: white;
-  padding: 4px 16px; /* Adjusted padding for a more compact button */
-  font-weight: bold; /* Bold text */
+  padding: 4px 16px; 
+  font-weight: bold; 
 }
 
 .emoji-picker {
@@ -96,8 +96,8 @@
 
 /* character counter */
 .character-counter {
-  width: 40px; /* Adjust size */
-  height: 40px; /* Adjust size */
+  width: 40px; 
+  height: 40px; 
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -107,13 +107,13 @@
 }
 
 .counter-normal {
-  background-color: #1da1f2; /* Default color */
+  background-color: #1da1f2; 
 }
 
 .counter-warning {
-  background-color: #f5a623; /* Yellow color */
+  background-color: #f5a623; 
 }
 
 .counter-error {
-  background-color: #e0245e; /* Red color */
+  background-color: #e0245e; 
 }

@@ -27,7 +27,6 @@ router.get("/login/success", (req, res) => {
 
 
 //google auth routes
-
 router.get('/auth/google/', 
   passport.authenticate('google', { scope: ['profile', 'email']}),
 );
@@ -447,7 +446,7 @@ router.post("/followUser", async (req, res) => {
       }
 
       console.log("Handled follow/unfollow successfully!")
-      // Send a success response with a message and status code, at the end of the operation
+      //send a success response with a message and status code, at the end of the operation
       res.status(200).json({
         message: "Follow/unfollow operation completed successfully"
       });      
@@ -567,7 +566,7 @@ router.post('/uploadprofilepic/:userid', upload.single('image'), async (req, res
   const user = await User.findOne({ _id: userid });
 
   try {
-    // Upload the image to cloudinary
+    //upload the image to cloudinary
     const uploadResult = await cloudinary.uploader
       .upload(
         dataURI, //image file to upload
@@ -584,7 +583,7 @@ router.post('/uploadprofilepic/:userid', upload.single('image'), async (req, res
     const result = await user.save();
     console.log("image saved! filename: " + req.file.filename);
 
-    // Update all Post model instances where "from" field has this user
+    //update all Post model instances where "from" field has this user
     await Post.updateMany({ "from._id": userid },
       {
         $set: {
@@ -593,7 +592,7 @@ router.post('/uploadprofilepic/:userid', upload.single('image'), async (req, res
       }
     );
 
-    // Update all Post model instances where "comments" field has this user
+    //update all Post model instances where "comments" field has this user
     const postsWithUserComments = await Post.find({
       "comments.from._id": userid
     });
@@ -602,7 +601,7 @@ router.post('/uploadprofilepic/:userid', upload.single('image'), async (req, res
       post.comments.forEach(comment => {
         comment.from.forEach(user => {
           if (user._id.toString() === userid.toString()) {
-            // Update the fields
+            //update the fields
             user.uploadedpic = uploadResult.secure_url;
           }
         });
@@ -610,7 +609,7 @@ router.post('/uploadprofilepic/:userid', upload.single('image'), async (req, res
       await post.save();
     });
 
-    // Update all Follower model instances where "user" field, "following" field or "followed" field has this user
+    //update all Follower model instances where "user" field, "following" field or "followed" field has this user
     const updateFollowers = await Follower.updateMany(
       {
         $or: [ // $or condition allows the query to look in all three arrays (user, following, followedby).
@@ -627,7 +626,7 @@ router.post('/uploadprofilepic/:userid', upload.single('image'), async (req, res
         }
       },
       {
-        arrayFilters: [{ "elem._id": userid }] // Update only the elements that match the user id
+        arrayFilters: [{ "elem._id": userid }] // update only the elements that match the user id
       }
     );
 
@@ -642,7 +641,7 @@ router.post('/uploadprofilepic/:userid', upload.single('image'), async (req, res
 //image sent in message input
 router.post("/imagesent", upload.single('image'), async (req, res) => {
 
-  console.log('File received:', req.file); // Add this line
+  console.log('File received:', req.file); 
 
   if (!req.file) {
       return res.status(400).send('No file uploaded.');
@@ -659,7 +658,7 @@ router.post("/imagesent", upload.single('image'), async (req, res) => {
 
   try {
     if (req.isAuthenticated){
-      // Upload the image to cloudinary
+      // upload the image to cloudinary
       const uploadResult = await cloudinary.uploader
       .upload(
           dataURI, //image file to upload

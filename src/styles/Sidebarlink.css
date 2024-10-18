@@ -8,24 +8,24 @@
 
 }
 
-  /* below 1300px width */
-  @media (max-width: 1300px) {
-    .sidebarLink h2 {
-      display: none;
-    }
-    .sidebarLink{
-      justify-content: flex-end;
-      width: fit-content;
-    }
-
-    .sidebarLink > .MuiSvgIcon-root{
-      height: 1.3em;
-      width: auto;
-    }
-
+/* below 1300px width */
+@media (max-width: 1300px) {
+  .sidebarLink h2 {
+    display: none;
+  }
+  .sidebarLink{
+    justify-content: flex-end;
+    width: fit-content;
   }
 
-    /* Below 650px width */ 
+  .sidebarLink > .MuiSvgIcon-root{
+    height: 1.3em;
+    width: auto;
+  }
+
+}
+
+/* below 650px width */ 
 @media (max-width: 650px){
   .sidebarLink > .MuiSvgIcon-root{
     height: 1.1em;

@@ -1,11 +1,8 @@
 /* eslint-disable react/prop-types */
-import {useState, useEffect, useRef, useContext} from 'react';
+import {useState, useRef, useContext} from 'react';
 import {AppStatesContext, UserContext} from '../App.jsx';
 import UserAvatar from './UserAvatar.jsx';
-import { Alert } from '@mui/material';
-import { TextField, Avatar, Button, Box, Typography,  IconButton } from '@mui/material';
-import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
-import PhotoCamera from '@mui/icons-material/PhotoCamera'; 
+import {Alert, Button, Box, Typography,  IconButton } from '@mui/material';
 import CircularProgress, { circularProgressClasses } from '@mui/material/CircularProgress';
 import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
 import { clean } from 'profanity-cleaner';
@@ -13,16 +10,14 @@ import { clean } from 'profanity-cleaner';
 import ImageUploadButton from "../components/ImageUploadButton.jsx";
 
 import '../styles/SubmitPostForm.css'
-
+//emoji picker
 import data from '@emoji-mart/data'
 import Picker from '@emoji-mart/react'
 
 export default function SubmitPostForm({location, handleClose }) {
   const { 
-    setSnackbarOpenCondition, setSnackbarOpen, isSubmittingPost, 
-    setisSubmittingPost , pressedSubmitPost, setPressedSubmitPost, 
-    imgSubmittedNavbar, setImgSubmittedNavbar, imgSubmittedHomePage, 
-    setImgSubmittedHomePage, darkModeOn
+    isSubmittingPost, setisSubmittingPost , pressedSubmitPost, 
+    setPressedSubmitPost, darkModeOn
   } = useContext(AppStatesContext);
 
   const {currentUser} = useContext(UserContext); 
@@ -34,29 +29,30 @@ export default function SubmitPostForm({location, handleClose }) {
   //state for storing when the user clicks on the textarea
   const [isFocused, setIsFocused] = useState(false);
 
+  //reference to the textarea element
   const textareaRef = useRef(null);
 
-  // Adjust the textarea height dynamically
+  // adjust the textarea height dynamically
   const autoResize = () => {
     const textarea = textareaRef.current;
     if (textarea) {
-      textarea.style.height = 'auto';  // Reset the height
-      textarea.style.height = `${textarea.scrollHeight}px`; // Set to scroll height
+      textarea.style.height = 'auto';  // reset the height
+      textarea.style.height = `${textarea.scrollHeight}px`; // set to scroll height
 
     }
   };
 
-  // Max character limit
+  //max character limit
   const maxCharacters = 280;
-  // Character counter
+  //character counter
   const [remainingCharacters, setRemainingCharacters] = useState(maxCharacters);
 
-  // Handle text change in form
+  //handle text change in form
   function handleChange(event) {
     const newValue = event.target.value;
     setValue(newValue);
     setRemainingCharacters(maxCharacters - newValue.length);
-    autoResize(); // Resize on every input change
+    autoResize(); //resize on every input change
   }
 
   //emoji select
@@ -68,7 +64,7 @@ export default function SubmitPostForm({location, handleClose }) {
   };
 
   //not using useEffect for the sending posts fetch api in order to not make both homepage form and navbar form trigger at the same time
-  // Submit the post
+  //submit the post
   async function handleSubmit(event) {
     event.preventDefault();
 
@@ -79,9 +75,9 @@ export default function SubmitPostForm({location, handleClose }) {
     
     if (isSubmittingPost || value.length > maxCharacters) {
       return
-    }; // Prevent multiple submissions, also prevents from submitting if above 280 characters.
+    }; // prevent multiple submissions, also prevents from submitting if above 280 characters.
 
-    setisSubmittingPost(true); // Mark submission as in progress
+    setisSubmittingPost(true); // mark submission as in progress
 
     try {
       const filteredPostMessage = await clean(value, { keepFirstAndLastChar: true, placeholder: '#' });
@@ -93,13 +89,13 @@ export default function SubmitPostForm({location, handleClose }) {
           'Content-Type': 'application/json',
           "Access-Control-Allow-Origin": "*",
         },
-        credentials: "include" // Include credentials like cookies
+        credentials: "include" // include credentials like cookies
       });
 
       if (result.ok) {
         await result.json();
         console.log("Posted Successfully!");
-        setValue(""); // Clear form after success
+        setValue(""); // clear form after success
 
         // Close modal if used in the navbar
         if (location === 'navbar' && handleClose) {
@@ -167,7 +163,7 @@ export default function SubmitPostForm({location, handleClose }) {
           value={value}
           onChange={(e) => {
             handleChange(e);  
-            autoResize();     // Adjust the size on input change
+            autoResize();     // adjust the size on input change
           }}
           onFocus={() => setIsFocused(true)}  
           onBlur={() => setIsFocused(false)}   
@@ -192,7 +188,7 @@ export default function SubmitPostForm({location, handleClose }) {
             <IconButton
               onClick={() => setShowEmojiPicker(!showEmojiPicker)}
               className="emoji-button"
-              type="button" // Prevent this button from triggering the form submission
+              type="button" // prevent this button from triggering the form submission
             >
               <SentimentSatisfiedAltIcon sx={{ color: isSubmittingPost? "#B0B0B0":'#1da1f2' }} />
 
@@ -203,27 +199,27 @@ export default function SubmitPostForm({location, handleClose }) {
             {/* character counter */}
             <Box sx={{ position: 'relative', display: 'inline-flex', marginLeft: 2 }}>
               <Box sx={{ position: 'relative', display: 'inline-flex', alignItems: "center"}}>
-                {/* Background Circle (Gray) */}
+                {/* background Circle (Gray) */}
                 <CircularProgress
                   variant="determinate"
-                  value={100} // Always fully rendered for the gray background
+                  value={100} // always fully rendered for the gray background
                   size={24}
                   thickness={4}
                   sx={{
-                    color: darkModeOn ? '#424242' : '#d3d3d3', // Gray color for unfilled part
+                    color: darkModeOn ? '#424242' : '#d3d3d3', // gray color for unfilled part
                   }}
                 />
                 
-                {/* Foreground Circle (Filling with Blue/Yellow/Red) */}
+                {/* foreground circle (filling with blue/yellow/red) */}
                 <CircularProgress
                   variant="determinate"
-                  value={100 - (remainingCharacters / maxCharacters) * 100} // Filling progress based on remaining characters
+                  value={100 - (remainingCharacters / maxCharacters) * 100} // filling progress based on remaining characters
                   size={24}
                   thickness={4}
                   sx={{
-                    position: 'absolute', // Stacking on top of the gray circle
+                    position: 'absolute', // stacking on top of the gray circle
                     left: 0,
-                    color: remainingCharacters < 0 ? '#e0245e' : remainingCharacters <= 20 ? '#f5a623' : '#1da1f2', // Filled part: red/yellow/blue
+                    color: remainingCharacters < 0 ? '#e0245e' : remainingCharacters <= 20 ? '#f5a623' : '#1da1f2', // filled part: red/yellow/blue
                     [`& .${circularProgressClasses.circle}`]: {
                       strokeLinecap: 'round',
                     },

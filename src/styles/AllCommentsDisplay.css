@@ -5,9 +5,9 @@
   
   .comment-feed {
     max-width: 600px;
-    margin: 0 auto; /* Center */
+    margin: 0 auto; /* center */
     padding: 0 15px; /* padding for smaller screens */
-    width: 100%; /* Fluid width until max-width is hit */
+    width: 100%; /* fluid width until max-width is hit */
   }
   
   .comment-item {

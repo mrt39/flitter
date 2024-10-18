@@ -1,17 +1,16 @@
 /* eslint-disable react/prop-types */
 import { useContext, useState, useEffect } from "react";
-import { Button, useTheme } from '@mui/material';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import { UserContext, AppStatesContext} from '../App.jsx';
+import { Button} from '@mui/material';
 
 import '../styles/FollowButton.css';
 
 const FollowButton = ({ displayedUserOnCard, location, firstRender, handleTooltipClose }) => {
 
-    const { currentUser, selectedUser } = useContext(UserContext); 
+    const { currentUser} = useContext(UserContext); 
 
     //pass the follow states from AppStatesContext in App.jsx
-    //sending a post request within the tooltip and it's child components disrupts the display of the tooltip and/or the follow logic, so the follow logic is defined in App.jsx to prevent that.
+    //sending a post request within the tooltip and its child components disrupts the display of the tooltip and/or the follow logic, so the follow logic is defined in App.jsx to prevent that.
     const {darkModeOn, pressedFollow, setPressedFollow, loadingFollow, setLoadingFollow, setUsertoFollow} = useContext(AppStatesContext); 
 
     const [isFollowing, setIsFollowing] = useState(false)

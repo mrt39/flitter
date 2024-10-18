@@ -1,28 +1,25 @@
 /* eslint-disable react/prop-types */
 import { useContext, useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import dayjs from 'dayjs';
+import { Link} from "react-router-dom";
 import CommentModal from './CommentModal.jsx';
 import HoverUserCard from './HoverUserCard.jsx';
 import UserAvatar from './UserAvatar.jsx';
 import { UserContext, AppStatesContext} from '../App.jsx';
-import { Avatar } from '@mui/material';
-import { ListItemText,  ListItemAvatar, Box} from '@mui/material';
-import {  Typography,  IconButton,  } from '@mui/material';
+import { ListItemText, ListItemAvatar, Box, Typography, IconButton} from '@mui/material';
 import { Favorite, FavoriteBorder} from '@mui/icons-material';
-import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
+import Tooltip from '@mui/material/Tooltip';
 // Import the link-preview-js library at the top of the file
 import { getLinkPreview } from 'link-preview-js';
 
-//imports for generating the url path for routing 
-import slugify from 'slugify';
+import dayjs from 'dayjs';
+
 import '../styles/PostDisplay.css'
 
 
 const PostDisplay = ({post, location}) => {
 
     //Pass the UserContext defined in app.jsx
-    const { currentUser, setSelectedUser } = useContext(UserContext); 
+    const {currentUser} = useContext(UserContext); 
 
     const {refreshPosts, setRefreshPosts, darkModeOn, handleProfileRouting} = useContext(AppStatesContext); 
 
@@ -97,6 +94,10 @@ const [linkPreviewData, setLinkPreviewData] = useState(null);
 
 //function to fetch link preview data
 const fetchLinkPreview = async (url) => {
+    //skip fetching link preview for youtube urls
+    if (extractYouTubeID(url)) {
+        return null;
+    }
     try {
         //using the link-preview-js library (getLinkPreview function) to fetch the link preview data
         const data = await getLinkPreview(url);
@@ -110,6 +111,7 @@ const fetchLinkPreview = async (url) => {
 //function to extract the first URL from the post content
 const extractURLFromContent = (content) => {
     const urlRegex = /(https?:\/\/[^\s]+)/g;
+    if (!content) return null;
     const urls = content.match(urlRegex);
     return urls ? urls[0] : null; // return the first URL found
 };
@@ -138,11 +140,12 @@ const renderContentWithPreviews = (content, previewData) => {
             {parts.map((part, index) => {
                 //check if the part is a URL
                 if (urlRegex.test(part)) {
+                    //extract the youtube video id from the URL
                     const videoID = extractYouTubeID(part);
                     if (videoID) {
                         //render YouTube video if URL is a youtube link
                         return (
-                            <div key={index} className="youtube-video-container">
+                            <span key={index} className="youtube-video-container">
                                 <iframe
                                     width="500"
                                     height="315"
@@ -152,7 +155,7 @@ const renderContentWithPreviews = (content, previewData) => {
                                     allowFullScreen
                                     title="Embedded YouTube Video"
                                 ></iframe>
-                            </div>
+                            </span>
                         );
                     } else {
                         //render the URL as an <a> element for non-youtube links
@@ -168,23 +171,22 @@ const renderContentWithPreviews = (content, previewData) => {
             })}
             {/* render the link preview if available and not a youtube link */}
             {previewData && !extractYouTubeID(previewData.url) && (
-                <div className="link-preview-container">
+                <span className="link-preview-container">
                     {/* display the first image from the preview data */}
-                    {previewData.images && previewData.images.length > 0 && (
-                        <img src={previewData.images[0]} alt="Link preview" className="link-preview-image" />
-                    )}
-                    <div className="link-preview-details">
-                        <Typography variant="subtitle1" className="link-preview-title">
-                            {previewData.title}
-                        </Typography>
-                        <Typography variant="body2" className="link-preview-description">
+                        {previewData.images && previewData.images.length > 0 && (
+                            <img src={previewData.images[0]} alt="Link preview" className="link-preview-image" />
+                        )}
+                        <span className="link-preview-details">
+                        <a href={previewData.url} className="link-preview-link">
+                            <Typography variant="subtitle1" className="link-preview-title" component="span">
+                                {previewData.title}
+                            </Typography>
+                        </a>
+                        <Typography variant="body2" className="link-preview-description" component="span">
                             {previewData.description}
                         </Typography>
-                        <Typography variant="body2" className="link-preview-url">
-                            {previewData.url}
-                        </Typography>
-                    </div>
-                </div>
+                        </span>
+                </span>
             )}
         </>
     );
@@ -259,7 +261,7 @@ const renderContentWithPreviews = (content, previewData) => {
                 </div>
             )}
             secondary={(
-                <>
+                <span>
                     <Typography component="span" variant="body1" className={`post-content ${darkModeOn ? 'dark-mode' : ''}`}
                     >
                         {post.image ? (
@@ -295,13 +297,13 @@ const renderContentWithPreviews = (content, previewData) => {
                                 <FavoriteBorder fontSize="small" sx={{ color: darkModeOn ? 'rgb(113, 118, 123)' : 'rgb(83, 100, 113)' }} />
                                 )}
 
-                                <Typography component="span" variant="body2" className={`postLikeCommentCount ${darkModeOn ? 'dark-mode' : ''}`}>
+                                <Typography component="div" variant="body2" className={`postLikeCommentCount ${darkModeOn ? 'dark-mode' : ''}`}>
                                     {post.likeCount}
                                 </Typography>
                             </IconButton>
                         </span>
                     )}
-                </>
+                </span>
             )}
         />
     </span>

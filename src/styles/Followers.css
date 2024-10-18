@@ -8,8 +8,8 @@
 
 .followers-listitem{
     display: flex;
-    align-items: center !important; /* Center items vertically */
-    justify-content: space-between !important; /* Space out the avatar, text, and button */
+    align-items: center !important; 
+    justify-content: space-between !important; 
     transition: background-color 0.3s ease;
 }
 

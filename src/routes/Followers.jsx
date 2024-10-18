@@ -1,14 +1,12 @@
 /* eslint-disable react/prop-types */
 import { useState, useContext, useEffect } from 'react'
-import { useLocation, Link, useNavigate} from "react-router-dom";
+import { useLocation, Link} from "react-router-dom";
 import HoverUserCard from '../components/HoverUserCard.jsx';
 import { UserContext, AppStatesContext } from '../App.jsx';
 import FollowersTopSection from '../components/FollowersTopSection.jsx'; 
 import UserAvatar from '../components/UserAvatar.jsx';
 import FollowButton from '../components/FollowButton.jsx';
-import { ListItem, ListItemAvatar, ListItemText, Typography, Paper, CircularProgress, Alert, Box, Tabs, Tab, Tooltip } from '@mui/material';
-//import for generating the url path for routing 
-import slugify from 'slugify';
+import { ListItem, ListItemAvatar, ListItemText, Typography, Paper, CircularProgress, Alert, Box, Tooltip } from '@mui/material';
 
 import '../styles/Followers.css';
 
@@ -16,7 +14,7 @@ import '../styles/Followers.css';
 const Followers = () => {
 
   // Pass the UserContext defined in app.jsx
-  const { setSelectedUser, currentUser } = useContext(UserContext); 
+  const { currentUser } = useContext(UserContext); 
   const { darkModeOn, pressedFollow, handleProfileRouting, setActiveTab, setSearchWord } = useContext(AppStatesContext); 
 
 
@@ -27,9 +25,9 @@ const Followers = () => {
 
   //get the shortid of the user from the current URL
   const location = useLocation();
-  // Get the pathname from the location object
+  //get the pathname from the location object
   const path = location.pathname;
-  // Extract the last 8 characters
+  //extract the last 8 characters
   const shortID = path.slice(-18, -10);
 
   //when the /followers route is accessed, set the active tab to "forYou" and set searchWord to null, in order to display the correct posts on user's profile
@@ -37,8 +35,6 @@ const Followers = () => {
     setActiveTab("forYou");
     setSearchWord(null);
   },[]);
-
-
 
   //get whether it's /following or /followers path and store it in currentPath state
   //change the currentPath state when the user clicks on the tabs or clicks on "followers" or "following" link on HoverUserCard
@@ -57,28 +53,25 @@ const Followers = () => {
           })
           .then(response => {
               if (response.ok) {
-              return response.json(); // Parse JSON when the response is successful
+              return response.json(); 
               }
               throw new Error('Network response was not ok.');
           })
           .then(data => {
               setFollowerData(data[0])
-              setLoading(false)
           })
           .catch(error => {
               setError(error.message);
-              setLoading(false)
               console.error('Error:', error);
+          })
+          .finally(() => {
+            setLoading(false);
           });
+          
       };
       //change followerData state when the user clicks on the profile tab or clicks on "followers" or "following" link on HoverUserCard
       getFollowerData();
       }, [pressedFollow, shortID]); 
-
-
-
-
-    
 
   if (loading) {
     return <CircularProgress />;

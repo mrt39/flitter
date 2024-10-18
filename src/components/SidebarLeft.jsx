@@ -1,23 +1,13 @@
 /* eslint-disable react/prop-types */
 import { useState, useContext } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AppStatesContext, UserContext } from '../App.jsx';
-import '../styles/SidebarLeft.css';
 import SidebarLink from './SidebarLink.jsx';
 import EditProfileModal from './EditProfileModal.jsx';
 import UserAvatar from './UserAvatar.jsx';
 import SubmitPostModal from './SubmitPostModal.jsx';
-
-// MUI Imports
-import { 
-  Avatar, 
-  Button, 
-  Menu, 
-  MenuItem, 
-  ListItemIcon 
-} from '@mui/material';
-
-// Icons
+import {Button, Menu, MenuItem, ListItemIcon } from '@mui/material';
+//icons
 import HomeIcon from '@mui/icons-material/Home';
 import SearchIcon from '@mui/icons-material/Search';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
@@ -29,13 +19,11 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import Logout from '@mui/icons-material/Logout';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 
-
-
-// Assets
 import LogoImg from '../assets/logo.png';
 
-// Utility
-import slugify from 'slugify'; // for generating the URL path for routing
+import '../styles/SidebarLeft.css';
+
+
 
 
 
@@ -43,7 +31,7 @@ import slugify from 'slugify'; // for generating the URL path for routing
 const SidebarLeft = () => {
 
     const {darkModeOn, handleProfileRouting} = useContext(AppStatesContext); 
-    const {currentUser, setCurrentUser, setSelectedUser} = useContext(UserContext);
+    const {currentUser, setCurrentUser} = useContext(UserContext);
 
 
     const [anchorEl, setAnchorEl] = useState(document.querySelector('#sideBarAccountMenu'));
@@ -55,26 +43,12 @@ const SidebarLeft = () => {
       setAnchorEl(null);
     };
 
-
     const navigate = useNavigate(); 
 
     //handle opening and closing the edit profile modal
     const [openEditProfileModal, setOpenEditProfileModal] = useState(false);
     const handleOpenEditProfileModal = () => setOpenEditProfileModal(true);
     const handleCloseEditProfileModal = () => setOpenEditProfileModal(false);
-
-
-
-  //handle generating the url path for routing to /profile/:slug
-/*   function handleProfileRouting(){
-    //slugify the username, e.g:"john-doe"
-    const slug = slugify(currentUser.name, { lower: true }); 
-    //combine slug with usershortID to create the unique profile path for the selected currentUser to route to
-    const profilePath = `/profile/${slug}-${currentUser.shortId}`
-    setSelectedUser(currentUser)
-    //route to the profile path
-    navigate(profilePath);
-  } */
 
 
   function handleSignOut(){
@@ -179,15 +153,12 @@ const SidebarLeft = () => {
         transformOrigin={{ horizontal: 'left', vertical: 'bottom' }}
         anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
       >
-        
-          <MenuItem className='sidebarMenuItem'onClick={handleOpenEditProfileModal}>
-              <ListItemIcon >
-                <EditOutlinedIcon className='sidebarMenuIcon' fontSize="small" />
-              </ListItemIcon>
-              Edit Profile
-          </MenuItem>
-        
-
+        <MenuItem className='sidebarMenuItem'onClick={handleOpenEditProfileModal}>
+          <ListItemIcon >
+            <EditOutlinedIcon className='sidebarMenuIcon' fontSize="small" />
+          </ListItemIcon>
+          Edit Profile
+        </MenuItem>
         <MenuItem className='sidebarMenuItem' onClick={handleSignOut}>
           <ListItemIcon >
             <Logout className='sidebarMenuLogoutIcon' fontSize="small" />
@@ -195,9 +166,6 @@ const SidebarLeft = () => {
           Logout
         </MenuItem>
       </Menu>
-
-
-
       <EditProfileModal open={openEditProfileModal} handleClose={handleCloseEditProfileModal} />
 
     </div>

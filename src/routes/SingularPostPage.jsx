@@ -5,10 +5,7 @@ import { AppStatesContext } from '../App.jsx';
 import PostDisplay from '../components/PostDisplay.jsx';
 import CommentForm from '../components/CommentForm.jsx';
 import AllCommentsDisplay from '../components/AllCommentsDisplay.jsx';
-
-
-import Box from '@mui/material/Box';
-import { CircularProgress, Alert, AppBar, Toolbar, IconButton, Typography } from '@mui/material';
+import { CircularProgress, Box, Alert, AppBar, Toolbar, IconButton, Typography } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import '../styles/SingularPostPage.css'
 

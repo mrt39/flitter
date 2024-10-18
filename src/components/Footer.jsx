@@ -14,10 +14,6 @@ return (
             </a>
             <p>Made by mrt39</p>
         </div>
-        <div className='imgCreditsContainer'>
-        Chat UI from  
-        <a href="https://chatscope.io/"> Chatscope</a>
-        </div>
     </footer>
 )
 }

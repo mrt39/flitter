@@ -76,29 +76,27 @@ const userSchema = new mongoose.Schema ({
       required: false,
       maxlength: 100
   },
-  followingtheseID: 
-  {
-    type: [String],
-    unique: false,
-    required: false, 
+    followingtheseID: {
+      type: [String],
+      unique: false,
+      required: false, 
   },
-  followingCount: {
-    type: Number,
-    unique: false,
-    required: true,
-    default: 0
+    followingCount: {
+      type: Number,
+      unique: false,
+      required: true,
+      default: 0
   },
-  followedbytheseID: 
-  {
-    type: [String],        
-    unique: false,
-    required: false, 
+    followedbytheseID: {
+      type: [String],        
+      unique: false,
+      required: false, 
   },
-  followerCount: {
-    type: Number,
-    unique: false,
-    required: true,
-    default: 0
+    followerCount: {
+      type: Number,
+      unique: false,
+      required: true,
+      default: 0
   },
 });
 
@@ -161,38 +159,32 @@ const postSchema = new mongoose.Schema ({
     default: Date.now, // Automatically sets the current date if not provided
 
   },
-
   message: {
     type: String,
     unique: false,
     required: false,
   },
-
   image: {
     type: String,
     unique: false,
     required: false,
   },
-
   likedby: {
     type: [userSchema],
     unique: false,
     required: false,
   },
-
   likeCount: {
     type: Number,
     unique: false,
     required: true,
     default: 0
   },
-
   comments: {
     type: [commentSchema],
     unique: false,
     required: false,
   },
-
   commentCount: {
     type: Number,
     unique: false,
@@ -209,7 +201,8 @@ const Post = mongoose.models.posts ||mongoose.model("posts", postSchema);
 //model for followers
 
 const followerSchema = new mongoose.Schema ({
-  user: {type: [userSchema],        
+  user: 
+  {type: [userSchema],        
     unique: false,
     required: true, 
   },
@@ -230,8 +223,6 @@ const Follower = mongoose.models.followers ||mongoose.model("followers", followe
 
 
 /* --------------------------------- END OF MONGOOSE ------------------------------------- */
-
-
 
 
 
@@ -295,7 +286,7 @@ async function(accessToken, refreshToken, profile, done) {
 
 
 
-// Serialize User to session
+// serialize user to session
 passport.serializeUser((user, done) => {
   done(null, user.id);
 });

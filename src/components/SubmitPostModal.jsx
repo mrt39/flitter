@@ -14,8 +14,6 @@ import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
 import "../styles/SubmitPostModal.css"
 
 
-
-
 export default function SubmitPostModal() {
 
 

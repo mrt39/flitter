@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useContext, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Card, CardContent, Avatar, Typography, Box, useTheme } from '@mui/material';
+import { Card, CardContent, Typography, Box, useTheme } from '@mui/material';
 import { AppStatesContext, UserContext} from '../App.jsx';
 import { CircularProgress, Alert } from '@mui/material';
 import FollowButton from './FollowButton.jsx';
@@ -16,7 +16,7 @@ import slugify from 'slugify';
 
 const HoverUserCard = ({ user, handleTooltipClose}) => {
 
-  const {currentUser, setSelectedUser} = useContext(UserContext); 
+  const {currentUser} = useContext(UserContext); 
   const {darkModeOn, pressedFollow, handleProfileRouting} = useContext(AppStatesContext); 
   const [displayedUserOnCard, setDisplayedUserOnCard] = useState(user)
   const [loading, setLoading] = useState(true);
@@ -26,7 +26,7 @@ const HoverUserCard = ({ user, handleTooltipClose}) => {
 
 
 
-  //make a profile call because when the user presses the follow button, data on the card needs to change
+  //make a profile call to populate because when the user presses the follow button, data on the card needs to change
   //fetch for getting data of the user, based on their shortId
   useEffect(() => {
     const getUserData = () => {
@@ -35,7 +35,7 @@ const HoverUserCard = ({ user, handleTooltipClose}) => {
       })
       .then(response => {
           if (response.ok) {
-          return response.json(); // Parse JSON when the response is successful
+          return response.json(); 
           }
           throw new Error('Network response was not ok.');
       })
@@ -56,7 +56,6 @@ const HoverUserCard = ({ user, handleTooltipClose}) => {
 
 
   const navigate = useNavigate(); 
-
     //handle generating the url path for routing to /profile/:slug/followers
     function handleFollowersRouting(string){
       //slugify the username, e.g:"john-doe"
@@ -125,7 +124,7 @@ const HoverUserCard = ({ user, handleTooltipClose}) => {
         }
       </Box>
 
-      {/* User's name and bio */}
+      {/*user's name and bio */}
       <CardContent 
         sx={{
           p: 0,
@@ -134,12 +133,12 @@ const HoverUserCard = ({ user, handleTooltipClose}) => {
           },
         }}
       >
-        {/* User Bio */}
+        {/*user Bio */}
         <Typography variant="body2" className={`userBio ${darkModeOn ? 'dark-mode' : ''}`}>
           {displayedUserOnCard.bio}
         </Typography>
 
-        {/* Follower and Following Counts */}
+        {/*follower and following Counts */}
         <Box display="flex" justifyContent="flex-start" gap="50px">
           <Link className="hoverUserCardFollowersLink" onClick={(e) => {e.preventDefault(); e.stopPropagation(); handleFollowersRouting("following")}}>
             <Typography variant="body2" color="text.secondary">
