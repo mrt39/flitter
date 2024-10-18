@@ -36,6 +36,7 @@ export default function CommentModal({ post }) {
   // modal states
   const [open, setOpen] = useState(false);
   const handleOpen = (e) => {
+    e.stopPropagation();
     e.preventDefault();
     setOpen(true);
   };
@@ -54,7 +55,7 @@ export default function CommentModal({ post }) {
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
         open={open}
-        onClick={(e) => e.preventDefault()}
+        onClick={(e) => {e.preventDefault(); e.stopPropagation()}} //prevent the modal from opening the post link when clicked on anywhere within the modal
         onClose={handleClose}
         closeAfterTransition
         slots={{ backdrop: Backdrop }}

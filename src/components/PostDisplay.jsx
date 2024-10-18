@@ -15,7 +15,6 @@ import dayjs from 'dayjs';
 
 import '../styles/PostDisplay.css'
 
-
 const PostDisplay = ({post, location}) => {
 
     //Pass the UserContext defined in app.jsx
@@ -31,7 +30,6 @@ const PostDisplay = ({post, location}) => {
 
     // Temporary state for like animation (in order to remove the "liked" class after 0.3 seconds, to prevent the animation from playing when the user likes another post)
     const [tempLiked, setTempLiked] = useState(false); // Temporary state for like animation
-
 
 
 
@@ -89,7 +87,6 @@ const PostDisplay = ({post, location}) => {
         } 
     }, [pressedLikePost]);
 
-
 /* ---------------------------------- EMBED YOUTUBE VIDEO AND LINK PREVIEW LOGIC ---------------------------------- */
 //extract YouTube video ID from URL
 const extractYouTubeID = (url) => {
@@ -101,7 +98,6 @@ const extractYouTubeID = (url) => {
 
 //state to store link preview data
 const [linkPreviewData, setLinkPreviewData] = useState(null);
-
 
 //function to fetch link preview data
 const fetchLinkPreview = async (url) => {
@@ -210,7 +206,6 @@ const renderContentWithPreviews = (content, previewData) => {
 
 
 
-
   
 //define the main post component here, in order to not to repeat the code in the "location === "singular-post-page" ?" statement below
   const PostContent = ({ post, handleProfileRouting, handleLike }) => (
@@ -294,6 +289,7 @@ const renderContentWithPreviews = (content, previewData) => {
                             <CommentModal post={post} />
                             <IconButton
                                 onClick={(e) => {
+                                    e.stopPropagation(); //prevent the click event from opening the link to the post
                                     e.preventDefault();
                                     handleLike();
                                 }}
