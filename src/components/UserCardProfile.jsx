@@ -112,17 +112,22 @@ const UserCardProfile = () => {
                         size="small"
                         className="editProfileButton"
                         sx={{
-                        fontWeight: 'bold',
-                        fontSize: '15px',
-                        borderRadius: '9999px', 
-                        textTransform: 'none',
-                        padding: '6px 16px',
-                        borderColor: (darkModeOn ? 'rgb(83, 100, 113);' : 'gray'),
-                        backgroundColor: 'transparent',
-                        color: darkModeOn ? 'white' : 'black', 
-                        '&:hover': {
-                            backgroundColor: darkModeOn ? 'rgb(39, 44, 48);': 'rgb(215, 219, 220)' ,
-                        },
+                            fontWeight: 'bold',
+                            fontSize: '15px',
+                            borderRadius: '9999px', 
+                            textTransform: 'none',
+                            padding: '6px 16px',
+                            borderColor: (darkModeOn ? 'rgb(83, 100, 113);' : 'gray'),
+                            backgroundColor: 'transparent',
+                            color: darkModeOn ? 'white' : 'black', 
+                            '&:hover': {
+                                backgroundColor: darkModeOn ? 'rgb(39, 44, 48);': 'rgb(215, 219, 220)' ,
+                            },
+                            maxWidth: '100%',
+                            width: 'auto',
+                            /* whiteSpace: 'nowrap', */
+                            overflow: 'auto',
+                            textOverflow: 'ellipsis',
                         }}
                         >
                             Edit Profile

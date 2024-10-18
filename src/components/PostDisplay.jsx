@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { useContext, useState, useEffect } from "react";
-import { Link} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import CommentModal from './CommentModal.jsx';
 import HoverUserCard from './HoverUserCard.jsx';
 import UserAvatar from './UserAvatar.jsx';
@@ -31,6 +31,17 @@ const PostDisplay = ({post, location}) => {
 
     // Temporary state for like animation (in order to remove the "liked" class after 0.3 seconds, to prevent the animation from playing when the user likes another post)
     const [tempLiked, setTempLiked] = useState(false); // Temporary state for like animation
+
+
+
+
+    //handle routing to post (singular post page) when the post is clicked
+
+    const navigate = useNavigate();
+
+    function handlePostRouting(link){
+        navigate(link);
+    }
 
       
     function handleLike(){
@@ -103,6 +114,11 @@ const fetchLinkPreview = async (url) => {
         const data = await getLinkPreview(url);
         return data;
     } catch (error) {
+        //check for CORS error and don't display a preview if it occurs
+        if (error.message.includes('Network request failed') || error.message.includes('CORS')) {
+            console.warn('Skipping link preview due to CORS error:', error);
+            return null;
+        }
         console.error('Error fetching link preview:', error);
         return null;
     }
@@ -160,7 +176,7 @@ const renderContentWithPreviews = (content, previewData) => {
                     } else {
                         //render the URL as an <a> element for non-youtube links
                         return (
-                            <a key={index} href={part} target="_blank" rel="noopener noreferrer">
+                            <a className="postUrl" key={index} href={part} target="_blank" rel="noopener noreferrer">
                                 {part}
                             </a>
                         );
@@ -177,7 +193,7 @@ const renderContentWithPreviews = (content, previewData) => {
                             <img src={previewData.images[0]} alt="Link preview" className="link-preview-image" />
                         )}
                         <span className="link-preview-details">
-                        <a href={previewData.url} className="link-preview-link">
+                        <a href={previewData.url} target="_blank" className="link-preview-link">
                             <Typography variant="subtitle1" className="link-preview-title" component="span">
                                 {previewData.title}
                             </Typography>
@@ -314,9 +330,9 @@ return (
         {location === "singular-post-page" ? (
             <PostContent post={post} handleProfileRouting={handleProfileRouting} handleLike={handleLike} />
         ) : (
-            <Link className={`singularPostLinkOnPost ${darkModeOn ? 'dark-mode' : ''}`} to={`/post/${post._id}`}>
+            <span className={`singularPostLinkOnPost ${darkModeOn ? 'dark-mode' : ''}`} onClick={() => handlePostRouting(`/post/${post._id}`)}>
                 <PostContent post={post} handleProfileRouting={handleProfileRouting} handleLike={handleLike} />
-            </Link>
+            </span>
         )}
     </span>
 );

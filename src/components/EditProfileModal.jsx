@@ -98,7 +98,7 @@ const EditProfileModal = ({ open, handleClose }) => {
 
   //email validation
   useEffect(() => {
-    if (values.email.includes("@")) {
+    if (values.email &&values.email.includes("@")) {
       //if the snackbar is already opened, close it
       setSnackbarOpen(false);
       //wait until snackbar closes to change the e-mail invalid state
@@ -263,18 +263,20 @@ const EditProfileModal = ({ open, handleClose }) => {
                   required
                   value={values.name}
                 />
-                <TextField
-                  disabled={loading || currentUser.googleId || currentUser.email === "demoacc@demoacc.com"}
-                  fullWidth
-                  error={invalidEmail}
-                  helperText={invalidEmail ? 'Invalid E-mail address!' : ' '}
-                  label="E-mail Address"
-                  name="email"
-                  type="email"
-                  required
-                  onChange={handleChange}
-                  value={values.email}
-                />
+                {!currentUser.twitterId&&
+                  <TextField
+                    disabled={loading || currentUser.googleId || currentUser.email === "demoacc@demoacc.com"}
+                    fullWidth
+                    error={invalidEmail}
+                    helperText={invalidEmail ? 'Invalid E-mail address!' : ' '}
+                    label="E-mail Address"
+                    name="email"
+                    type="email"
+                    required
+                    onChange={handleChange}
+                    value={values.email}
+                  />
+                }
                 <TextField
                   disabled={loading || currentUser.email === "demoacc@demoacc.com"}
                   fullWidth

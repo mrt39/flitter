@@ -53,6 +53,7 @@
 
 .singularPostLinkOnPost:hover{
   background-color: rgba(0, 0, 0, 0.03) !important;
+  cursor: pointer;
 }
 
 .singularPostLinkOnPost.dark-mode:hover{
@@ -121,6 +122,8 @@
     display: block;
     margin-bottom: 1em; 
     padding: 0;
+    word-break: break-word; /* break long words to fit within the container */
+    overflow-wrap: break-word; /* long words break to fit within the container */
   }
 
   .post-content.dark-mode {
@@ -155,6 +158,24 @@
     justify-content: center; 
     margin-top: 10px; 
   }
+
+  .youtube-video-container {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+    height: 0;
+    max-width: 100%;
+    background: #000;
+    margin-bottom: 1rem;
+}
+
+.youtube-video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
 
   /* general post action button styling */
     .icon-button {
@@ -217,6 +238,14 @@
 
 
 /* link preview styling */
+.postUrl{
+  /* styling to prevent the <a> element disrupting the responsive design. (on lower width screens, <a> element widens up the post container, therefore disrupts the display of the navbar on screen)  */
+  word-break: break-word; /* break long words to fit within the container */
+  overflow-wrap: break-word; /* long words break to fit within the container */
+  display: inline-block; /* link behaves like an inline element */
+  max-width: 100%; /* make link does not exceed the container width */
+}
+
 .link-preview-container {
   display: flex;
   flex-direction: column;

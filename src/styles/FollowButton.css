@@ -1,3 +1,11 @@
 .followButton{
     font-size: 15px;
 }
+
+
+/*below 450px width */ 
+@media (max-width: 450px){
+    .followButton{
+      font-size: 12px !important;
+    }
+  }

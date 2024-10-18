@@ -95,4 +95,15 @@
   text-decoration: none;
   color: #1DA1F2; 
 }
+
+/*below 450px width */ 
+@media (max-width: 450px){
+  .editProfileButton{
+    font-size: 12px !important;
+  }
+
+  .follow-button-container{
+    margin-right: 2px !important;
+  }
+}
   

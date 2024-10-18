@@ -88,7 +88,7 @@ const SidebarLeft = () => {
         <SidebarLink text="Messages" Icon={MailOutlineIcon} />
         <SidebarLink text="Bookmarks" Icon={BookmarkBorderIcon} />
         <SidebarLink text="Lists" Icon={ListAltIcon} />
-        <span  className="sidebarLink" onClick={() => handleProfileRouting(currentUser)} >
+        <span onClick={() => handleProfileRouting(currentUser)} >
             <SidebarLink text="Profile" Icon={PermIdentityIcon} />
         </span>
             <SidebarLink text="More" Icon={MoreHorizIcon}/>

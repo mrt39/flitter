@@ -57,7 +57,12 @@ const userSchema = new mongoose.Schema ({
       unique: false,
       required: false,
   },
-    /* google pic */
+    twitterId: {
+      type: String,
+      unique: false,
+      required: false,
+  },
+    /* google or twitter pic */
     picture: {
       type: String,
       unique: false,
@@ -268,9 +273,10 @@ passport.use(new TwitterStrategy({
   callbackURL: SERVER_URL+"/auth/twitter/callback",
 },
 async function(accessToken, refreshToken, profile, done) {
-  const existingUser = await User.findOne({ googleId: profile.id });
+  const existingUser = await User.findOne({ twitterId: profile.id });
   //if the user exists with the same id, log in
   if (existingUser) { 
+    console.log(profile["photos"])
     done(null, existingUser);
   //otherwise, create new user
   } else {
@@ -278,7 +284,7 @@ async function(accessToken, refreshToken, profile, done) {
   const { randomUUID } = new ShortUniqueId({ length: 8 });
   const randomShortId= randomUUID();
 
-  const user = await new User({ googleId: profile.id, name: profile.username, shortId:randomShortId, picture: profile["photos"][0].value}).save();
+  const user = await new User({ twitterId: profile.id, name: profile.username, shortId:randomShortId, picture: profile["photos"][0].value.replace(/_normal(?=\.\w+$)/, "")}).save();
     done(null, user);
   }
   }
