@@ -114,32 +114,6 @@ export default function SubmitPostForm({location, handleClose }) {
     }
   }
 
-  //function for populating db with post data
-
-/*   async function populate(){
-    try {
-      const result = await fetch(import.meta.env.VITE_BACKEND_URL + '/populate', {
-          method: "GET",
-          headers: {
-            'Content-Type': 'application/json',
-            "Access-Control-Allow-Origin": "*",
-          },
-          credentials: "include" // Include credentials like cookies
-      });
-
-      if (result.ok) {
-          await result.json();
-          console.log("Populated successfully!");
-      } else {
-          throw new Error(result);
-      }
-      } catch (error) {
-          console.error('Error:', error);
-          setError(error);
-      } 
-  } */
-
-
 
     //handle image preview and sending image
 
@@ -170,9 +144,35 @@ export default function SubmitPostForm({location, handleClose }) {
       }
   }
 
+
+
+    //function for populating db with post data
+/*   async function populate(){
+    try {
+      const result = await fetch(import.meta.env.VITE_BACKEND_URL + '/populate', {
+          method: "GET",
+          headers: {
+            'Content-Type': 'application/json',
+            "Access-Control-Allow-Origin": "*",
+          },
+          credentials: "include" // Include credentials like cookies
+      });
+
+      if (result.ok) {
+          await result.json();
+          console.log("Populated successfully!");
+      } else {
+          throw new Error(result);
+      }
+      } catch (error) {
+          console.error('Error:', error);
+          setError(error);
+      } 
+  }  */
+
   return (
     <>
-    {/* <button onClick={populate}>POPULATE</button> */}
+     {/* <button onClick={populate}>POPULATE</button>  */}
     <Box className="submitPost-form-container">
       <Box component="form" className="submitPost-form">
         <UserAvatar user={currentUser ? currentUser : ""} />

@@ -64,7 +64,9 @@ const UserCardProfile = () => {
                     </Typography>    
                 </div>  
             </div>
-            <div className="header-background"></div>
+            <div className="header-background">
+                <img src={selectedUser.banner} alt="banner" className="header-image"/>
+            </div>
             <div className="profile-content-and-followButton-container"> 
                 <div className="profile-content">
                     <UserAvatar

@@ -18,6 +18,9 @@ const findOrCreate = require('mongoose-findorcreate')
 //dotenv for environment variables
 require('dotenv').config();
 
+//for generating random data (for the purpose of passport.js, random banners for twitter and google users)
+const { faker } = require( '@faker-js/faker');
+
 // Define the database URL to connect to.
 const dev_db_url = "mongodb://127.0.0.1:27017/flitterDB"
 const mongoDB = process.env.MONGODB_URI || dev_db_url;
@@ -73,8 +76,12 @@ const userSchema = new mongoose.Schema ({
       type: String,
       unique: false,
       required: false,
-
-  },
+  }, /* banner */
+    banner: {
+      type: String,
+      unique: false,
+      required: false,
+    },
     bio: {
       type: String,
       unique: false,
@@ -260,7 +267,7 @@ async function(accessToken, refreshToken, profile, done) {
   const { randomUUID } = new ShortUniqueId({ length: 8 });
   const randomShortId= randomUUID();
 
-  const user = await new User({ googleId: profile.id, name: profile.displayName, shortId:randomShortId, picture: profile["_json"].picture, email: profile["_json"].email  }).save();
+  const user = await new User({ googleId: profile.id, name: profile.displayName, shortId:randomShortId, picture: profile["_json"].picture, email: profile["_json"].email, banner: faker.image.urlPicsumPhotos({ height: 200, width: 600, blur: 0, grayscale: false  })  }).save();
     done(null, user);
   }
   }
@@ -284,7 +291,7 @@ async function(accessToken, refreshToken, profile, done) {
   const { randomUUID } = new ShortUniqueId({ length: 8 });
   const randomShortId= randomUUID();
 
-  const user = await new User({ twitterId: profile.id, name: profile.username, shortId:randomShortId, picture: profile["photos"][0].value.replace(/_normal(?=\.\w+$)/, "")}).save();
+  const user = await new User({ twitterId: profile.id, name: profile.username, shortId:randomShortId, picture: profile["photos"][0].value.replace(/_normal(?=\.\w+$)/, ""), banner: faker.image.urlPicsumPhotos({ height: 200, width: 600, blur: 0, grayscale: false  })}, ).save();
     done(null, user);
   }
   }

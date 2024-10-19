@@ -6,6 +6,7 @@ const path = require('path');
 const ShortUniqueId = require('short-unique-id');
 //grab the User model that's exported in passport.js
 const {Follower, Comment, Post, User, upload, passport} = require( "../passport.js")
+//for generating random data (for the purpose of routes.js, random banners for signed up users that sign up through the app)
 const { faker } = require( '@faker-js/faker');
 
 
@@ -67,7 +68,7 @@ router.post("/signup", function(req, res){
   const { randomUUID } = new ShortUniqueId({ length: 8 });
   const randomShortId= randomUUID();
 
-  User.register({name: req.body.name, email:req.body.email, shortId:randomShortId}, req.body.password, function(err){
+  User.register({name: req.body.name, email:req.body.email, shortId:randomShortId, banner: faker.image.urlPicsumPhotos({ height: 200, width: 600, blur: 0, grayscale: false }) /* add a random banner to registered user */}, req.body.password, function(err){
     if(err){
         console.log(err);
         res.send(JSON.stringify(err))
@@ -475,7 +476,7 @@ router.get("/followers/:shortid", async (req, res) => {
   }
 })
 
-/* //experimental populate route for populating the db
+//populate route for populating the db
 //using faker app: https://fakerjs.dev/api/
 router.get("/populate", async (req, res) => {
 
@@ -483,7 +484,7 @@ router.get("/populate", async (req, res) => {
   var quoteIndex = 0
 
   try {
-    //get the quotes data into quotes const
+    //get the quotes data into quotes array
     await fetch("https://gist.githubusercontent.com/camperbot/5a022b72e96c4c9585c32bf6a75f62d9/raw/e3c6895ce42069f0ee7e991229064f167fe8ccdc/quotes.json", {
       method: 'GET',
       })
@@ -500,8 +501,8 @@ router.get("/populate", async (req, res) => {
           console.error('Error:', error);
       });
   
-
-    for (let i=0; i<10; i++){
+    //create 20 users with 5 posts each
+    for (let i=0; i<20; i++){
       // Generate a short unique ID
       const { randomUUID } = new ShortUniqueId({ length: 8 });
       const randomShortId= randomUUID();
@@ -510,14 +511,15 @@ router.get("/populate", async (req, res) => {
         shortId: randomShortId,
         name: faker.person.fullName(),
         bio: faker.person.bio(),
-        uploadedpic: faker.image.urlLoremFlickr({ height: 128, width: 128, category: 'humans' })
+        uploadedpic: faker.image.urlLoremFlickr({ height: 128, width: 128, category: 'humans' }),
+        banner: faker.image.urlPicsumPhotos({ height: 200, width: 600, blur: 0, grayscale: false  }),
       });
       await newUser.save();
-      //make 10 posts with this user
-       for (let x=0; x<10; x++){ 
+      //make 5 posts with this user
+       for (let x=0; x<5; x++){ 
         const newPost = new Post({
             from: newUser,
-            date: faker.date.between({ from: '2024-08-01T00:00:00.000Z', to: '2024-09-25T00:00:00.000Z' }),
+            date: faker.date.between({ from: '2024-08-01T00:00:00.000Z', to: '2024-10-19T00:00:00.000Z' }),
             message: quotes[quoteIndex].quote,
         });
         await newPost.save();
@@ -532,7 +534,7 @@ router.get("/populate", async (req, res) => {
       res.send(err);
   }
 
-}) */
+})
 
 
 

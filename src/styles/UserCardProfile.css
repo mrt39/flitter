@@ -31,7 +31,6 @@
 .header-background {
   width: 100%;
   height: 200px;
-  background-color: #1DA1F2; 
 }
 
 .profile-content {
@@ -94,6 +93,12 @@
 .follow-link {
   text-decoration: none;
   color: #1DA1F2; 
+}
+
+.header-image{
+  width: 100%; /* scale the image to fit the container width */
+  height: auto; /* maintain the aspect ratio */
+  object-fit: contain; /* ensure the image is contained within the container */
 }
 
 /*below 450px width */ 
