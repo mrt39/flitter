@@ -257,6 +257,7 @@ const renderContentWithPreviews = (content, previewData) => {
                             className="usernameLinkOnPost"
                             onClick={(e) => {
                                 e.preventDefault();
+                                e.stopPropagation();
                                 handleProfileRouting(post.from[0]);
                             }}
                         >

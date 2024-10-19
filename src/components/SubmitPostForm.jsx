@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import {useState, useRef, useContext, useEffect} from 'react';
+import {useState, useRef, useContext} from 'react';
 import {AppStatesContext, UserContext} from '../App.jsx';
 import UserAvatar from './UserAvatar.jsx';
 import {Alert, Button, Box, Typography,  IconButton } from '@mui/material';

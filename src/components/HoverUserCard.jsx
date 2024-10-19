@@ -101,6 +101,7 @@ const HoverUserCard = ({ user, handleTooltipClose}) => {
           className="usernameLinkOnPost"
           onClick={(e) => {
               e.preventDefault();
+              e.stopPropagation();
               handleProfileRouting(displayedUserOnCard);
           }}
         >

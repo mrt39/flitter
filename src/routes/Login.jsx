@@ -8,6 +8,8 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Footer from "../components/Footer.jsx";
+import GoogleLogo from '../assets/google-logo.png'; // Adjust the path as needed
+import XLogo from '../assets/x-logo.png'; // Adjust the path as needed
 import '../styles/Login.css'
 
 
@@ -151,25 +153,25 @@ export default function Login() {
             </Button>
             
             <Button
-            id="googleSignInBtn"
+              id="googleSignInBtn"
               type="button"
               onClick={handleGoogleClick}
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
+              sx={{ mt: 3, mb: 2, }} 
+              startIcon={<img src={GoogleLogo} alt="Google logo" style={{ width: 24, height: 24 }} />}>
               Sign In With Google
             </Button>
 
             <Button
-            id="twitterSignInBtn"
+              id="twitterSignInBtn"
               type="button"
               onClick={handleTwitterClick}
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Sign In With Twitter
+              sx={{ mt: 3, mb: 2, }} 
+              startIcon={<img src={XLogo} alt="X logo" style={{ width: 24, height: 24 }} />}>
+              Sign In With X
             </Button>
 
             <Button

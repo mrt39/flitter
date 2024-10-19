@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { useState, useContext } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import {useNavigate } from 'react-router-dom';
 import { AppStatesContext, UserContext } from '../App.jsx';
 import SidebarLink from './SidebarLink.jsx';
 import EditProfileModal from './EditProfileModal.jsx';
@@ -80,9 +80,9 @@ const SidebarLeft = () => {
         <div className="sidebarLogo">
           <img src={LogoImg} alt="logo" />
         </div>
-        <Link className="sidebarLink" to="/">
+        <span onClick={() => navigate("/")}>
             <SidebarLink text="Home" Icon={HomeIcon} />
-        </Link>
+        </span>
         <SidebarLink text="Explore" Icon={SearchIcon} />
         <SidebarLink text="Notifications" Icon={NotificationsNoneIcon} />
         <SidebarLink text="Messages" Icon={MailOutlineIcon} />
