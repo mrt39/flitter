@@ -2,35 +2,32 @@
 import { useState, useEffect, useRef, useContext } from 'react';
 import { IconButton, Box } from '@mui/material';
 import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
-import FileInputPopover from "./Popover.jsx";
 import { AppStatesContext, UserContext} from '../App.jsx';
 
-export default function ImageUploadButton({ location, handleClose, setError}) {
+export default function ImageUploadButton({ location, handleClose, setError, fileInputRef, setSelectedImage, imageSelected, setImageSelected}) {
   const { setImgSubmittedNavbar, setImgSubmittedHomePage, isSubmittingPost, 
     imgSubmittedNavbar, imgSubmittedHomePage, setSnackbarOpenCondition, 
     setSnackbarOpen, setisSubmittingPost } = useContext(AppStatesContext);
 
-    const {currentUser} = useContext(UserContext); 
-
-  //use ref to be able to select an element within a function (for displaying popover)
-  const fileInputRef = useRef(null);
-
-  //anchor for popover
-  const [popOveranchorEl, setPopOverAnchorEl] = useState(null);
+  const {currentUser} = useContext(UserContext); 
 
   const [imageFile, setImageFile] = useState(null);
 
-  //trigger when user selects an image
-  const [imageSelected, setImageSelected] = useState(false);
 
+  //use ref to be able to select an element within a function (for activating file input)
+  /* const fileInputRef = useRef(null); */
   //when the attachment icon is clicked, click on the hidden input (type=file) element
   function handleAttachmentClick() {
-      fileInputRef.current.click(); // Trigger file input
+      fileInputRef.current.click(); // trigger file input
   }
 
   //when user selects an image and changes the value of the input, change the state 
   function handleFileInputChange(event){
       const selectedFile = event.target.files;
+      if (selectedFile) {
+        setSelectedImage(URL.createObjectURL(selectedFile[0])); // create an url for the selected image (for image preview)
+        setImageSelected(true);
+      }
       //check the filetype to ensure it's an image. throw error if it isn't
       if (selectedFile[0]["type"] != "image/x-png" && selectedFile[0]["type"] != "image/png" && selectedFile[0]["type"] != "image/jpeg") {
         console.error("Only image files can be attached!")
@@ -49,32 +46,7 @@ export default function ImageUploadButton({ location, handleClose, setError}) {
       }
     }
 
-  //when an image is selected, activate the popover
-  useEffect(() => {
-      //only trigger if an image is selected
-      if (imageSelected){
-        var attachmentIcon = null
-        // select the attachment button next to the message input box and make it the anchor for the popover to be displayed over
-        // if the image is selected from navbar, attach the button to navbar. if from homepage, attach it to homepage.
-        {location === 'navbar' ? 'sendAnImgButtonNavbar' : "sendAnImgButtonHomepage"}
-        if (document.querySelector('#sendAnImgButtonNavbar')){
-          attachmentIcon = document.querySelector('#sendAnImgButtonNavbar')
-        } else {
-          attachmentIcon = document.querySelector('#sendAnImgButtonHomepage')
-        }
-        setPopOverAnchorEl(attachmentIcon)
-      }
-  }, [imageSelected]);
 
-  //function for sending the image
-  function handleImgSendBtn() {
-      //use two different states for posting image from navbar form and homepage form, as otherwise they clash while posting
-      if (location === "navbar") {
-          setImgSubmittedNavbar(true);
-      } else if (location === "homepage") {
-          setImgSubmittedHomePage(true);
-      }
-  }
 
   //handle sending image
   useEffect(() => {
@@ -99,6 +71,8 @@ export default function ImageUploadButton({ location, handleClose, setError}) {
                 await result.json();
                 console.log("Image sent successfully!");
                 setImageFile(null);
+                setSelectedImage(null);
+                setImageSelected(false);
             } else {
                 throw new Error(result);
             }
@@ -132,7 +106,9 @@ export default function ImageUploadButton({ location, handleClose, setError}) {
         ref={fileInputRef}
         className='fileInputMessageBox' 
         style={{ display: 'none' }} // hide the input
-        onChange={handleFileInputChange}
+        onChange={(event) => {
+          handleFileInputChange(event); // trigger when user selects an image
+        }}
         accept="image/*" 
       />
       <IconButton
@@ -140,21 +116,11 @@ export default function ImageUploadButton({ location, handleClose, setError}) {
         onClick={handleAttachmentClick}
         disabled={isSubmittingPost}
         aria-label="upload picture"
+        sx={{ display: imageSelected?"none":"inline-flex" }} // hide the button when an image is selected
       >
         <ImageOutlinedIcon sx={{ color: isSubmittingPost? "#B0B0B0":'#1da1f2' }} />
       </IconButton>
 
-      {/*render popover if image is selected */}
-      {imageSelected && (
-        <FileInputPopover 
-        popOveranchorEl={popOveranchorEl}
-        imgSubmittedHomePage={imgSubmittedHomePage}
-        imgSubmittedNavbar = {imgSubmittedNavbar}
-        setPopOverAnchorEl={setPopOverAnchorEl}
-        setImageSelected={setImageSelected}
-        handleImgSendBtn={handleImgSendBtn}
-        />
-      )}
     </Box>
   );
 }

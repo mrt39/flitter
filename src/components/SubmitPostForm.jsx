@@ -1,10 +1,11 @@
 /* eslint-disable react/prop-types */
-import {useState, useRef, useContext} from 'react';
+import {useState, useRef, useContext, useEffect} from 'react';
 import {AppStatesContext, UserContext} from '../App.jsx';
 import UserAvatar from './UserAvatar.jsx';
 import {Alert, Button, Box, Typography,  IconButton } from '@mui/material';
 import CircularProgress, { circularProgressClasses } from '@mui/material/CircularProgress';
 import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
+import CloseIcon from '@mui/icons-material/Close';
 import { clean } from 'profanity-cleaner';
 
 import ImageUploadButton from "../components/ImageUploadButton.jsx";
@@ -17,7 +18,7 @@ import Picker from '@emoji-mart/react'
 export default function SubmitPostForm({location, handleClose }) {
   const { 
     isSubmittingPost, setisSubmittingPost , pressedSubmitPost, 
-    setPressedSubmitPost, darkModeOn
+    setPressedSubmitPost, darkModeOn, setImgSubmittedNavbar, setImgSubmittedHomePage
   } = useContext(AppStatesContext);
 
   const {currentUser} = useContext(UserContext); 
@@ -138,146 +139,166 @@ export default function SubmitPostForm({location, handleClose }) {
       } 
   } */
 
+
+
+    //handle image preview and sending image
+
+    //true when user selects an image
+    const [imageSelected, setImageSelected] = useState(false);
+    //manage the selected image
+    const [selectedImage, setSelectedImage] = useState(null);
+    //use ref to be able to select an element within a function (for activating file input in ImageUploadButton)
+    const fileInputRef = useRef(null);
+
+    //remove the selected image
+    function handleRemoveImage() {
+      setSelectedImage(null);
+      setImageSelected(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = ''; // Reset the file input value
+      }
+    }
+
+    //function for sending the image
+    function handleImgSendBtn(event) {
+      event.preventDefault();
+      //use two different states for posting image from navbar form and homepage form, as otherwise they clash while posting
+      if (location === "navbar") {
+          setImgSubmittedNavbar(true);
+      } else if (location === "homepage") {
+          setImgSubmittedHomePage(true);
+      }
+  }
+
   return (
     <>
     {/* <button onClick={populate}>POPULATE</button> */}
-
     <Box className="submitPost-form-container">
-
-    <Box component="form" className="submitPost-form">
-    
-      <UserAvatar
-        user={currentUser? currentUser: ""}
-      />
-      {/* have different width on navbar */}
-      <Box sx={{ width: "100%" }} className="submitPostFormtextAreacontainer">
-        <textarea
-          ref={textareaRef} 
-          required
-          //if dark theme on, add dark-theme class
-          className={`
-            submitPost-input 
-            ${darkModeOn ? 'dark-mode' : ''} 
-            ` } 
-          placeholder={location === "homepage"?"What's on your mind?": "Send a Post."}
-          value={value}
-          onChange={(e) => {
-            handleChange(e);  
-            autoResize();     // adjust the size on input change
-          }}
-          onFocus={() => setIsFocused(true)}  
-          onBlur={() => setIsFocused(false)}   
-        />
-        
-
-        <Box className={`
-            submitPost-actions 
-            ${isFocused ?  //display border at the bottom of the textarea when focused
-                darkModeOn ?
-                'submitPost-actions-border-top-dark' 
-                : 
-                'submitPost-actions-bottom-top'
-              :
-              ''}` } >
-          <div className='submitPostFormIconContainer'>
-            <ImageUploadButton
-              location={location} 
-              handleClose={handleClose}
-              setError={setError}
-            />
-            <IconButton
-              onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-              className="emoji-button"
-              type="button" // prevent this button from triggering the form submission
-            >
-              <SentimentSatisfiedAltIcon sx={{ color: isSubmittingPost? "#B0B0B0":'#1da1f2' }} />
-
-            </IconButton>
-          </div>
-
-          <div className="characterCounterAndReplyBtnContainer">
-            {/* character counter */}
-            <Box sx={{ position: 'relative', display: 'inline-flex', marginLeft: 2 }}>
-              <Box sx={{ position: 'relative', display: 'inline-flex', alignItems: "center"}}>
-                {/* background Circle (Gray) */}
-                <CircularProgress
-                  variant="determinate"
-                  value={100} // always fully rendered for the gray background
-                  size={24}
-                  thickness={4}
-                  sx={{
-                    color: darkModeOn ? '#424242' : '#d3d3d3', // gray color for unfilled part
-                  }}
-                />
-                
-                {/* foreground circle (filling with blue/yellow/red) */}
-                <CircularProgress
-                  variant="determinate"
-                  value={100 - (remainingCharacters / maxCharacters) * 100} // filling progress based on remaining characters
-                  size={24}
-                  thickness={4}
-                  sx={{
-                    position: 'absolute', // stacking on top of the gray circle
-                    left: 0,
-                    color: remainingCharacters < 0 ? '#e0245e' : remainingCharacters <= 20 ? '#f5a623' : '#1da1f2', // filled part: red/yellow/blue
-                    [`& .${circularProgressClasses.circle}`]: {
-                      strokeLinecap: 'round',
-                    },
-                  }}
-                />
-              </Box>
-              {remainingCharacters < 20 && (
-                <Typography
-                  variant="caption"
-                  component="div"
-                  sx={{
-                    position: 'absolute',
-                    left: '50%',
-                    top: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    color: remainingCharacters < 0 ? '#e0245e' : 'inherit',
-                  }}
-                >
-                  {remainingCharacters}
-                </Typography>
-              )}
-          </Box>
-          <Button
-              variant="contained"
-              type="submit" // make this button the form submission button
-              onClick={handleSubmit}
-              className="reply-button"
-              disabled={remainingCharacters<0 ||isSubmittingPost}
-              sx={{
-                backgroundColor: '#1da1f2',
-                fontWeight: 'bold',
-                fontSize: '15px',
-                color: 'white',
-                textTransform: 'none',
-                borderRadius: '9999px',
-                padding: '4px 16px', 
-                '&:hover': {
-                  backgroundColor: '#1a91da',
-                },
+      <Box component="form" className="submitPost-form">
+        <UserAvatar user={currentUser ? currentUser : ""} />
+        {/* have different width on navbar */}
+        <Box sx={{ width: "100%" }} className="submitPostFormtextAreacontainer">
+          {selectedImage ? ( //conditionally render the image preview if an image is selected
+            <Box className="image-preview-container">
+              <img src={selectedImage} alt="Selected" className="image-preview" />
+              <IconButton className="remove-image-button" onClick={handleRemoveImage}>
+                <CloseIcon />
+              </IconButton>
+            </Box>
+          ) : (
+            <textarea
+              ref={textareaRef}
+              required
+              className={`submitPost-input ${darkModeOn ? 'dark-mode' : ''}`}
+              placeholder={location === "homepage" ? "What's on your mind?" : "Send a Post."}
+              value={value}
+              onChange={(e) => {
+                handleChange(e);
+                autoResize(); // adjust the size on input change
               }}
-            >
-              Post
-          </Button>
-        </div>
-        </Box>
-        {showEmojiPicker && (
-          <Box className="emoji-picker">
-            <Picker data={data} onEmojiSelect={handleEmojiSelect} theme={darkModeOn? "dark": "light"} />
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setIsFocused(false)}
+            />
+          )}
+          {/* //display border at the bottom of the textarea when focused */}
+          <Box className={`submitPost-actions ${isFocused ? darkModeOn ? 'submitPost-actions-border-top-dark' : 'submitPost-actions-bottom-top' : ''}`}>
+            <div className='submitPostFormIconContainer'>
+              {/* can't remove the imageupload button render when an image is selected, otherwise the image posting logic gets interrupted */}
+              <ImageUploadButton
+                location={location}
+                handleClose={handleClose}
+                setError={setError}
+                fileInputRef={fileInputRef}
+                setSelectedImage={setSelectedImage} 
+                imageSelected={imageSelected}
+                setImageSelected={setImageSelected}
+              />
+              {!selectedImage && ( //conditionally render emoji button only if no image is selected
+                <IconButton
+                  onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                  className="emoji-button"
+                  type="button" // prevent this button from triggering the form submission
+                >
+                  <SentimentSatisfiedAltIcon sx={{ color: isSubmittingPost ? "#B0B0B0" : '#1da1f2' }} />
+                </IconButton>
+              )}
+            </div>
+            <div className="characterCounterAndReplyBtnContainer">
+              {!selectedImage && ( //conditionally render character counter only if no image is selected
+                //character counter
+                <Box sx={{ position: 'relative', display: 'inline-flex', marginLeft: 2 }}>
+                  <Box sx={{ position: 'relative', display: 'inline-flex', alignItems: "center" }}>
+                    {/* background Circle (gray) */}
+                    <CircularProgress
+                      variant="determinate" 
+                      value={100} // always fully rendered for the gray background
+                      size={24}
+                      thickness={4}
+                      sx={{ color: darkModeOn ? '#424242' : '#d3d3d3' }} // gray color for unfilled part
+                    />
+                    {/* foreground circle (filling with blue/yellow/red) */}
+                    <CircularProgress
+                      variant="determinate"
+                      value={100 - (remainingCharacters / maxCharacters) * 100} // filling progress based on remaining characters
+                      size={24}
+                      thickness={4}
+                      sx={{
+                        position: 'absolute', // stacking on top of the gray circle
+                        left: 0,
+                        color: remainingCharacters < 0 ? '#e0245e' : remainingCharacters <= 20 ? '#f5a623' : '#1da1f2', // filled part: red/yellow/blue
+                        [`& .${circularProgressClasses.circle}`]: { strokeLinecap: 'round' },
+                      }}
+                    />
+                  </Box>
+                  {remainingCharacters < 20 && (
+                    <Typography
+                      variant="caption"
+                      component="div"
+                      sx={{
+                        position: 'absolute',
+                        left: '50%',
+                        top: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        color: remainingCharacters < 0 ? '#e0245e' : 'inherit',
+                      }}
+                    >
+                      {remainingCharacters}
+                    </Typography>
+                  )}
+                </Box>
+              )}
+              <Button
+                variant="contained"
+                type="submit" // make this button the form submission button
+                onClick={selectedImage ? handleImgSendBtn : handleSubmit} // call handleImgSendBtn if an image is selected
+                className="reply-button"
+                disabled={remainingCharacters < 0 || isSubmittingPost}
+                sx={{
+                  backgroundColor: '#1da1f2',
+                  fontWeight: 'bold',
+                  fontSize: '15px',
+                  color: 'white',
+                  textTransform: 'none',
+                  borderRadius: '9999px',
+                  padding: '4px 16px',
+                  '&:hover': { backgroundColor: '#1a91da' },
+                }}
+              >
+                Post
+              </Button>
+            </div>
           </Box>
-        )}
+          {showEmojiPicker && (
+            <Box className="emoji-picker">
+              <Picker data={data} onEmojiSelect={handleEmojiSelect} theme={darkModeOn ? "dark" : "light"} />
+            </Box>
+          )}
+        </Box>
       </Box>
     </Box>
-    </Box>
+    {error && <Alert severity="error">{error.message}</Alert>}
+  </>
+);
 
-
-
-      {error && <Alert severity="error">{error.message}</Alert>}
-    </>
-  );
 }
 

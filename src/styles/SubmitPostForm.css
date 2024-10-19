@@ -88,4 +88,26 @@
     border-top: 1px solid rgb(239, 243, 244);
   }
   
+
+  /* image preview */
+  .image-preview-container {
+    position: relative;
+    max-width: 100%; 
+    overflow: hidden; 
+  }
   
+  .image-preview {
+    width: 100%; /* scale the image to fit the container width */
+    height: auto; /* maintain the aspect ratio */
+    object-fit: contain; /* ensure the image is contained within the container */
+  }
+  
+  .remove-image-button {
+    position: absolute !important;
+    top: 8px;
+    right: 8px;
+    background-color: rgba(0, 0, 0, 0.5) !important; 
+    color: white !important;
+    z-index: 1; /*ensure the button is above the image */
+  }
+

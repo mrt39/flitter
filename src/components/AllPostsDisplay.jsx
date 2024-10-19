@@ -205,7 +205,7 @@ const AllPostsDisplay = ({fromThisUser}) => {
 
   //filter messages based on activeTab before rendering (if activeTab is 'following', only display messages from users the currentUser is following)
     const messagesToDisplay = activeTab === 'following'
-    ? filteredMessages.filter(post => currentUser.followingtheseID.includes(post.from[0]._id))
+    ? filteredMessages.filter(post => post && post.from && /* ensure post and post.from is defined before rendering. important after image uploading */ currentUser.followingtheseID.includes(post.from[0]._id))
     : filteredMessages;
 
   return (
@@ -226,14 +226,15 @@ const AllPostsDisplay = ({fromThisUser}) => {
         {/* only display if messagesToDisplay is populated. */}
         {messagesToDisplay && messagesToDisplay.length > 0 ? 
         //displaying posts 10 at a time
-        (messagesToDisplay.slice(0, visiblePosts).map(post => (
+        (messagesToDisplay.slice(0, visiblePosts).map(post => 
+          post &&( // ensure post is defined before rendering ListItem and PostDisplay. important when image uploading takes time
         <ListItem key={post._id} className={`post-item ${darkModeOn ? 'dark-mode' : ''}`} alignItems="flex-start">
           <PostDisplay
             post={post}
           />
         </ListItem>
-          
-        ))
+          )
+        )
         ) : (
           <div className={`no-posts-available-text-container ${darkModeOn ? 'dark-mode' : ''}`}>
             <p>No posts available.</p>
