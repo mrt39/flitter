@@ -6,18 +6,14 @@ import SidebarLink from './SidebarLink.jsx';
 import EditProfileModal from './EditProfileModal.jsx';
 import UserAvatar from './UserAvatar.jsx';
 import SubmitPostModal from './SubmitPostModal.jsx';
-import {Button, Menu, MenuItem, ListItemIcon } from '@mui/material';
+import {Button, Menu, MenuItem, ListItemIcon, IconButton, Card, CardContent } from '@mui/material';
 //icons
 import HomeIcon from '@mui/icons-material/Home';
-import SearchIcon from '@mui/icons-material/Search';
-import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
-import MailOutlineIcon from '@mui/icons-material/MailOutline';
-import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
-import ListAltIcon from '@mui/icons-material/ListAlt';
 import PermIdentityIcon from '@mui/icons-material/PermIdentity';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import Logout from '@mui/icons-material/Logout';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import Brightness2Icon from '@mui/icons-material/Brightness2'; 
+import WbSunnyIcon from '@mui/icons-material/WbSunny';
 
 import LogoImg from '../assets/logo.png';
 
@@ -30,7 +26,7 @@ import '../styles/SidebarLeft.css';
 
 const SidebarLeft = () => {
 
-    const {darkModeOn, handleProfileRouting} = useContext(AppStatesContext); 
+    const {darkModeOn, toggleDarkTheme, handleProfileRouting} = useContext(AppStatesContext); 
     const {currentUser, setCurrentUser} = useContext(UserContext);
 
 
@@ -83,16 +79,14 @@ const SidebarLeft = () => {
         <span onClick={() => navigate("/")}>
             <SidebarLink text="Home" Icon={HomeIcon} />
         </span>
-        <SidebarLink text="Explore" Icon={SearchIcon} />
-        <SidebarLink text="Notifications" Icon={NotificationsNoneIcon} />
-        <SidebarLink text="Messages" Icon={MailOutlineIcon} />
-        <SidebarLink text="Bookmarks" Icon={BookmarkBorderIcon} />
-        <SidebarLink text="Lists" Icon={ListAltIcon} />
+
         <span onClick={() => handleProfileRouting(currentUser)} >
             <SidebarLink text="Profile" Icon={PermIdentityIcon} />
         </span>
-            <SidebarLink text="More" Icon={MoreHorizIcon}/>
 
+        <span onClick={toggleDarkTheme} >
+            <SidebarLink text="Theme" Icon={darkModeOn ? Brightness2Icon : WbSunnyIcon} />
+        </span>
         {/* use different react components for forms in homepage and navbar in order to seperate concerns and avoid state/post logic clashing */}
         <SubmitPostModal/>
 

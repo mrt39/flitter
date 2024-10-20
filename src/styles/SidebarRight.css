@@ -2,7 +2,7 @@
     width: 450px;
     min-width: 250px;
     padding: 20px 20px;
-    margin: 0;
+    margin-top: 12px;
 }
 
 /* below 1050px width */
@@ -40,6 +40,11 @@
     --Paper-shadow: none !important; 
     width: 350px;
     text-align: left;
+  }
+
+  .noUsersToFollow-text{
+    padding-left: 16px;
+    padding-bottom: 16px;
   }
 
   .sidebarRight.dark-mode .sidebarRight-section-card {

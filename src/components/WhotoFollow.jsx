@@ -143,7 +143,7 @@ const WhotoFollow = () => {
               </Link>
             ))}
             {sortedUsers.length === 0 && 
-                <Typography variant="body2" component="div" >
+                <Typography variant="body2" className='noUsersToFollow-text' component="div" >
                     No users to follow.
                 </Typography>
             }
