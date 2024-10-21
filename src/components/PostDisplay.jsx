@@ -297,7 +297,7 @@ const renderContentWithPreviews = (content, previewData) => {
                                 size="small"
                                  //as "tempLiked" becomes false in 0.3 seconds, liked class will be removed from the button, thus preventing multiple posts from playing the animation at the same time 
                                 className={`icon-button like-button ${currentUserLikedPost && tempLiked ? 'liked' : ''}`}
-
+                                disabled={pressedLikePost}
                             >
 
                                 {post.likedby.findIndex(u=>u._id.toString()===currentUser._id.toString())>-1 ?  //find if post is already liked by the user, if user is already in likedby array
