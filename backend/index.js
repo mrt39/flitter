@@ -48,8 +48,8 @@ app.use(session({
     proxy: true, //add this for production
     store: store, //store to mongodb
     cookie: {
-      secure: false, // Set to true in production if served over HTTPS, "false" for development
-      sameSite: 'Lax' // "none" for production, "strict" for development, "Lax" for twitter oAuth
+      secure: true, // Set to true in production if served over HTTPS, "false" for development
+      sameSite: 'none' // "none" for production, "strict" for development, "Lax" for twitter oAuth
   }
 }));
 

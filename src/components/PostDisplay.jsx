@@ -274,7 +274,7 @@ const renderContentWithPreviews = (content, previewData) => {
             )}
             secondary={(
                 <span>
-                    <Typography component="span" variant="body1" className={`post-content ${darkModeOn ? 'dark-mode' : ''}`}
+                    <Typography component="span" variant="body1" className={`post-content ${darkModeOn ? 'dark-mode' : ''}${post.image ? 'center-image' : ''}`}
                     >
                         {post.image ? (
                             <img className="postImg" src={post.image} alt="image" />

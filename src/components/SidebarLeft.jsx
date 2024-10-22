@@ -6,7 +6,7 @@ import SidebarLink from './SidebarLink.jsx';
 import EditProfileModal from './EditProfileModal.jsx';
 import UserAvatar from './UserAvatar.jsx';
 import SubmitPostModal from './SubmitPostModal.jsx';
-import {Button, Menu, MenuItem, ListItemIcon, IconButton, Card, CardContent } from '@mui/material';
+import {Button, Menu, MenuItem, ListItemIcon} from '@mui/material';
 //icons
 import HomeIcon from '@mui/icons-material/Home';
 import PermIdentityIcon from '@mui/icons-material/PermIdentity';
