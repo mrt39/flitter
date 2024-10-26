@@ -1,8 +1,8 @@
 # Flitter- The Social Media APP
-
-<h2>🖥️ Live Preview</h2>
 ![preview](https://github.com/user-attachments/assets/c9a9b560-a30d-4e0a-92c6-8e1221223614)
 
+
+<h2>🖥️ Live Preview</h2>
 
 https://flitter-five.vercel.app/
 
