@@ -222,6 +222,7 @@ const EditProfileModal = ({ open, handleClose }) => {
                     id="image"
                     name="image"
                     accept="image/*"
+                    disabled={loading || currentUser.email === "demoacc@demoacc.com"}
                     onChange={handleImageChange}
                   />
                   <label htmlFor="image" className="cameraIconLabel">
