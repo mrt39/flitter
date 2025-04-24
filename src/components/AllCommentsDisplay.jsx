@@ -1,20 +1,17 @@
 /* eslint-disable react/prop-types */
-import { useContext, useState, useEffect } from "react";
-import {AppStatesContext } from '../App.jsx';
+import { useState, useEffect } from "react";
 import CommentDisplay from './CommentDisplay.jsx';
 import {ListItem,} from '@mui/material';
 import Box from '@mui/material/Box';
 import { CircularProgress, List} from '@mui/material';
 import InfiniteScroll from 'react-infinite-scroll-component'; //infinite scroll 
+import { useUI } from '../contexts/UIContext.jsx';
 import '../styles/AllCommentsDisplay.css'
 
 
 const AllCommentsDisplay = ({post}) => {
-
-
-  const [sortedComments, setSortedComments] = useState([])
-
-  const {darkModeOn, appContainerRef} = useContext(AppStatesContext); 
+  const [sortedComments, setSortedComments] = useState([]);
+  const { darkModeOn, appContainerRef } = useUI();
 
   useEffect(() => {
     //sort comments by dates, descending order

@@ -1,28 +1,29 @@
 /* eslint-disable react/prop-types */
 import { Link as RouterLink } from "react-router-dom";
-import { useState, useEffect, useContext  } from 'react';
-import { UserContext, AppStatesContext } from '../App.jsx';
+import { useNavigate } from 'react-router-dom';
+import { useState, useEffect} from 'react';
+import { useAuth } from '../contexts/AuthContext.jsx';
+import { useUI } from '../contexts/UIContext.jsx';
+import { loginUser } from '../utilities/authService.js';
 import { Navigate } from "react-router-dom";
 import { Avatar, Button, CssBaseline, TextField, Grid, Box } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Footer from "../components/Footer.jsx";
-import GoogleLogo from '../assets/google-logo.png'; // Adjust the path as needed
-import XLogo from '../assets/x-logo.png'; // Adjust the path as needed
+import GoogleLogo from '../assets/google-logo.png';
+import XLogo from '../assets/x-logo.png';
 import '../styles/Login.css'
 
 
 export default function Login() {
 
 
-  // Passing the UserContext defined in app.jsx
-  const { currentUser} = useContext(UserContext); 
+  //use context hooks
+  const { currentUser } = useAuth(); 
+  const { setSnackbarOpenCondition, setSnackbarOpen } = useUI(); 
 
-  const { setSnackbarOpenCondition, setSnackbarOpen } = useContext(AppStatesContext); 
-
-
-
+  const navigate = useNavigate();
   const [clickedLogin, setClickedLogin] = useState(false);
   const [loginData, setLoginData] = useState({ });
 
@@ -53,45 +54,30 @@ export default function Login() {
   };
 
   useEffect(() => {
-    async function loginUser() {
-
-      fetch(import.meta.env.VITE_BACKEND_URL+'/login', {
-          method: "POST",
-          body: JSON.stringify({ email: loginData.email, password: loginData.password}), 
-          headers: {
-              Accept: 'application/json',
-              'Content-Type': 'application/json',
-              "Access-Control-Allow-Origin": "*",
-          },
-          credentials:"include" //required for sending the cookie data
-      })
-      .then(async result => {
-        if (result.ok) {
-          let response = await result.json();
-          console.warn(response);
-          setClickedLogin(false);
-          //redirect to the external URL
-            window.location.replace(import.meta.env.VITE_FRONTEND_URL); 
-        }else{
-            if (result.status === 401) {
-              console.error("Wrong e-mail or password!")
-              setSnackbarOpenCondition("wrongLoginDeets")
-              setSnackbarOpen(true)
-            }else{
-              throw new Error(result);
-          }
-          setClickedLogin(false);
-        }  
-      })
-      .catch(error =>{
-        console.error("Error:" + error)
-      })
- 
+    // Redirect if already logged in
+    if (currentUser) {
+      navigate('/');
+      return;
     }
-    /* only trigger when message is sent */
-    if (clickedLogin ===true){
-      loginUser();
-    } 
+    
+    if (clickedLogin) {
+      loginUser(loginData.email, loginData.password)
+        .then(data => {
+          // Check if login was successful
+          if (data) {
+            // Login successful, set currentUser in context
+            window.location.reload();
+          } else {
+            throw new Error('Login failed');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          setSnackbarOpenCondition("wrongLoginDeets");
+          setSnackbarOpen(true);
+          setClickedLogin(false);
+        });
+    }
   }, [clickedLogin]);
 
 

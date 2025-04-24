@@ -1,39 +1,36 @@
 /* eslint-disable react/prop-types */
-import { useContext, useState, useEffect } from "react";
-import { UserContext, AppStatesContext} from '../App.jsx';
-import { Button} from '@mui/material';
-
+import { useState, useEffect } from "react";
+import { Button } from '@mui/material';
+import { useAuth } from '../contexts/AuthContext.jsx';
+import { useUI } from '../contexts/UIContext.jsx';
+import { useFollow } from '../contexts/FollowContext.jsx';
 import '../styles/FollowButton.css';
 
 const FollowButton = ({ displayedUserOnCard, location, firstRender, handleTooltipClose }) => {
+  const { currentUser } = useAuth();
+  const { darkModeOn } = useUI();
+  const { pressedFollow, setPressedFollow, loadingFollow, setLoadingFollow, setUsertoFollow, userRefreshPending } = useFollow();
 
-    const { currentUser} = useContext(UserContext); 
-
-    //pass the follow states from AppStatesContext in App.jsx
-    //sending a post request within the tooltip and its child components disrupts the display of the tooltip and/or the follow logic, so the follow logic is defined in App.jsx to prevent that.
-    const {darkModeOn, pressedFollow, setPressedFollow, loadingFollow, setLoadingFollow, setUsertoFollow} = useContext(AppStatesContext); 
-
-    const [isFollowing, setIsFollowing] = useState(false)
-
-    const [isHovered, setIsHovered] = useState(false);
+  const [isFollowing, setIsFollowing] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
 
     //decide isFollowing state
     useEffect(() => {
-        if(displayedUserOnCard.followedbytheseID.includes(currentUser._id)){
+        if(currentUser.followingtheseID && currentUser.followingtheseID.includes(displayedUserOnCard._id)){
             setIsFollowing(true)
-            //if the followbutton is rendered within the profile page, set the isFollowing state to false to prevent the follow button from displaying the wrong state
+/*             //if the followbutton is rendered within the profile page, set the isFollowing state to false to prevent the follow button from displaying the wrong state
             //check if the usercardprofile component is rendered for the first time as well, to prevent the follow button from displaying the wrong state
             if(location === 'profilePage'&&firstRender===false){
                 setIsFollowing(false)
-            }
+            } */
         }else{
             setIsFollowing(false)
-            if(location === 'profilePage'&&firstRender===false){
+/*             if(location === 'profilePage'&&firstRender===false){
               setIsFollowing(true)
-          }
+          } */
         }
-    }, [pressedFollow]);
+    }, [loadingFollow, currentUser]);
 
 
 
@@ -59,7 +56,7 @@ const FollowButton = ({ displayedUserOnCard, location, firstRender, handleToolti
         variant="outlined"
         size="small"
         onClick={handleFollow}
-        disabled={loadingFollow}
+        disabled={loadingFollow || userRefreshPending}
         className="followButton"
         sx={{
           borderRadius: '9999px', 

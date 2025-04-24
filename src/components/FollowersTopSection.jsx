@@ -1,22 +1,20 @@
 /* eslint-disable react/prop-types */
-import { useContext } from 'react';
 import { useLocation, useNavigate} from "react-router-dom";
-import { AppStatesContext } from '../App.jsx';
 import { Typography, IconButton } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-
+import { useUI } from '../contexts/UIContext.jsx';
 import '../styles/FollowersTopSection.css';
 
 
 const FollowersTopSection = ({currentPathFollowers, setCurrentPathFollowers}) => {
 
-    const {darkModeOn} = useContext(AppStatesContext); 
+    const { darkModeOn } = useUI();
 
     //get the shortid of the user from the current URL
     const location = useLocation();
-    // Get the pathname from the location object
+    //get the pathname from the location object
     const path = location.pathname;
-    // Extract the last 10 characters (either "following" or "followers")
+    //extract the last 10 characters (either "following" or "followers")
     const urlWithoutCurrentpath = path.slice(0, -10);
 
     const navigate = useNavigate(); 

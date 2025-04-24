@@ -1,24 +1,22 @@
 /* eslint-disable react/prop-types */
-import { useContext, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { AppStatesContext } from '../App.jsx';
 import PostDisplay from '../components/PostDisplay.jsx';
 import CommentForm from '../components/CommentForm.jsx';
 import AllCommentsDisplay from '../components/AllCommentsDisplay.jsx';
 import { CircularProgress, Box, Alert, AppBar, Toolbar, IconButton, Typography } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { useUI } from '../contexts/UIContext.jsx';
+import { usePost } from '../contexts/PostContext.jsx';
+import { getSinglePost } from '../utilities/postService.js';
 import '../styles/SingularPostPage.css'
 
-
-
-
 const SingularPostPage = ({}) => {
-
-
-  const { refreshPosts, darkModeOn} = useContext(AppStatesContext); 
+  //use context hooks
+  const { refreshPosts } = usePost();
+  const { darkModeOn } = useUI();
 
   const [singularPost, setSingularPost] = useState(null)
-
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -35,33 +33,21 @@ const SingularPostPage = ({}) => {
     navigate('/'); // Navigate back to home page
   };
 
-
   useEffect(() => {
-    const getSingularPost = () => {
-      fetch(import.meta.env.VITE_BACKEND_URL+'/getsingularpost/'+last24Chars, {
-      method: 'GET',
-      })
-      .then(response => {
-          if (response.ok) {
-          return response.json(); // Parse JSON when the response is successful
-          }
-          throw new Error('Network response was not ok.');
-      })
-      .then(data => {
+    const getSingularPostFromApi = () => {
+      getSinglePost(last24Chars)
+        .then(data => {
           setSingularPost(data)
           setLoading(false)
-      })
-      .catch(error => {
+        })
+        .catch(error => {
           setError(error.message);
           console.error('Error:', error);
           setLoading(false)
-      });
+        });
     };
-    getSingularPost();
-
-    }, [refreshPosts]); 
- 
-
+    getSingularPostFromApi();
+  }, [refreshPosts]); 
 
   if (loading) {
     return (
@@ -72,7 +58,6 @@ const SingularPostPage = ({}) => {
       </div>
     )
   }
-
   
   if (error) {
     return <Alert severity="error">{error}</Alert>;
@@ -113,6 +98,4 @@ const SingularPostPage = ({}) => {
   );
 };
 
-
 export default SingularPostPage;
-

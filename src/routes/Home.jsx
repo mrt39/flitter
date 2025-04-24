@@ -1,21 +1,15 @@
 /* eslint-disable react/prop-types */
 import '../styles/Home.css'
-import {useContext} from 'react'
-import { UserContext, AppStatesContext } from '../App.jsx';
+import { useAuth } from '../contexts/AuthContext.jsx';
+import { useUI } from '../contexts/UIContext.jsx';
 import SubmitPostForm from '../components/SubmitPostForm.jsx';
 import AllPostsDisplay from '../components/AllPostsDisplay.jsx';
 import HomepageTopSection from '../components/HomepageTopSection.jsx';
 
-
-
-
-
 function Home() {
-
-  //pass the UserContext defined in app.jsx
-  const { currentUser } = useContext(UserContext); 
-  const { darkModeOn} = useContext(AppStatesContext); 
-
+  //use context hooks
+  const { currentUser } = useAuth(); 
+  const { darkModeOn } = useUI(); 
 
   return (
     <>

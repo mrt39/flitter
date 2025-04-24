@@ -1,7 +1,8 @@
 /* eslint-disable react/prop-types */
 import { Link as RouterLink, useNavigate} from "react-router-dom";
-import { useState, useEffect, useContext } from 'react'
-import { AppStatesContext } from '../App.jsx';
+import { useState, useEffect} from 'react'
+import { useUI } from '../contexts/UIContext.jsx';
+import { registerUser } from '../utilities/authService.js';
 import '../styles/SignUp.css'
 import { Avatar, Button, CssBaseline, TextField, Grid, Box } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
@@ -15,7 +16,7 @@ export default function SignUp() {
 
   const navigate = useNavigate(); 
 
-  const {setSnackbarOpenCondition, setSnackbarOpen } = useContext(AppStatesContext); 
+  const { setSnackbarOpenCondition, setSnackbarOpen } = useUI();  
 
   const [submitted, setSubmitted] = useState(false);
   const [signUpData, setSignUpData] = useState({ });
@@ -83,56 +84,33 @@ export default function SignUp() {
 
 
   useEffect(() => {
-      async function registerUser() {
-          //on submit, clean the word with the profanity cleaner package
-          //https://www.npmjs.com/package/profanity-cleaner
-          const filteredName = await clean(signUpData.name, { keepFirstAndLastChar: true }); 
+    if (submitted) {
+      //on submit, clean the word with the profanity cleaner package
+      //https://www.npmjs.com/package/profanity-cleaner
+      const filteredName = clean(signUpData.name, { keepFirstAndLastChar: true }); 
 
-          fetch(import.meta.env.VITE_BACKEND_URL+'/signup', {
-              method: "post",
-              body: JSON.stringify({ name: filteredName, email: signUpData.email, password: signUpData.password}), 
-              headers: {
-                  'Content-Type': 'application/json',
-                  "Access-Control-Allow-Origin": "*",
-              },
-              credentials:"include" //required for sending the cookie data
-          })
-          .then(async result => {
-            if (result.ok) {
-              let response = await result.json();
-              console.warn(response);
-              setSubmitted(false);
-              if(response.name==="UserExistsError"){
-                setSnackbarOpenCondition("alreadyRegistered")
-                setSnackbarOpen(true)
-              }else{
-                console.log("Successfully registered user!")
-                navigate("/"); 
-                //reload the page, so it re-fetches the logged in user data
-                window.location.reload();
-                setSnackbarOpenCondition("successfulRegister")
-                setSnackbarOpen(true)
-              }
-            }else{
-              console.error("There has been an error!")
-              console.error(result); 
-              setSubmitted(false);
-            }  
-          })
-          .catch (error =>{
-            console.warn("Error: " + error)
-          }) 
-
-      }
-      if (submitted ===true){
-      registerUser();
-      } 
+      registerUser(filteredName, signUpData.email, signUpData.password)
+        .then(data => {
+          // Successfully registered
+          setSnackbarOpenCondition("successfulRegister");
+          setSnackbarOpen(true);
+          navigate('/login');
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          // Check if user already exists
+          if (error.message.includes('already registered')) {
+            setSnackbarOpenCondition("alreadyRegistered");
+          } else {
+            setSnackbarOpenCondition("failure");
+          }
+          setSnackbarOpen(true);
+          setSubmitted(false);
+        });
+    }
   }, [submitted]);
 
   return (
-  <>
-{/*     {currentUser? <Navigate to="/" />
-  : ""} */}
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <Box
@@ -211,9 +189,6 @@ export default function SignUp() {
           </Grid>
         </Box>
       </Box>
-
     </Container>
-    <Footer/>
-  </>
   );
 }

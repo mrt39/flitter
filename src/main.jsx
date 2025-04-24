@@ -10,10 +10,6 @@ import Profile from './routes/Profile.jsx';
 import Followers from './routes/Followers.jsx';
 import SingularPostPage from './routes/SingularPostPage.jsx';
 
-
-
-
-
 const router = createBrowserRouter([
   {
     path: "/",
@@ -29,7 +25,6 @@ const router = createBrowserRouter([
       { path: "post/:postID", element: <SingularPostPage />},
     ], 
   },
-
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
@@ -37,4 +32,3 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <RouterProvider router={router} />
   </React.StrictMode>
 );
-

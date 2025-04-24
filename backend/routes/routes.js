@@ -348,7 +348,7 @@ router.get("/profile-shortId/:shortId", async (req, res) => {
 
 
 
-// follow and unfollow a user 
+//follow and unfollow a user 
 router.post("/followUser", async (req, res) => {
   try {
     //only available if authenticated

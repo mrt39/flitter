@@ -4,17 +4,18 @@ import dayjs from 'dayjs';
 import HoverUserCard from './HoverUserCard.jsx';
 import Tooltip from '@mui/material/Tooltip';
 import UserAvatar from './UserAvatar.jsx';
-import {AppStatesContext} from '../App.jsx';
 import { ListItemText,  ListItemAvatar, Box, Typography} from '@mui/material';
-
+import { useUI } from '../contexts/UIContext.jsx';
+import { useUser } from '../contexts/UserContext.jsx';
 
 import '../styles/CommentDisplay.css'
 
 
 const CommentDisplay = ({comment}) => {
 
-    //pass the userContext defined in app.jsx
-    const {darkModeOn, handleProfileRouting} = useContext(AppStatesContext); 
+    //use context hooks
+    const { darkModeOn } = useUI();
+    const { handleProfileRouting } = useUser();
 
     const [tooltipOpen, setTooltipOpen] = useState(false);
 

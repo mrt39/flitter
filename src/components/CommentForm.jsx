@@ -1,29 +1,27 @@
 /* eslint-disable react/prop-types */
-import {useState, useEffect, useContext, useRef} from "react";
-import { UserContext, AppStatesContext } from '../App.jsx';
-import UserAvatar from './UserAvatar.jsx';
-import {Typography, IconButton, Button, Box} from '@mui/material';
+import { useState, useEffect, useRef } from "react";
+import { Typography, IconButton, Button, Box } from '@mui/material';
 import CircularProgress, { circularProgressClasses } from '@mui/material/CircularProgress';
 import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
-//emoji picker
-import data from '@emoji-mart/data'
-import Picker from '@emoji-mart/react'
-
+import { useAuth } from '../contexts/AuthContext.jsx';
+import { useUI } from '../contexts/UIContext.jsx';
+import { usePost } from '../contexts/PostContext.jsx';
+import { commentOnPost } from '../utilities/postService.js';
 import { clean } from 'profanity-cleaner';
-import '../styles/CommentForm.css'
+import UserAvatar from './UserAvatar.jsx';
+// Emoji picker
+import data from '@emoji-mart/data';
+import Picker from '@emoji-mart/react';
+import '../styles/CommentForm.css';
 
-const CommentForm = ({post, handleClose}) => {
-
-  
-  //Pass the UserContext defined in app.jsx
-  const { currentUser} = useContext(UserContext); 
-
-  const {refreshPosts, setRefreshPosts, darkModeOn} = useContext(AppStatesContext); 
+const CommentForm = ({ post, handleClose }) => {
+  const { currentUser } = useAuth();
+  const { darkModeOn } = useUI();
+  const { refreshPosts, setRefreshPosts } = usePost();
 
   const [value, setValue] = useState("")
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [clickedPostComment, setClickedPostComment] = useState(false); // state to toggle form visibility
-
   //state for storing when the user clicks on the textarea
   const [isFocused, setIsFocused] = useState(false);
 
@@ -42,6 +40,7 @@ const CommentForm = ({post, handleClose}) => {
   //character counter
   const maxCharacters = 280;
   const [remainingCharacters, setRemainingCharacters] = useState(maxCharacters);
+  
   function handleChange(event) {
     const newValue = event.target.value;
     setValue(newValue);
@@ -72,39 +71,23 @@ const CommentForm = ({post, handleClose}) => {
   //handle submitting comments on posts
   useEffect(() => {
     async function sendCommentonPost() {
+      //prevent from submitting if above 280 characters
+      if (value.length > maxCharacters) return; 
 
-      if (value.length > maxCharacters) return; //prevent from submitting if above 280 characters.
-
-      //on submit, clean the words with the profanity cleaner package
-      //https://www.npmjs.com/package/profanity-cleaner
-      let filteredCommentMessage = await clean(value, { keepFirstAndLastChar: true, placeholder: '#' }) 
-
-      await fetch(import.meta.env.VITE_BACKEND_URL+'/sendCommentonPost', {
-        method: "POST",
-        // store date as isostring to make the reading easier later
-        body: JSON.stringify({ from:currentUser, toPostID:post._id , date: new Date().toISOString(), comment: filteredCommentMessage}), 
-        headers: {
-            'Content-Type': 'application/json',
-            "Access-Control-Allow-Origin": "*",
-        },
-        credentials:"include" //required for sending the cookie data-authorization check
-    })
-      .then(async result => {
-        if (result.ok){
-          await result.json();
-          console.log("Commented on the Succesfully!")
-          setValue("")
-          setRefreshPosts(!refreshPosts)
-        } else{
-          throw new Error(result)
-        }
-      })
-      .catch(error => {
+      try {
+        //clean the words with the profanity cleaner package
+        let filteredCommentMessage = await clean(value, { keepFirstAndLastChar: true, placeholder: '#' });
+        
+        await commentOnPost(currentUser, post._id, filteredCommentMessage);
+        
+        console.log("Commented on the post successfully!");
+        setValue("");
+        setRefreshPosts(prev => !prev);
+      } catch (error) {
         console.error('Error:', error);
-      })
-      .finally(() => {
-        setClickedPostComment(false)
-      });
+      } finally {
+        setClickedPostComment(false);
+      }
     }
     //only trigger when comment is posted
     if (clickedPostComment ===true){

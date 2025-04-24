@@ -1,26 +1,28 @@
 /* eslint-disable react/prop-types */
-import { useContext, useState, useEffect } from "react";
-import {useNavigate} from "react-router-dom";
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { ListItemAvatar, ListItemText, Typography, IconButton, Box } from '@mui/material';
+import { FavoriteBorder, Favorite } from '@mui/icons-material';
+import dayjs from 'dayjs';
+import Tooltip from '@mui/material/Tooltip';
 import CommentModal from './CommentModal.jsx';
 import HoverUserCard from './HoverUserCard.jsx';
 import UserAvatar from './UserAvatar.jsx';
-import { UserContext, AppStatesContext} from '../App.jsx';
-import { ListItemText, ListItemAvatar, Box, Typography, IconButton} from '@mui/material';
-import { Favorite, FavoriteBorder} from '@mui/icons-material';
-import Tooltip from '@mui/material/Tooltip';
-// Import the link-preview-js library at the top of the file
+import { useAuth } from '../contexts/AuthContext.jsx';
+import { useUI } from '../contexts/UIContext.jsx';
+import { useUser } from '../contexts/UserContext.jsx';
+import { usePost } from '../contexts/PostContext.jsx';
+import { likePost } from '../utilities/postService.js';
+import { getDarkModeClass } from '../utilities/themeUtils.js';
+import { formatDate } from '../utilities/dateFormatter.js';
 import { getLinkPreview } from 'link-preview-js';
-
-import dayjs from 'dayjs';
-
-import '../styles/PostDisplay.css'
+import '../styles/PostDisplay.css';
 
 const PostDisplay = ({post, location}) => {
-
-    //Pass the UserContext defined in app.jsx
-    const {currentUser} = useContext(UserContext); 
-
-    const {refreshPosts, setRefreshPosts, darkModeOn, handleProfileRouting} = useContext(AppStatesContext); 
+    const { currentUser } = useAuth();
+    const { darkModeOn } = useUI();
+    const { handleProfileRouting } = useUser();
+    const { refreshPosts, setRefreshPosts } = usePost();
 
     //state for storing if the currentuser has already liked this post
     const [currentUserLikedPost, setCurrentUserLikedPost] = useState(false); // Like state for individual post
@@ -28,62 +30,46 @@ const PostDisplay = ({post, location}) => {
     //Id for liking the posts
     const [pressedLikePost, setPressedLikePost] = useState(false); // Like state for individual post
 
-    // Temporary state for like animation (in order to remove the "liked" class after 0.3 seconds, to prevent the animation from playing when the user likes another post)
+    //temporary state for like animation (in order to remove the "liked" class after 0.3 seconds, to prevent the animation from playing when the user likes another post)
     const [tempLiked, setTempLiked] = useState(false); // Temporary state for like animation
 
-
-
     //handle routing to post (singular post page) when the post is clicked
-
     const navigate = useNavigate();
 
-    function handlePostRouting(link){
+    function handlePostRouting(link) {
         navigate(link);
     }
-
       
-    function handleLike(){
+    function handleLike() {
         setTempLiked(true);
         setTimeout(() => setTempLiked(false), 300); //remove the liked class after 0.3 seconds
-        setPressedLikePost(true)
+        setPressedLikePost(true);
     }
 
     //useffect for liking posts
     useEffect(() => {
-        async function likePost() {
-        //find if post is already liked by the user, if user is already in likedby array, in order to properly display (filled or empty+like animation) the heart icon in ui
+        async function handleLikePost() {
+        //find if post is already liked by the current user, (if user is already in likedby array), in order to properly display (filled heart or empty+like animation) the heart icon in ui
         //find via converting id objects to string because querying with id's doesn't work
-        const likedPostIndex = post.likedby.findIndex(u => u._id.toString() === currentUser._id.toString());
-
-        await fetch(import.meta.env.VITE_BACKEND_URL+'/likePost', {
-            method: "PATCH",
-            // storing date as isostring to make the reading easier later
-            body: JSON.stringify({ postID: post._id, likedBy: currentUser}), 
-            headers: {
-                'Content-Type': 'application/json',
-                "Access-Control-Allow-Origin": "*",
-            },
-            credentials:"include" //required for sending the cookie data-authorization check
-        })
-        .then(async result => {
-            if (result.ok){
-            await result.json();
+        const likedPostIndex = post.likedby.findIndex(u => u._id.toString() === currentUser._id.toString())
+        await likePost(currentUser, post._id)
+        .then(() => {
             setCurrentUserLikedPost(likedPostIndex === -1); //update state based on whether the user has liked this post or not
-            console.log("Liked Post!")
-            setPressedLikePost(false)
-            setRefreshPosts(!refreshPosts)
-            } else{
-            throw new Error(result)
-            }
+
+            console.log("Liked/Unliked Post Successfully!");
+            setRefreshPosts(!refreshPosts);
         })
         .catch(error => {
             console.error('Error:', error);
-            setPressedLikePost(false)
-        }); 
+        })
+        .finally(() => {
+            setPressedLikePost(false);
+        });
         }
-        //only trigger when comment is posted
-        if (pressedLikePost){
-        likePost();
+        
+        //only trigger when like button is clicked
+        if (pressedLikePost) {
+            handleLikePost();
         } 
     }, [pressedLikePost]);
 

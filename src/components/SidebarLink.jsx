@@ -1,11 +1,10 @@
 /* eslint-disable react/prop-types */
-import { useContext } from 'react';
-import { AppStatesContext } from '../App.jsx';
+import { useUI } from '../contexts/UIContext.jsx';
 import '../styles/Sidebarlink.css'
 
 function SidebarLink({ text, Icon }) {
 
-  const {darkModeOn} = useContext(AppStatesContext); 
+  const { darkModeOn } = useUI();
 
   return(
     <div className={`sidebarLink ${darkModeOn ? 'dark-mode' : ''}`}>

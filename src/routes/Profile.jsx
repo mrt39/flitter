@@ -1,23 +1,26 @@
 /* eslint-disable react/prop-types */
-import { useState, useContext, useEffect } from 'react'
-import { useLocation} from "react-router-dom";
-import { UserContext, AppStatesContext} from '../App.jsx';
+import { useState, useEffect } from 'react'
+import { useLocation } from "react-router-dom";
 import { CircularProgress, Alert } from '@mui/material';
 import UserCardProfile from "../components/UserCardProfile.jsx";
 import AllPostsDisplay from '../components/AllPostsDisplay.jsx';
+import { useUser } from '../contexts/UserContext.jsx';
+import { usePost } from '../contexts/PostContext.jsx';
+import { useAuth } from '../contexts/AuthContext.jsx';
+import { useFollow } from '../contexts/FollowContext.jsx';
+import { getUserByShortId } from '../utilities/authService.js';
 import "../styles/Profile.css"
 
-
-
-
 const Profile = () => {
+  //use context hooks
+  const { selectedUser, setSelectedUser } = useUser(); 
+  const { setActiveTab, setSearchWord } = usePost(); 
+  const { pressedFollow } = useFollow(); 
+  const { profileUpdated } = useAuth();
 
-  // Pass the UserContext defined in app.js
-  const {selectedUser, setSelectedUser } = useContext(UserContext); 
-  const {pressedFollow, profileUpdated, setActiveTab, setSearchWord} = useContext(AppStatesContext); 
+  
   const [error, setError] = useState(null);
   const [profilePageLoading, setProfilePageLoading] = useState(true);
-
  
   //get the last 8 characters of current url (which is the assigned shortid for the selectedUser)
   const location = useLocation();
@@ -32,46 +35,32 @@ const Profile = () => {
     setSearchWord(null);
   },[]);
 
-
   //make a profile call because the selectedUser state will empty once the user refreshes the page
   //fetch for getting data of the user, based on their shortId
   useEffect(() => {
     const getUserData = () => {
-      fetch(import.meta.env.VITE_BACKEND_URL+'/profile-shortId/'+last8Chars, {
-      method: 'GET',
-      })
-      .then(response => {
-          if (response.ok) {
-          return response.json(); // Parse JSON when the response is successful
-          }
-          throw new Error('Network response was not ok.');
-      })
-      .then(data => {
+      getUserByShortId(last8Chars)
+        .then(data => {
           setSelectedUser(data[0])
           setProfilePageLoading(false)
-      })
-      .catch(error => {
+        })
+        .catch(error => {
           setError(error.message);
           setProfilePageLoading(false)
           console.error('Error:', error);
-      });
+        });
     };
     getUserData();
     //when user follows/unfollows, refresh display to have either the follow or unfollow button
-    }, [pressedFollow, profileUpdated]); 
+  }, [pressedFollow, profileUpdated]); 
 
-
-    
   if (profilePageLoading) {
     return <CircularProgress />;
   }
 
-
-
   if (error) {
     return <Alert severity="error">{error}</Alert>;
   }
-
   
   return (
     <>
@@ -80,15 +69,9 @@ const Profile = () => {
       <AllPostsDisplay
       fromThisUser = {selectedUser} //instead of displaying all posts, display the posts only from this user
       />
-
-
     </div>
     </>
-
-
   );
 };
 
-
 export default Profile;
-

@@ -1,33 +1,47 @@
 /* eslint-disable react/prop-types */
-import { useState, useEffect, useContext } from 'react';
-import { Modal, Box, Typography, IconButton, Button, TextField, CircularProgress, Card, CardContent, CardActions, Backdrop } from '@mui/material';
+import { useState, useEffect } from 'react';
+import { Modal, Box, TextField, Button, Typography, IconButton, Card, CardContent, CardActions, CircularProgress, Backdrop } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { AppStatesContext, UserContext } from '../App.jsx';
+import CameraAltIcon from '@mui/icons-material/CameraAlt';
+import { useAuth } from '../contexts/AuthContext.jsx';
+import { useUI } from '../contexts/UIContext.jsx';
+import { updateUserProfile, uploadProfileImage } from '../utilities/userService.js';
 import { clean } from 'profanity-cleaner';
 import UserAvatar from './UserAvatar.jsx';
-import CameraAltIcon from '@mui/icons-material/CameraAlt';
-import "../styles/EditProfileModal.css";
+import '../styles/EditProfileModal.css';
 
 const EditProfileModal = ({ open, handleClose }) => {
-  const { setSnackbarOpenCondition, setSnackbarOpen, setProfileUpdated, darkModeOn } = useContext(AppStatesContext);
-  const { currentUser } = useContext(UserContext);
+  const { darkModeOn, setSnackbarOpenCondition, setSnackbarOpen } = useUI();
+  const { currentUser, setProfileUpdated } = useAuth();
 
-  const [uploadedImg, setUploadedImg] = useState();
+  const [uploadedImg, setUploadedImg] = useState(null);
   const [imgSubmitted, setImgSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [values, setValues] = useState({
-    name: currentUser.name,
-    email: currentUser.email,
-    bio: currentUser.bio,
+    name: currentUser ? currentUser.name : '',
+    email: currentUser ? currentUser.email : '',
+    bio: currentUser ? currentUser.bio : '',
   });
   const [clickedOnProfileUpdate, setClickedOnProfileUpdate] = useState(false);
-  //check if the e-mail address currentUser puts is invalid
-  const [invalidEmail, setInvalidEmail] = useState(false);
+  //check if the email address entered is invalid
+  const [invalidEmail, setInvalidEmail] = useState(false); 
   const [showSaveImageButton, setShowSaveImageButton] = useState(false);
+
+  //reset form values when currentUser changes
+  useEffect(() => {
+    if (currentUser) {
+      setValues({
+        name: currentUser.name || '',
+        email: currentUser.email || '',
+        bio: currentUser.bio || '',
+      });
+    }
+  }, [currentUser]);
 
 
   function handleImageChange(event) {
     const uploadedImg = event.target.files[0];
+    if (!uploadedImg) return;
     //check the filetype to ensure it's an image. throw error if it isn't
     if (uploadedImg["type"] !== "image/x-png" && uploadedImg["type"] !== "image/png" && uploadedImg["type"] !== "image/jpeg") {
       console.error("Only image files can be attached!");
@@ -41,7 +55,7 @@ const EditProfileModal = ({ open, handleClose }) => {
       setSnackbarOpen(true);
       return;
     } else {
-      setUploadedImg(event.target.files[0]);
+      setUploadedImg(uploadedImg);
       setShowSaveImageButton(true);
     }
   }
@@ -54,34 +68,27 @@ const EditProfileModal = ({ open, handleClose }) => {
   //handle uploading image
   useEffect(() => {
     async function changeProfileImage() {
+      if (!uploadedImg || !currentUser) return;
+
+
       const formData = new FormData();
       formData.append("image", uploadedImg);
 
-      fetch(import.meta.env.VITE_BACKEND_URL + '/uploadprofilepic/' + currentUser["_id"], {
-        method: "post",
-        body: formData,
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-        }
-      })
-        .then(async result => {
-          if (result.ok) {
-            await result.json();
-            console.log("Image uploaded");
-            setUploadedImg(null);
-            setProfileUpdated(true);
-          } else {
-            throw new Error(result);
-          }
-        })
-        .catch(error => {
-          console.error('Error:', error);
-        })
-        .finally(() => {
-            setLoading(false);
-            setImgSubmitted(false);
-            setShowSaveImageButton(false)
-        });
+      try {
+        const result = await uploadProfileImage(currentUser._id, formData);
+        console.log("Profile picture updated successfully!");
+        setProfileUpdated(true);
+        setSnackbarOpenCondition("profileChangeSuccess");
+        setSnackbarOpen(true);
+        setShowSaveImageButton(false);
+      } catch (error) {
+        console.error('Error:', error);
+        setSnackbarOpenCondition("failure");
+        setSnackbarOpen(true);
+      } finally {
+        setLoading(false);
+        setImgSubmitted(false);
+      }
     }
     //only trigger when image is sent
     if (imgSubmitted === true) {
@@ -141,42 +148,34 @@ const EditProfileModal = ({ open, handleClose }) => {
   //submit the profile changes
   useEffect(() => {
     async function editProfile() {
-      //on submit, clean the word with the profanity cleaner
-      //https://www.npmjs.com/package/profanity-cleaner
-      let filteredName = await clean(values.name, { keepFirstAndLastChar: true, placeholder: '#' });
-      let filteredEmail = await clean(values.email, { keepFirstAndLastChar: true, placeholder: '#' });
-      let filteredBio = values.bio ? await clean(values.bio, { keepFirstAndLastChar: true, placeholder: '#' }) : "";
+      if (!currentUser) return;
 
-      fetch(import.meta.env.VITE_BACKEND_URL + '/editprofile/' + currentUser["_id"], {
-        method: 'PATCH',
-        body: JSON.stringify({ name: filteredName, email: filteredEmail, bio: filteredBio }),
-        headers: {
-          'Content-Type': 'application/json',
-          "Access-Control-Allow-Origin": "*",
-        },
-        credentials: "include" //required for sending the cookie data-authorization check
-      })
-        .then(async result => {
-          if (result.ok) {
-            await result.json();
-            console.log("Profile Updated!");
-            await setProfileUpdated(true);
-            await setSnackbarOpenCondition("profileChangeSuccess");
-
-          } else {
-            console.error("There has been an error!");
-            setSnackbarOpenCondition("failure");
-            setProfileUpdated(false);
-          }
-        })
-        .catch(error => {
-          console.error('Error:', error);
-        })
-        .finally(() => {
-            setLoading(false);
-            setClickedOnProfileUpdate(false);
-            setSnackbarOpen(true);
-        });
+       try {
+        //on submit, clean the words with the profanity cleaner
+        let filteredName = await clean(values.name, { keepFirstAndLastChar: true, placeholder: '#' });
+        let filteredBio = values.bio ? await clean(values.bio, { keepFirstAndLastChar: true, placeholder: '#' }) : '';
+        
+        const profileData = {
+          name: filteredName,
+          email: values.email,
+          bio: filteredBio,
+        };
+        
+        await updateUserProfile(currentUser._id, profileData);
+        
+        console.log("Profile updated successfully!");
+        setProfileUpdated(true);
+        setSnackbarOpenCondition("profileChangeSuccess");
+        setSnackbarOpen(true);
+        handleClose();
+      } catch (error) {
+        console.error('Error:', error);
+        setSnackbarOpenCondition("failure");
+        setSnackbarOpen(true);
+      } finally {
+        setLoading(false);
+        setClickedOnProfileUpdate(false);
+      }
     }
 
     //only trigger when profile is updated

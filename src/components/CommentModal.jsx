@@ -1,15 +1,16 @@
 /* eslint-disable react/prop-types */
-import { useState, useContext } from "react";
-import { AppStatesContext } from '../App.jsx';
-import PostDisplay from '../components/PostDisplay.jsx';
+import PostDisplay from './PostDisplay.jsx';
 import CommentForm from './CommentForm.jsx';
 import Backdrop from '@mui/material/Backdrop';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import CloseIcon from '@mui/icons-material/Close';
-import { Typography, IconButton} from '@mui/material';
+import { Typography, IconButton } from '@mui/material';
 import { ChatBubbleOutline } from '@mui/icons-material';
+import { useUI } from '../contexts/UIContext.jsx';
+import { useModal } from '../utilities/modalUtils.js';
+import "../styles/CommentModal.css";
 
 import "../styles/CommentModal.css"
 
@@ -31,16 +32,16 @@ const style = {
 export default function CommentModal({ post }) {
 
 
-  const {darkModeOn} = useContext(AppStatesContext);
+  const { darkModeOn } = useUI();
+  const { isOpen, openModal, closeModal } = useModal(false);
 
-  // modal states
-  const [open, setOpen] = useState(false);
+  
   const handleOpen = (e) => {
     e.stopPropagation();
     e.preventDefault();
-    setOpen(true);
+    openModal();
   };
-  const handleClose = () => setOpen(false);
+  const handleClose = () => closeModal();
 
   return (
     <>
@@ -54,7 +55,7 @@ export default function CommentModal({ post }) {
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
-        open={open}
+        open={isOpen}
         onClick={(e) => {e.preventDefault(); e.stopPropagation()}} //prevent the modal from opening the post link when clicked on anywhere within the modal
         onClose={handleClose}
         closeAfterTransition
@@ -66,7 +67,7 @@ export default function CommentModal({ post }) {
           },
         }}
       >
-        <Fade in={open}>
+        <Fade in={isOpen}>
             <Box 
             sx={style}
             className={`comment-modal ${darkModeOn ? 'dark-mode' : ''}`}

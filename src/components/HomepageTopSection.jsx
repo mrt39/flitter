@@ -1,13 +1,13 @@
 /* eslint-disable react/prop-types */
-import { useContext } from 'react';
-import { AppStatesContext } from '../App.jsx';
-import '../styles/HomepageTopSection.css';
 import { Typography, IconButton } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { useUI } from '../contexts/UIContext.jsx';
+import { usePost } from '../contexts/PostContext.jsx';
+import '../styles/HomepageTopSection.css';
 
 const HomepageTopSection = () => {
-
-  const { darkModeOn, activeTab, setActiveTab, mostIteratedWords, searchWord, setSearchWord} = useContext(AppStatesContext); 
+  const { darkModeOn } = useUI();
+  const { activeTab, setActiveTab, mostIteratedWords, searchWord, setSearchWord } = usePost(); 
 
 
   return (

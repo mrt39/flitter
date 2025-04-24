@@ -1,23 +1,24 @@
 /* eslint-disable react/prop-types */
-import {useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {Link} from "react-router-dom";
 import HoverUserCard from './HoverUserCard.jsx';
-import { AppStatesContext, UserContext } from '../App.jsx';
-import {  Box, CircularProgress, Card, CardContent, Typography, List, ListItem, ListItemAvatar, ListItemText, Tooltip} from '@mui/material';
-import '../styles/SidebarRight.css';
+import { Box, CircularProgress, Card, CardContent, Typography, List, ListItem, ListItemAvatar, ListItemText, Tooltip} from '@mui/material';
+import { useUI } from '../contexts/UIContext.jsx';
+import { useAuth } from '../contexts/AuthContext.jsx';
+import { useUser } from '../contexts/UserContext.jsx';
+import { useFollow } from '../contexts/FollowContext.jsx';
+import { getAllUsers } from '../utilities/userService.js';
 import UserAvatar from './UserAvatar.jsx';
 import FollowButton from './FollowButton.jsx';
 
 import "../styles/WhotoFollow.css";
 
-
-
-
-
 const WhotoFollow = () => {
-
-  const {pressedFollow, darkModeOn, handleProfileRouting} = useContext(AppStatesContext); 
-  const {currentUser} = useContext(UserContext); 
+  //use context hooks
+  const { darkModeOn } = useUI();
+  const { currentUser } = useAuth(); 
+  const { handleProfileRouting } = useUser();
+  const { pressedFollow } = useFollow();
 
   const [allUsers, setAllUsers] = useState(null);
   //store the sorted users to display
@@ -27,15 +28,7 @@ const WhotoFollow = () => {
   const [firstrender, setFirstrender] = useState(true);
 
   useEffect(() => {
-    fetch(import.meta.env.VITE_BACKEND_URL + '/getallusers', {
-      method: 'GET',
-    })
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        }
-        throw new Error('Network response was not ok.');
-      })
+    getAllUsers()
       .then(data => {
         setAllUsers(data);
         setLoading(false);
@@ -44,8 +37,7 @@ const WhotoFollow = () => {
         setLoading(false);
         console.error('Error:', error);
       });
-  }, [pressedFollow]);
-
+  }, []);
 
   useEffect(() => {
     if (allUsers) {
@@ -71,8 +63,6 @@ const WhotoFollow = () => {
     }
   }, [allUsers]);
 
-
-
   if (loading) {
     return (
       <div className='circularProgressContainer'>
@@ -83,76 +73,70 @@ const WhotoFollow = () => {
     )
   }
 
-
   return (
-      <Card className="sidebarRight-section-card">
-        <CardContent className="sidebarRight-section-cardContent">
-          <Typography variant="h6" component="div" className='sidebarRightTitle'>
-            Who to follow
-          </Typography>
-          <List>
-          {sortedUsers.map((user) => (
-              <Link onClick={(e) => {handleProfileRouting(user); e.preventDefault();}} className={`followers-link ${darkModeOn ? 'dark-mode' : ''}`} style={{ textDecoration: 'none', color: 'inherit' }} key={user._id}>
-                  <ListItem className={`whotoFollowListItem ${darkModeOn ? 'dark-mode' : ''}`} key={user._id}>
-                    <ListItemAvatar>
-                        <UserAvatar user={user} />
-                    </ListItemAvatar>
-                    
-                    <div className="whotofollow-list-item-content">
-                      <ListItemText 
-                        primary={
-                          <div className="whotofollow-header">
-                              {/* MUI tooltip that will display a user card on hover */}
-                              <Tooltip 
-                              title={
-                                  <Box sx={{ minWidth: 280 }}> 
-                                      <HoverUserCard 
-                                        user={user} 
-                                      />
-                                  </Box>
-                              }
-                              enterDelay={200}
-                              leaveDelay={200}
-                              placement="bottom"
-
-                              PopperProps={{
-                                  modifiers: [
-                                      {
-                                          name: 'arrow',
-                                          enabled: false, 
-                                      },
-                                  ],
-                                  sx: {
-                                    '.MuiTooltip-tooltip': {
-                                      backgroundColor: 'transparent',
-                                      boxShadow: 'none', 
-                                      padding: 0, 
-                                    },
-                                  },
-                                }}        
-                            > 
-                            <Typography variant="h6" className='whotofollow-name'>{user.name}</Typography>
-                          </Tooltip>
-                          </div>
+    <Card className="sidebarRight-section-card">
+      <CardContent className="sidebarRight-section-cardContent">
+        <Typography variant="h6" component="div" className='sidebarRightTitle'>
+          Who to follow
+        </Typography>
+        <List>
+        {sortedUsers.map((user) => (
+          <Link onClick={(e) => {handleProfileRouting(user); e.preventDefault();}} className={`followers-link ${darkModeOn ? 'dark-mode' : ''}`} style={{ textDecoration: 'none', color: 'inherit' }} key={user._id}>
+            <ListItem className={`whotoFollowListItem ${darkModeOn ? 'dark-mode' : ''}`} key={user._id}>
+              <ListItemAvatar>
+                <UserAvatar user={user} />
+              </ListItemAvatar>
+              
+              <div className="whotofollow-list-item-content">
+                <ListItemText 
+                  primary={
+                    <div className="whotofollow-header">
+                      {/* MUI tooltip that will display a user card on hover */}
+                      <Tooltip 
+                        title={
+                          <Box sx={{ minWidth: 280 }}> 
+                            <HoverUserCard user={user} />
+                          </Box>
                         }
-                      />
-
-                    <FollowButton displayedUserOnCard={user}/>
+                        enterDelay={200}
+                        leaveDelay={200}
+                        placement="bottom"
+                        PopperProps={{
+                          modifiers: [
+                            {
+                              name: 'arrow',
+                              enabled: false, 
+                            },
+                          ],
+                          sx: {
+                            '.MuiTooltip-tooltip': {
+                              backgroundColor: 'transparent',
+                              boxShadow: 'none', 
+                              padding: 0, 
+                            },
+                          },
+                        }}        
+                      > 
+                        <Typography variant="h6" className='whotofollow-name'>{user.name}</Typography>
+                      </Tooltip>
                     </div>
-                  </ListItem>
-              </Link>
-            ))}
-            {sortedUsers.length === 0 && 
-                <Typography variant="body2" className='noUsersToFollow-text' component="div" >
-                    No users to follow.
-                </Typography>
-            }
-          </List>
-        </CardContent>
-      </Card>
-   
+                  }
+                />
+
+                <FollowButton displayedUserOnCard={user}/>
+              </div>
+            </ListItem>
+          </Link>
+        ))}
+        {sortedUsers.length === 0 && 
+          <Typography variant="body2" className='noUsersToFollow-text' component="div" >
+            No users to follow.
+          </Typography>
+        }
+        </List>
+      </CardContent>
+    </Card>
   );
 }
 
 export default WhotoFollow;
-

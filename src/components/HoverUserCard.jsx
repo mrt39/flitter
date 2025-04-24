@@ -1,83 +1,62 @@
 /* eslint-disable react/prop-types */
-import { useContext, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Card, CardContent, Typography, Box, useTheme } from '@mui/material';
-import { AppStatesContext, UserContext} from '../App.jsx';
-import { CircularProgress, Alert } from '@mui/material';
+import { Card, CardContent, Typography, Box, useTheme, CircularProgress, Alert } from '@mui/material';
+import { useAuth } from '../contexts/AuthContext.jsx';
+import { useUI } from '../contexts/UIContext.jsx';
+import { useUser } from '../contexts/UserContext.jsx';
+import { useFollow } from '../contexts/FollowContext.jsx';
+import { getUserByShortId } from '../utilities/authService.js';
+import { createFollowersRoute } from '../utilities/routingUtils.js';
 import FollowButton from './FollowButton.jsx';
 import UserAvatar from './UserAvatar.jsx';
 import '../styles/HoverUserCard.css';
 
-//imports for generating the url path for routing 
-import slugify from 'slugify';
-
-
-
-
-const HoverUserCard = ({ user, handleTooltipClose}) => {
-
-  const {currentUser} = useContext(UserContext); 
-  const {darkModeOn, pressedFollow, handleProfileRouting} = useContext(AppStatesContext); 
-  const [displayedUserOnCard, setDisplayedUserOnCard] = useState(user)
+const HoverUserCard = ({ user, handleTooltipClose }) => {
+  const { currentUser } = useAuth();
+  const { darkModeOn } = useUI();
+  const { handleProfileRouting } = useUser();
+  const { pressedFollow } = useFollow();
+  
+  const [displayedUserOnCard, setDisplayedUserOnCard] = useState(user);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const theme = useTheme();
-
-
+  const navigate = useNavigate();
 
   //make a profile call to populate because when the user presses the follow button, data on the card needs to change
   //fetch for getting data of the user, based on their shortId
   useEffect(() => {
-    const getUserData = () => {
-      fetch(import.meta.env.VITE_BACKEND_URL+'/profile-shortId/'+user.shortId, {
-      method: 'GET',
-      })
-      .then(response => {
-          if (response.ok) {
-          return response.json(); 
-          }
-          throw new Error('Network response was not ok.');
-      })
-      .then(data => {
-          setDisplayedUserOnCard(data[0])
-          setLoading(false)
-      })
-      .catch(error => {
-          setError(error.message);
-          setLoading(false)
-          console.error('Error:', error);
-      });
+    const getUserData = async () => {
+      try {
+        const data = await getUserByShortId(user.shortId);
+        setDisplayedUserOnCard(data[0]);
+        setLoading(false);
+      } catch (error) {
+        setError(error.message);
+        setLoading(false);
+        console.error('Error:', error);
+      }
     };
     getUserData();
     //when user follows/unfollows, re-populate the displayedUserOnCard state
-    }, [pressedFollow]);
+  }, [pressedFollow]);
 
-
-
-  const navigate = useNavigate(); 
-    //handle generating the url path for routing to /profile/:slug/followers
-    function handleFollowersRouting(string){
-      //slugify the username, e.g:"john-doe"
-      const slug = slugify(displayedUserOnCard.name, { lower: true }); 
-      //combine slug with usershortID to create the unique profile path for the selected user to route to
-      const profilePath = `/profile/${slug}-${displayedUserOnCard.shortId}/${string}`
-      // Route to the profile path
-      navigate(profilePath); 
-    }
-
-
+  //handle generating the url path for routing to /profile/:slug/followers
+  function handleFollowersRouting(string) {
+    const profilePath = createFollowersRoute(displayedUserOnCard, string);
+    // Route to the profile path
+    navigate(profilePath);
+  }
 
   if (loading) {
     return <CircularProgress />;
   }
 
-
-
   if (error) {
     return <Alert severity="error">{error}</Alert>;
   }
-
 
   return (
     <Card
@@ -116,8 +95,7 @@ const HoverUserCard = ({ user, handleTooltipClose}) => {
           </div>
         </span>
         {/* don't display the follow button when the user hovers on their own name */}
-        {currentUser.shortId !== displayedUserOnCard.shortId 
-        &&
+        {currentUser.shortId !== displayedUserOnCard.shortId && 
           <FollowButton
             displayedUserOnCard={displayedUserOnCard}
             handleTooltipClose={handleTooltipClose}
