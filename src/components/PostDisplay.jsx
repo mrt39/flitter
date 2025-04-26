@@ -30,41 +30,79 @@ const PostDisplay = ({post, location}) => {
     //Id for liking the posts
     const [pressedLikePost, setPressedLikePost] = useState(false); // Like state for individual post
 
+    //state to track if like button is disabled during API call
+    const [likeButtonDisabled, setLikeButtonDisabled] = useState(false);
+
+    //state to track the current like count for optimistic updates
+    const [optimisticLikeCount, setOptimisticLikeCount] = useState(post.likeCount);
+
+    //state to store the previous like state in case api call fails and optimistic update needs to revert
+    const [previousLikeState, setPreviousLikeState] = useState(false);
+
     //temporary state for like animation (in order to remove the "liked" class after 0.3 seconds, to prevent the animation from playing when the user likes another post)
     const [tempLiked, setTempLiked] = useState(false); // Temporary state for like animation
 
     //handle routing to post (singular post page) when the post is clicked
     const navigate = useNavigate();
 
+    //check initial like state when component mounts
+    useEffect(() => {
+        //find if post is already liked by the current user, (if user is already in likedby array), in order to properly display (filled heart or empty+like animation) the heart icon in ui
+        //find via converting id objects to string because querying with id's doesn't work
+        const likedPostIndex = post.likedby.findIndex(u => u._id.toString() === currentUser._id.toString());
+        //update state based on whether the user has liked this post or not
+        setCurrentUserLikedPost(likedPostIndex !== -1);
+        setOptimisticLikeCount(post.likeCount);
+    }, [post, currentUser]);
+    
     function handlePostRouting(link) {
         navigate(link);
     }
       
     function handleLike() {
+        //prevent multiple clicks while processing
+        if (likeButtonDisabled) return;
+        
+        //store previous state for potential rollback
+        setPreviousLikeState(currentUserLikedPost);
+        
+        //optimistically update UI immediately
+        const isLiking = !currentUserLikedPost;
+        setCurrentUserLikedPost(isLiking);
+        setOptimisticLikeCount(prev => isLiking ? prev + 1 : prev - 1);
+        
+        //animation effect
         setTempLiked(true);
-        setTimeout(() => setTempLiked(false), 300); //remove the liked class after 0.3 seconds
+        setTimeout(() => setTempLiked(false), 300);
+        
+        //disable button during API call
+        setLikeButtonDisabled(true);
+        
+        //trigger the actual API call
         setPressedLikePost(true);
     }
 
     //useffect for liking posts
     useEffect(() => {
         async function handleLikePost() {
-        //find if post is already liked by the current user, (if user is already in likedby array), in order to properly display (filled heart or empty+like animation) the heart icon in ui
-        //find via converting id objects to string because querying with id's doesn't work
-        const likedPostIndex = post.likedby.findIndex(u => u._id.toString() === currentUser._id.toString())
-        await likePost(currentUser, post._id)
-        .then(() => {
-            setCurrentUserLikedPost(likedPostIndex === -1); //update state based on whether the user has liked this post or not
-
-            console.log("Liked/Unliked Post Successfully!");
-            setRefreshPosts(!refreshPosts);
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        })
-        .finally(() => {
-            setPressedLikePost(false);
-        });
+            try {
+                //api call to like/unlike the post
+                await likePost(currentUser, post._id);
+                console.log("Liked/Unliked Post Successfully!");
+                
+            }
+            catch (error) {
+                console.error('Error:', error);
+                
+                //revert optimistic update on error
+                setCurrentUserLikedPost(previousLikeState);
+                setOptimisticLikeCount(previousLikeState ? post.likeCount : Math.max(0, post.likeCount - 1));
+            }
+            finally {
+                //re-enable the like button
+                setPressedLikePost(false);
+                setLikeButtonDisabled(false);
+            }
         }
         
         //only trigger when like button is clicked
@@ -283,10 +321,10 @@ const renderContentWithPreviews = (content, previewData) => {
                                 size="small"
                                  //as "tempLiked" becomes false in 0.3 seconds, liked class will be removed from the button, thus preventing multiple posts from playing the animation at the same time 
                                 className={`icon-button like-button ${currentUserLikedPost && tempLiked ? 'liked' : ''}`}
-                                disabled={pressedLikePost}
+                                disabled={likeButtonDisabled}
                             >
 
-                                {post.likedby.findIndex(u=>u._id.toString()===currentUser._id.toString())>-1 ?  //find if post is already liked by the user, if user is already in likedby array
+                                {currentUserLikedPost ?  //find if post is already liked by the user, if user is already in likedby array
                                 (
                                 <Favorite fontSize="small" 
                                 sx={{ 
@@ -297,7 +335,7 @@ const renderContentWithPreviews = (content, previewData) => {
                                 )}
 
                                 <Typography component="div" variant="body2" className={`postLikeCommentCount ${darkModeOn ? 'dark-mode' : ''}`}>
-                                    {post.likeCount}
+                                    {optimisticLikeCount}
                                 </Typography>
                             </IconButton>
                         </span>

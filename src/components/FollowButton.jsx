@@ -6,10 +6,10 @@ import { useUI } from '../contexts/UIContext.jsx';
 import { useFollow } from '../contexts/FollowContext.jsx';
 import '../styles/FollowButton.css';
 
-const FollowButton = ({ displayedUserOnCard, location, firstRender, handleTooltipClose }) => {
+const FollowButton = ({ displayedUserOnCard, handleTooltipClose }) => {
   const { currentUser } = useAuth();
   const { darkModeOn } = useUI();
-  const { pressedFollow, setPressedFollow, loadingFollow, setLoadingFollow, setUsertoFollow, userRefreshPending } = useFollow();
+  const { loadingFollow,  userRefreshPending, optimisticFollowState, handleOptimisticFollow } = useFollow();
 
   const [isFollowing, setIsFollowing] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -17,39 +17,32 @@ const FollowButton = ({ displayedUserOnCard, location, firstRender, handleToolti
 
     //decide isFollowing state
     useEffect(() => {
-        if(currentUser.followingtheseID && currentUser.followingtheseID.includes(displayedUserOnCard._id)){
-            setIsFollowing(true)
-/*             //if the followbutton is rendered within the profile page, set the isFollowing state to false to prevent the follow button from displaying the wrong state
-            //check if the usercardprofile component is rendered for the first time as well, to prevent the follow button from displaying the wrong state
-            if(location === 'profilePage'&&firstRender===false){
-                setIsFollowing(false)
-            } */
-        }else{
-            setIsFollowing(false)
-/*             if(location === 'profilePage'&&firstRender===false){
-              setIsFollowing(true)
-          } */
-        }
-    }, [loadingFollow, currentUser]);
-
-
+      //first check if we have an optimistic state for this user
+      const userId = displayedUserOnCard._id;
+      //does this user have an entry in our optimistic state object (true or false)
+      const hasOptimisticState = optimisticFollowState[userId] !== undefined;
+      if (hasOptimisticState) {
+      //if yes, use the optimistic state value (true or false)
+      setIsFollowing(optimisticFollowState[userId]);
+      } else if (currentUser.followingtheseID && currentUser.followingtheseID.includes(displayedUserOnCard._id)) {
+        setIsFollowing(true);
+      } else {
+        setIsFollowing(false);
+      }
+    }, [loadingFollow, currentUser, optimisticFollowState, displayedUserOnCard]);
 
     function handleFollow(e){
       //if handleTooltipClose is passed as a prop (from the tooltip that displays the HoverUserCard), call it
       if(handleTooltipClose){
         handleTooltipClose()
       }
+        //stop event propagation so clicks don't trigger parent elements
         e.preventDefault()
         e.stopPropagation(); //prevent the event from bubbling up to the Tooltip
-        setUsertoFollow(displayedUserOnCard)
-        if (!loadingFollow) { //if loading, do not send another request
-          setLoadingFollow(true);
-          setPressedFollow((prev) => !prev); // toggle the pressedFollow state
+
+        //use optimistic update handler, which handles setLoadingFollow and setPressedFollow states
+        handleOptimisticFollow(displayedUserOnCard);
       }
-      }
-      
-    
-  
 
     return (
         <Button
