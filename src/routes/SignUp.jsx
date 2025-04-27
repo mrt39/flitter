@@ -8,8 +8,8 @@ import { Avatar, Button, CssBaseline, TextField, Grid, Box } from '@mui/material
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import Footer from "../components/Footer.jsx";
 import { clean } from 'profanity-cleaner';
+import { validateName, validateEmail, validateRequired } from '../utilities/formValidationUtils.js';
 
 
 export default function SignUp() {
@@ -19,69 +19,69 @@ export default function SignUp() {
   const { setSnackbarOpenCondition, setSnackbarOpen } = useUI();  
 
   const [submitted, setSubmitted] = useState(false);
-  const [signUpData, setSignUpData] = useState({ });
-  const [emptyNameField, setEmptyNameField] = useState(false);
-  const [emptyEmailField, setEmptyEmailField] = useState(false);
-  const [invalidEmailField, setInvalidEmailField] = useState(false);
-  const [emptyPasswordField, setEmptyPasswordField] = useState(false);
+  const [signUpData, setSignUpData] = useState({
+    name: '',
+    email: '',
+    password: ''
+  });
+  
+  const [errors, setErrors] = useState({
+    name: false,
+    email: false,
+    password: false
+  });
 
+  const [hasErrors, setHasErrors] = useState(false);
+
+  // Real-time form validation using formValidationUtils
+  useEffect(() => {
+    const newErrors = {
+      name: !validateName(signUpData.name) || !validateRequired(signUpData.name),
+      email: !validateEmail(signUpData.email) || !validateRequired(signUpData.email),
+      password: !validateRequired(signUpData.password || '')
+    };
+
+    setErrors(newErrors);
+
+    // Check if any error exists, don't allow submit if so
+    const hasAnyError = newErrors.name || newErrors.email || newErrors.password;
+    setHasErrors(hasAnyError);
+  }, [signUpData]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    if(emptyPasswordField||invalidEmailField||emptyEmailField||emptyNameField){
-      return
-    }
-    else{
-      setSubmitted(true) 
+    if (hasErrors) {
+      return;
+    } else {
+      setSubmitted(true);
     }
   };
 
-  function handleChange (event) {
-    //validation
-    if (event.target.name==="name"){
-        if(event.target.value ===""){
-          setEmptyNameField(true)
-        }else{
-          setEmptyNameField(false)
-        }
-    }
-    if(event.target.name==="email"){
-      if(event.target.value ===""){
-        setEmptyEmailField(true)
-      }else{
-        if(event.target.value.includes("@")){
-          setInvalidEmailField(false)
-        }else{
-        setInvalidEmailField(true)
-        }
-       setEmptyEmailField(false)
-      }
-    }
-    if(event.target.name==="password"){
-      if(event.target.value ===""){
-        setEmptyPasswordField(true)
-      }else{
-        setEmptyPasswordField(false)
-      }
-    }
+  function handleChange(event) {
     setSignUpData({
-        ...signUpData,
-        [event.target.name]: event.target.value
-  });
+      ...signUpData,
+      [event.target.name]: event.target.value
+    });
   }
 
-
-  function setEmailFieldHelperText(){
-    if(emptyEmailField){
-      return "E-mail field can not be empty."
-    }else if (invalidEmailField){
-      return "Invalid E-mail!"
-    }else{
-      return null
+  function getNameHelperText() {
+    if (!signUpData.name) {
+      return "Name field cannot be empty";
+    } else if (!validateName(signUpData.name)) {
+      return "Name cannot exceed 30 characters";
     }
+    return null;
   }
 
+  function getEmailHelperText() {
+    if (!signUpData.email) {
+      return "Email field cannot be empty";
+    } else if (!validateEmail(signUpData.email)) {
+      return "Invalid email address";
+    }
+    return null;
+  }
 
   useEffect(() => {
     if (submitted) {
@@ -140,8 +140,8 @@ export default function SignUp() {
             autoFocus
             required
             onChange={handleChange}
-            error={emptyNameField}
-            helperText={emptyNameField? "Name field can not be empty." :null}
+            error={errors.name}
+            helperText={errors.name ? getNameHelperText() : ' '}
           />
           <TextField 
             margin="normal"
@@ -154,8 +154,8 @@ export default function SignUp() {
             required
             autoComplete="email"
             onChange={handleChange}
-            error={emptyEmailField || invalidEmailField}
-            helperText={setEmailFieldHelperText()}
+            error={errors.email}
+            helperText={errors.email ? getEmailHelperText() : ' '}
           />
           <TextField
             margin="normal"
@@ -168,14 +168,15 @@ export default function SignUp() {
             id="password"
             autoComplete="current-password"
             onChange={handleChange}
-            error={emptyPasswordField}
-            helperText={emptyPasswordField? "Password field can not be empty." :null}
+            error={errors.password}
+            helperText={errors.password ? "Password field cannot be empty" : ' '}
           />
           <Button
             type="submit"
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
+            disabled={hasErrors}
           >
             Sign Up
           </Button>

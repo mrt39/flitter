@@ -66,8 +66,6 @@ const CommentForm = ({ post, handleClose }) => {
     }
   };
 
-
-
   //handle submitting comments on posts
   useEffect(() => {
     async function sendCommentonPost() {
@@ -94,11 +92,6 @@ const CommentForm = ({ post, handleClose }) => {
         sendCommentonPost();
     } 
   }, [clickedPostComment]);
-
-
-
-
-
 
   return (
     <Box component="form" className=  

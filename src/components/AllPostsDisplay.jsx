@@ -1,16 +1,17 @@
 /* eslint-disable react/prop-types */
-import { useState, useEffect, useRef } from 'react';
-import { Box, List, ListItem, Alert, CircularProgress } from '@mui/material';
+import { useState, useEffect, useRef } from "react";
+import { Box, Alert, CircularProgress, List, ListItem } from '@mui/material';
+import InfiniteScroll from 'react-infinite-scroll-component';
 import PostDisplay from './PostDisplay.jsx';
-import InfiniteScroll from 'react-infinite-scroll-component'; //infinite scroll 
-import { useUI } from '../contexts/UIContext.jsx';
 import { useAuth } from '../contexts/AuthContext.jsx';
+import { useUI } from '../contexts/UIContext.jsx';
 import { useUser } from '../contexts/UserContext.jsx';
 import { usePost } from '../contexts/PostContext.jsx';
 import { getAllPosts } from '../utilities/postService.js';
+import { useInfiniteScroll } from '../utilities/infiniteScrollUtils.js';
 import '../styles/AllPostsDisplay.css';
 
-const AllPostsDisplay = ({fromThisUser}) => {
+function AllPostsDisplay({fromThisUser}) {
   const { darkModeOn, appContainerRef } = useUI();
   const { currentUser, profileUpdated } = useAuth();
   const { selectedUser} = useUser();
@@ -29,16 +30,20 @@ const AllPostsDisplay = ({fromThisUser}) => {
   const [loading, setLoading] = useState(true);
   const [filteredMessages, setFilteredMessages] = useState([]);
 
-  // Control shuffling. 
-  //Create this variable to prevent the homepage AllPostsDisplay from shuffling posts when the user likes or comments on a post.
+  //control shuffling
+  //create this variable to prevent the homepage AllPostsDisplay from shuffling posts when the user likes or comments on a post
   const [shouldNotShuffle, setShouldNotShuffle] = useState(false); 
   const [shuffledOrder, setShuffledOrder] = useState([]);
   const [newPostAdded, setNewPostAdded] = useState(false);
 
-  // Create a ref to store the previous values of the dependencies
+  //create a ref to store the previous values of the dependencies
   const prevDeps = useRef([pressedSubmitPost, imgSubmittedNavbar, imgSubmittedHomePage, refreshPosts]);
+  
+  //use infinite scroll utility
+  const { visibleItems: visiblePosts, loading: loadingPosts, loadMoreItems: loadMorePosts } = 
+    useInfiniteScroll(15, 10, 1000);
 
-  // fetch for getting data of all posts
+  //fetch for getting data of all posts
   useEffect(() => {
     const getMessages = () => {
       getAllPosts()
@@ -53,7 +58,7 @@ const AllPostsDisplay = ({fromThisUser}) => {
         });
     };
   
-    // Check if the useEffect has been triggered by any of the pressedSubmitPost, imgSubmittedNavbar, imgSubmittedHomePage dependencies
+    //check if the useEffect has been triggered by any of the pressedSubmitPost, imgSubmittedNavbar, imgSubmittedHomePage dependencies
     if (
       prevDeps.current[0] !== pressedSubmitPost ||
       prevDeps.current[1] !== imgSubmittedNavbar ||
@@ -63,7 +68,7 @@ const AllPostsDisplay = ({fromThisUser}) => {
       setShouldNotShuffle(true);
     }
   
-    // If the useEffect has been triggered by the refreshPosts dependency (like or comment), set the shouldNotShuffle state to true
+    //if the useEffect has been triggered by the refreshPosts dependency (like or comment), set the shouldNotShuffle state to true
     if (prevDeps.current[3] !== refreshPosts) {
       setShouldNotShuffle(true);
     }
@@ -78,7 +83,7 @@ const AllPostsDisplay = ({fromThisUser}) => {
     }
   }, [pressedSubmitPost, imgSubmittedNavbar, imgSubmittedHomePage, refreshPosts, profileUpdated]);
   
-  // useEffect for sorting messages (shuffle or sort by date)
+  //useEffect for sorting messages (shuffle or sort by date)
   useEffect(() => {
     sortMessageDisplay();
   }, [allPosts, selectedUser, searchWord]);
@@ -105,9 +110,7 @@ const AllPostsDisplay = ({fromThisUser}) => {
     //if fromThisUser exists (rendering /profile route), only get the messages from that user, display chronologically
     if (fromThisUser) {
       allPosts.forEach((post) => {
-        // Check if the post is from this user
-        if (post.from[0]._id === fromThisUser._id) {
-          // Push the post into filteredMessages array
+        if (post.from[0].shortId === fromThisUser.shortId) {
           filteredMessagesinFunc.push(post);
         }
       });
@@ -115,44 +118,28 @@ const AllPostsDisplay = ({fromThisUser}) => {
       //sort filteredMessages array by their dates, descending order
       filteredMessagesinFunc.sort((a, b) => new Date(b.date) - new Date(a.date));
     } else { // If fromThisUser does not exist (rendering home route), get all the messages, shuffle them
-      //if the user has liked or commented on a post, do not shuffle the posts (which sets the shouldNotShuffle state to true), use the previously shuffled order
+      //if the user has liked or commented on a post, do not shuffle the posts (which sets the shouldNotShuffle state to true), 
+      //use the previously shuffled order
       if (shouldNotShuffle && shuffledOrder.length > 0) {
-        //get the new posts from the allposts array in the stored (under shuffledOrder) order
+        //get the posts from the allposts array in the saved shuffled order
         filteredMessagesinFunc = shuffledOrder.map(index => allPosts[index]);
+        //reset the shouldNotShuffle state
         setShouldNotShuffle(false);
       } else {
-          filteredMessagesinFunc = [...allPosts];
-            // Shuffle the posts
-            const order = filteredMessagesinFunc.map((_, index) => index);
-            for (let i = filteredMessagesinFunc.length - 1; i >= 0; i--) {
-              const j = Math.floor(Math.random() * (i + 1));
-              //store the order of the posts in the shuffle
-              [order[i], order[j]] = [order[j], order[i]];
-            }
-            setShuffledOrder(order);
-            //get the posts from the allposts in the shuffled order
-            filteredMessagesinFunc = order.map(index => allPosts[index]);
-            setShouldNotShuffle(false);
+        //otherwise, shuffle the posts
+        const order = Array.from({ length: allPosts.length }, (_, i) => i);
+        //shuffle the indices array using Fisher-Yates shuffle algorithm
+        for (let i = order.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [order[i], order[j]] = [order[j], order[i]];
         }
+        setShuffledOrder(order);
+        //get the posts from the allposts array in the shuffled order
+        filteredMessagesinFunc = order.map(index => allPosts[index]);
       }
+    }
   
     setFilteredMessages(filteredMessagesinFunc);
-  }
-
-  /* ---------------------------INFINITE SCROLL FUNCTIONALITY--------------------------- */
-  //state for setting the visible post count, for infinite scroll functionality 
-  const [visiblePosts, setVisiblePosts] = useState(15); // initial amount of posts to show
-  const [loadingPosts, setLoadingPosts] = useState(false); // track posts loading state
-
-  // function to load more posts when scrolled to the bottom, with a 1.5-second delay
-  function loadMorePosts() {
-    setLoadingPosts(true); // Start loading
-
-    // delay the loading of the next set of posts by 1.5 seconds
-    setTimeout(() => {
-      setVisiblePosts(visiblePosts + 10); // increase the visible post count by 10
-      setLoadingPosts(false); // end loading
-    }, 1000);
   }
 
   //filter based on searchWord

@@ -9,7 +9,7 @@ import '../styles/FollowButton.css';
 const FollowButton = ({ displayedUserOnCard, handleTooltipClose }) => {
   const { currentUser } = useAuth();
   const { darkModeOn } = useUI();
-  const { loadingFollow,  userRefreshPending, optimisticFollowState, handleOptimisticFollow } = useFollow();
+  const { loadingFollow,  userRefreshPending, optimisticFollowState, handleOptimisticFollow} = useFollow();
 
   const [isFollowing, setIsFollowing] = useState(false);
   const [isHovered, setIsHovered] = useState(false);

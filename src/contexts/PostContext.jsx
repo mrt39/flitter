@@ -9,6 +9,8 @@ const PostContext = createContext();
 function PostProvider({ children }) {
   //all posts
   const [allPosts, setAllPosts] = useState([]);
+  const [postsLoading, setPostsLoading] = useState(true);
+  const [postsError, setPostsError] = useState(null);
   
   //refresh posts in the event of like, comment or sending a new post
   const [refreshPosts, setRefreshPosts] = useState(false);
@@ -40,7 +42,7 @@ function PostProvider({ children }) {
     }
   }, [refreshPosts]);
 
-  //calculate most iterated words when posts change to display in What's Happening component
+  //calculate most iterated words when posts change to display in what's happening component
   useEffect(() => {
     if (allPosts.length === 0) return;
 

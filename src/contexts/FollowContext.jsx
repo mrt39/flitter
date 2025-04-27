@@ -4,6 +4,11 @@
 import { createContext, useState, useContext, useEffect } from 'react';
 import { toggleFollow } from '../utilities/followService';
 import { useAuth } from './AuthContext';
+import { 
+  handleOptimisticFollow as utilHandleOptimisticFollow,
+  setOptimisticFollowState as updateOptimisticState,
+  revertOptimisticFollow
+} from '../utilities/optimisticUpdateUtils';
 
 const FollowContext = createContext();
 
@@ -26,27 +31,30 @@ function FollowProvider({ children }) {
   function handleOptimisticFollow(userToFollow) {
     if (!currentUser || !userToFollow) return;
     
-    //check if current user is following this user already - returns true/false
-    const isCurrentlyFollowing = currentUser.followingtheseID && 
-      currentUser.followingtheseID.includes(userToFollow._id);
+    //prevent following yourself
+    if (userToFollow._id === currentUser._id) return;
     
-    //update optimistic state with slight delay
-    setTimeout(() => {
-      //make a copy of existing state object
-      const newOptimisticState = Object.assign({}, optimisticFollowState);
-      //toggle the follow state for this user
-      newOptimisticState[userToFollow._id] = !isCurrentlyFollowing;
-      //update state with new object
-      setOptimisticFollowState(newOptimisticState);
-    }, 200);
+    //prevent action while loading or refreshing
+    if (loadingFollow || userRefreshPending) return;
+    
+    //use utility function to determine new follow state
+    const isFollowing = utilHandleOptimisticFollow(userToFollow, currentUser);
+    
+    //use utility function to set optimistic state
+    updateOptimisticState(
+      userToFollow, 
+      isFollowing, 
+      optimisticFollowState, 
+      setOptimisticFollowState
+    );
     
     //trigger API calls
     setUsertoFollow(userToFollow);
     setLoadingFollow(true);
-    setPressedFollow(!pressedFollow);
+    setPressedFollow(prev => !prev);
   }
 
-  //useEffect for handling follow
+  //useEffect for handling follow API calls
   useEffect(() => {
     async function followUser() {
       if (!currentUser || !usertoFollow) return;
@@ -59,17 +67,14 @@ function FollowProvider({ children }) {
       } catch (error) {
         console.error('Error:', error);
 
-        //revert optimistic state on error
-        const newOptimisticState = Object.assign({}, optimisticFollowState);
-        //remove this user's entry from optimistic state
-        delete newOptimisticState[usertoFollow._id];
-        setOptimisticFollowState(newOptimisticState);
-        
-        // set error message
-        const newErrors = Object.assign({}, followErrors);
-        newErrors[usertoFollow._id] = error.message || 'Failed to follow user';
-        setFollowErrors(newErrors);
-
+        //use utility function to revert optimistic state on error
+        revertOptimisticFollow(
+          usertoFollow,
+          optimisticFollowState,
+          setOptimisticFollowState,
+          followErrors,
+          setFollowErrors
+        );
       } finally {
         setLoadingFollow(false);
         //fetch an api call to get currentUser, in order to get the updated verison of follower/following lists of the currentUser

@@ -5,6 +5,7 @@ import {ListItem,} from '@mui/material';
 import Box from '@mui/material/Box';
 import { CircularProgress, List} from '@mui/material';
 import InfiniteScroll from 'react-infinite-scroll-component'; //infinite scroll 
+import { useInfiniteScroll } from '../utilities/infiniteScrollUtils.js';
 import { useUI } from '../contexts/UIContext.jsx';
 import '../styles/AllCommentsDisplay.css'
 
@@ -19,32 +20,19 @@ const AllCommentsDisplay = ({post}) => {
     setSortedComments(post.comments)
   }, [post])
 
-  /* ---------------------------INFINITE SCROLL FUNCTIONALITY--------------------------- */
-  //state for setting the visible post count, for infinite scroll functionality 
-  const [visibleComments, setVisibleComments] = useState(20); // Initial amount of comments to show
-  const [loadingComments, setLoadingComments] = useState(false); // Track comments loading state
-
-
-  // Function to load more comments when scrolled to the bottom, with a 1.5-second delay
-  function loadMoreComments () {
-    setLoadingComments(true); // Start loading
-
-    // Delay the loading of the next set of comments by 1.5 seconds
-    setTimeout(() => {
-      setVisibleComments(visibleComments + 7); // Increase the visible post count by 10
-      setLoadingComments(false); // End loading
-    }, 1000);
-  };
+  //use infinite scroll utility
+  const { visibleItems: visibleComments, loading: loadingComments, loadMoreItems: loadMoreComments } =
+    useInfiniteScroll(20, 7, 1000);
 
   return (
   <Box className="comment-feed-container">
     <List className="comment-feed">
       <InfiniteScroll
-        dataLength={visibleComments} // this is the length of the currently visible comments
-        next={loadMoreComments} // function to call when more comments are to be loaded
-        hasMore={visibleComments < sortedComments.length} // check if there's more to load
-        scrollableTarget={appContainerRef.current} // set the scrollable target as the appContainerRef (passed from Home.jsx)
-        loader={ // display while loading more
+        dataLength={visibleComments} //length of the currently visible comments
+        next={loadMoreComments} //function to call when more comments are to be loaded
+        hasMore={visibleComments < sortedComments.length} //check if there's more to load
+        scrollableTarget={appContainerRef.current} //set the scrollable target as the appContainerRef (passed from Home.jsx)
+        loader={ //display while loading more
           loadingComments && 
           <CircularProgress size="5rem" sx={{"marginBottom":"5rem"}}/>
         } 

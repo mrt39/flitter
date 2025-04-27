@@ -21,7 +21,7 @@ function UserProvider({ children }) {
 
   //function to fetch user by shortId (for profile page)
   function fetchUserByShortId(shortId) {
-    return getUserByShortId(shortId)
+    getUserByShortId(shortId)
       .then(data => {
         setSelectedUser(data[0]);
         return data[0];

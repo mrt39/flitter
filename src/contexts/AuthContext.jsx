@@ -25,13 +25,14 @@ function AuthProvider({ children }) {
       getCurrentUser()
         .then(data => {
           setCurrentUser(data)
-          setLoading(false); //set loading to false once the data is received
           setFirstTimeLoading(false);
         })
         .catch(error => {
-          setLoading(false); //set loading to false once the data is received
           console.error('Error:', error);
-        });
+        })
+        .finally(() => {
+          setLoading(false); //set loading to false once the data is received
+        })
     };
     
     //only call when it's the first time loading
@@ -48,12 +49,13 @@ function AuthProvider({ children }) {
       getUserById(currentUser["_id"])
         .then(data => {
           setCurrentUser(data[0])
-          setLoading(false); //set loading to false once the data is received
         })
         .catch(error => {
-          setLoading(false); //set loading to false once the data is received
           console.error('Error:', error);
-        });
+        })
+        .finally(() => {
+          setLoading(false); //set loading to false once the data is received
+        })
     };
     
     //only call after the first fetch request is complete and when profile is updated
@@ -62,23 +64,23 @@ function AuthProvider({ children }) {
     }
   }, [profileUpdated, firstTimeLoading]); 
 
-    //when the user clicks on follow, refresh the currentUser state to render the followbutton correctly
-    function refreshCurrentUser() {
-      if (!currentUser) return;
-      
-      return getUserById(currentUser._id)
-        .then(data => {
-          setCurrentUser(data[0]);
-          return data[0];
-        })
-        .catch(error => {
-          console.error('Error refreshing user:', error);
-          throw error;
-        });
-    }
+  //when the user clicks on follow, refresh the currentUser state to render the followbutton correctly
+  function refreshCurrentUser() {
+    if (!currentUser) return;
+    
+    return getUserById(currentUser._id)
+      .then(data => {
+        setCurrentUser(data[0]);
+        return data[0];
+      })
+      .catch(error => {
+        console.error('Error refreshing user:', error);
+        throw error;
+      });
+  }
 
   function handleSignOut() {
-    return logoutUser()
+    logoutUser()
     .then(async result => {
       if (result.ok) {
         let response = await result.json(); 
