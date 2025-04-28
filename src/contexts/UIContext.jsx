@@ -1,12 +1,12 @@
 /* eslint-disable react/prop-types */
 
 //ui context for managing ui state like dark mode, snackbars, and container refs
-import { createContext, useState, useContext, useRef } from 'react';
+import { createContext, useState, useContext} from 'react';
 import { createAppTheme } from '../utilities/themeUtils';
 
 const UIContext = createContext();
 
-function UIProvider({ children }) {
+function UIProvider({ children, appContainerRef }) {
   //load the theme from localstorage so that the user selection persists. Use dark theme as default.
   const savedTheme = localStorage.getItem('darkModeOn') || 'true';
 
@@ -17,8 +17,6 @@ function UIProvider({ children }) {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarOpenCondition, setSnackbarOpenCondition] = useState("");
 
-  //reference for infinite scroll
-  const appContainerRef = useRef(null);
 
   //function to toggle the dark mode
   function toggleDarkTheme() {

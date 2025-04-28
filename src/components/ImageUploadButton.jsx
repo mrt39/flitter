@@ -44,6 +44,9 @@ export default function ImageUploadButton({
       //check the filetype to ensure it's an image. throw error if it isn't
       if (selectedFile[0]["type"] != "image/x-png" && selectedFile[0]["type"] != "image/png" && selectedFile[0]["type"] != "image/jpeg") {
         console.error("Only image files can be attached!")
+        //remove the attached non-image file
+        setSelectedImage(null);
+        setImageSelected(false);
         setSnackbarOpenCondition("notAnImage")
         setSnackbarOpen(true)
         return

@@ -51,11 +51,40 @@ function PostProvider({ children }) {
     allPosts.forEach(post => {
       //if there is no text in the post (if it is an image), return
       if (!post.message) return;
+
+      //split post into words
+      const allWordsInPost = post.message.split(' ');
       
-      post.message.split(' ').forEach(wordInPosts => {
+      //create array for unique words
+      const uniqueWordsInPost = [];
+  
+      //get only the unique words from this post 
+      //(so if there is a word repeated multiple times in the same post, it will count as only one, as we are looing for "posts" that contain these words, so counting the posts)
+      for (let i = 0; i < allWordsInPost.length; i++) {
+        //convert to lowercase and remove punctuation for accurate counting
+        const wordLowerCase = allWordsInPost[i].toLowerCase().replace(/[.,;:!?'"()]/g, '');
+        //skip empty words
+        if (wordLowerCase === '') continue;
+        
+        //check if word is already in unique list
+        let isWordAlreadyAdded = false;
+        for (let j = 0; j < uniqueWordsInPost.length; j++) {
+          if (uniqueWordsInPost[j] === wordLowerCase) {
+            isWordAlreadyAdded = true;
+            break;
+          }
+        }
+
+        //if word isn't in the list yet, add it
+        if (!isWordAlreadyAdded) {
+          uniqueWordsInPost.push(wordLowerCase);
+        }
+      }
+      
+      uniqueWordsInPost.forEach(wordInPosts => {
         let wordFound = false;
         words.forEach(word => {
-          if (word.word === wordInPosts) {
+          if (word.word=== wordInPosts) {
             word.timesIterated++;
             wordFound = true;
           }

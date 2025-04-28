@@ -158,7 +158,7 @@ function AllPostsDisplay({fromThisUser}) {
       setShuffledOrder(order);
       setFilteredMessages(filtered);
     } else {
-      // Reset to all posts if searchWord is cleared
+      //reset to all posts if searchWord is cleared
       return;
     }
   }, [searchWord]);
@@ -179,8 +179,8 @@ function AllPostsDisplay({fromThisUser}) {
 
   //filter messages based on activeTab before rendering (if activeTab is 'following', only display messages from users the currentUser is following)
   const messagesToDisplay = activeTab === 'following'
-    ? filteredMessages.filter(post => post && post.from && /* ensure post and post.from is defined before rendering. important after image uploading */ currentUser.followingtheseID.includes(post.from[0]._id))
-    : filteredMessages;
+  ? filteredMessages.filter(post => post && post.from && /* ensure post and post.from is defined before rendering. important after image uploading */ currentUser.followingtheseID.includes(post.from[0]._id))
+  : filteredMessages;
 
   return (
     <Box className="post-feed-container" id="post-feed-container">

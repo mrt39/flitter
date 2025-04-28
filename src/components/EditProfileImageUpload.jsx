@@ -24,6 +24,9 @@ function ProfileImageUpload({
     //check the filetype to ensure it's an image. throw error if it isn't
     if (uploadedImg.type !== "image/x-png" && uploadedImg.type !== "image/png" && uploadedImg.type !== "image/jpeg") {
       console.error("Only image files can be attached!");
+      //remove the attached non-image file
+      setUploadedImg(null)
+      setShowSaveImageButton(false);
       setSnackbarOpenCondition("notAnImage");
       setSnackbarOpen(true);
       return;

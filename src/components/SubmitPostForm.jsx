@@ -116,7 +116,7 @@ export default function SubmitPostForm({location, handleClose}) {
     setSelectedImage(null);
     setImageSelected(false);
     if (fileInputRef.current) {
-      fileInputRef.current.value = null; // Reset the file input
+      fileInputRef.current.value = null; //reset the file input
     }
   }
 

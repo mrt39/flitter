@@ -10,7 +10,7 @@ function useInfiniteScroll(initialCount, increment, delay = 1000) {
   const [loading, setLoading] = useState(false);  // track posts loading state
 
   //function to load more items
-  function loadMoreItems() {
+  function loadMoreItems() {    
     setLoading(true); //start loading the next set of posts
     
     // delay the loading of the next set of posts by 1 second

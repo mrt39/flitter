@@ -32,6 +32,7 @@ const AllCommentsDisplay = ({post}) => {
         next={loadMoreComments} //function to call when more comments are to be loaded
         hasMore={visibleComments < sortedComments.length} //check if there's more to load
         scrollableTarget={appContainerRef.current} //set the scrollable target as the appContainerRef (passed from Home.jsx)
+        onScroll={() => console.log("Scroll event detected in AllCommentsDisplay InfiniteScroll")}
         loader={ //display while loading more
           loadingComments && 
           <CircularProgress size="5rem" sx={{"marginBottom":"5rem"}}/>
