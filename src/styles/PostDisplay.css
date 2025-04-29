@@ -248,6 +248,7 @@
   overflow-wrap: break-word; /* long words break to fit within the container */
   display: inline-block; /* link behaves like an inline element */
   max-width: 100%; /* make link does not exceed the container width */
+
 }
 
 .link-preview-container {
@@ -279,10 +280,12 @@
   display: block;
   color: #555;
   margin-bottom: 5px;
+  font-size: 0.9em;
 }
 
 .link-preview-link {
   display: block;
   color: #888;
-  font-size: 0.9em;
+  font-size: 1em;
+  text-decoration: none;
 }
