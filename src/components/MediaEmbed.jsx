@@ -3,9 +3,11 @@
 /* eslint-disable react/prop-types */
 import { useState, useEffect, useRef } from 'react';
 import { extractURLFromContent, extractYouTubeID, fetchLinkPreview } from '../utilities/mediaUtils.jsx';
+import { useUI } from '../contexts/UIContext.jsx';
 import '../styles/PostDisplay.css';
 
 function MediaEmbed({ content }) {
+  const {darkModeOn} = useUI();
   //state to store link preview data
   const [linkPreviewData, setLinkPreviewData] = useState(null);
   //ref to track if a request for the same link has already been made
@@ -77,7 +79,7 @@ function MediaEmbed({ content }) {
       <>
         {/* keep original text order: plain text before URL, render url as <a>, plain text after URL */}
         {parts[0]}
-        <a className="postUrl" href={url} target="_blank" rel="noopener noreferrer">
+        <a className={`postUrl ${darkModeOn ? 'dark-mode' : ''}`}  href={url} target="_blank" rel="noopener noreferrer">
             {url}
         </a>
         {parts[1]}

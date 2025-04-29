@@ -18,3 +18,19 @@ input[aria-invalid="true"] + .MuiOutlinedInput-notchedOutline{
     border-color: #d32f2f !important; 
  }
 
+.signUpLink{
+    word-break: break-word; /* break long words to fit within the container */
+    max-width: 100%; /* make link does not exceed the container width */
+}
+
+.signUpLink:hover{
+    color: #1A4D80;
+}
+
+.signUpLink.dark-mode{
+    color: #4C78D6;
+}
+
+.signUpLink.dark-mode:hover{
+    color: #5A9BD5;
+}

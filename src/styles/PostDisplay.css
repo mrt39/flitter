@@ -248,7 +248,18 @@
   overflow-wrap: break-word; /* long words break to fit within the container */
   display: inline-block; /* link behaves like an inline element */
   max-width: 100%; /* make link does not exceed the container width */
+}
 
+.postUrl:hover{
+  color: #1A4D80;
+}
+
+.postUrl.dark-mode{
+  color: #4C78D6;
+}
+
+.postUrl.dark-mode:hover{
+  color: #5A9BD5;
 }
 
 .link-preview-container {

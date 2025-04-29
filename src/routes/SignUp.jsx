@@ -16,7 +16,7 @@ export default function SignUp() {
 
   const navigate = useNavigate(); 
 
-  const { setSnackbarOpenCondition, setSnackbarOpen } = useUI();  
+  const {darkModeOn, setSnackbarOpenCondition, setSnackbarOpen } = useUI();  
 
   const [submitted, setSubmitted] = useState(false);
   const [signUpData, setSignUpData] = useState({
@@ -31,22 +31,29 @@ export default function SignUp() {
     password: false
   });
 
+  //set the touched state for each field, so that validation checks occur for each field only after they're touched by the user (when the user types something in a field)
+  const [touched, setTouched] = useState({
+    name: false,
+    email: false,
+    password: false
+  });
+
   const [hasErrors, setHasErrors] = useState(false);
 
-  // Real-time form validation using formValidationUtils
+  //real-time form validation using formValidationUtils
   useEffect(() => {
     const newErrors = {
-      name: !validateName(signUpData.name) || !validateRequired(signUpData.name),
-      email: !validateEmail(signUpData.email) || !validateRequired(signUpData.email),
-      password: !validateRequired(signUpData.password || '')
+      name: touched.name && (!validateName(signUpData.name) || !validateRequired(signUpData.name)),
+      email: touched.email && (!validateEmail(signUpData.email) || !validateRequired(signUpData.email)),
+      password: touched.password && !validateRequired(signUpData.password || '')
     };
 
     setErrors(newErrors);
 
-    // Check if any error exists, don't allow submit if so
+    //check if any error exists, don't allow submit if so
     const hasAnyError = newErrors.name || newErrors.email || newErrors.password;
     setHasErrors(hasAnyError);
-  }, [signUpData]);
+  }, [signUpData, touched]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -59,10 +66,20 @@ export default function SignUp() {
   };
 
   function handleChange(event) {
+
+    const name = event.target.name
+    const value = event.target.value
+
     setSignUpData({
       ...signUpData,
-      [event.target.name]: event.target.value
+      [name]: value
     });
+
+    //mark field as touched when user types
+    setTouched(prev => ({
+      ...prev,
+      [name]: true
+    }));
   }
 
   function getNameHelperText() {
@@ -183,7 +200,7 @@ export default function SignUp() {
           
           <Grid container className="loginSignupLinkContainer">
             <Grid item>
-              <RouterLink className="signUpLink" to="/login">
+              <RouterLink className={`signUpLink ${darkModeOn ? 'dark-mode' : ''}`} to="/login">
                   {"Already have an account? Sign in"}
               </RouterLink>
             </Grid>

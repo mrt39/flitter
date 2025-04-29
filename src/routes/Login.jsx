@@ -21,7 +21,7 @@ export default function Login() {
 
   //use context hooks
   const { currentUser } = useAuth(); 
-  const { setSnackbarOpenCondition, setSnackbarOpen } = useUI(); 
+  const {darkModeOn, setSnackbarOpenCondition, setSnackbarOpen } = useUI(); 
 
   const navigate = useNavigate();
   const [clickedLogin, setClickedLogin] = useState(false);
@@ -173,7 +173,7 @@ export default function Login() {
 
             <Grid container className="loginSignupLinkContainer">
               <Grid item>
-                <RouterLink className="signUpLink" to="/signup">
+                <RouterLink className={`signUpLink ${darkModeOn ? 'dark-mode' : ''}`} to="/signup">
                     {"Don't have an account? Sign Up"}
                 </RouterLink>
               </Grid>
