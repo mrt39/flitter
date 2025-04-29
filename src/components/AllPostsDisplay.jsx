@@ -91,33 +91,37 @@ function AllPostsDisplay({fromThisUser}) {
   async function sortMessageDisplay() {
     let filteredMessagesinFunc = [];
   
-    //if a new post has been added, place it at the top and retain the order of the other posts
-    if (newPostAdded) {
+    //if the logged in user is displaying another user's profile, always prioritize displaying that user's posts
+    //do not add the newly added post to the top, since it's another user's profile, consisting only of that user's posts
+    if (fromThisUser) {
+      //if viewing a profile page, always filter for that user's posts
+      allPosts.forEach((post) => {
+        if (post.from && post.from[0] && post.from[0].shortId === fromThisUser.shortId) {
+          filteredMessagesinFunc.push(post);
+        }
+      });
+  
+      //sort filteredMessages array by their dates, descending order
+      filteredMessagesinFunc.sort((a, b) => new Date(b.date) - new Date(a.date));
+      
+      //reset newPostAdded if it was set
+      if (newPostAdded) {
+        setNewPostAdded(false);
+      }
+    }
+    //only handle new post ordering for home page
+    else if (newPostAdded) {
       //add the new post's index (which is 0) to the top of the shuffledOrder array, and increment the index of all the other posts by 1 
       //so that the new post is at the top and the other posts are in the same order
       const order = [0, ...shuffledOrder.map(index => index + 1)];
       setShuffledOrder(order);
-
+  
       //get the new posts from the allposts array in the new order
       filteredMessagesinFunc = order.map(index => allPosts[index]);
-
-      setFilteredMessages(filteredMessagesinFunc);
-
+  
       setNewPostAdded(false);
-      return;
     }
-    
-    //if fromThisUser exists (rendering /profile route), only get the messages from that user, display chronologically
-    if (fromThisUser) {
-      allPosts.forEach((post) => {
-        if (post.from[0].shortId === fromThisUser.shortId) {
-          filteredMessagesinFunc.push(post);
-        }
-      });
-
-      //sort filteredMessages array by their dates, descending order
-      filteredMessagesinFunc.sort((a, b) => new Date(b.date) - new Date(a.date));
-    } else { // If fromThisUser does not exist (rendering home route), get all the messages, shuffle them
+    else { // If fromThisUser does not exist (rendering home route), get all the messages, shuffle them
       //if the user has liked or commented on a post, do not shuffle the posts (which sets the shouldNotShuffle state to true), 
       //use the previously shuffled order
       if (shouldNotShuffle && shuffledOrder.length > 0) {
