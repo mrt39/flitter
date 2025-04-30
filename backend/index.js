@@ -1,19 +1,22 @@
 //jshint esversion:6
-require('dotenv').config()
+require('dotenv').config();
 const express = require("express");
 const bodyParser = require("body-parser");
-
-//hashing, cookies 
 const session = require('express-session');
-const {passport} = require( "./passport.js")
-
-//cors
 const cors = require("cors");
 
-//require other js files
-const authRoute = require("./routes/routes.js");
+//import configurations
+const { connectToDatabase } = require("./configuration/database");
+const { sessionConfig } = require("./configuration/session-config");
+const configurePassport = require("./configuration/passport-config");
 
+//import routes
+const allRoutes = require("./routes/all-routes");
+
+//initialize app
 const app = express();
+
+//configure CORS
 app.use(
   cors({
     origin: true,
@@ -22,48 +25,35 @@ app.use(
   })
 );
 
+//middleware
 app.use(express.json());
 app.use(bodyParser.urlencoded({extended: true}));
+app.use('/images', express.static('images')) //serve the files in /images folder as static files
 
-//serve the files in /images folder as static files
-app.use('/images', express.static('images'))
-
-
-
+//configure sessions and passport
 app.set('trust proxy', 1); //add this for production
+app.use(session(sessionConfig));
 
-//storing session in mongodb because storing it in client is unstable for production
-//(works fine for development but starts to randomly log people out in production, when deployed to server)
-const MongoDBStore = require('connect-mongodb-session')(session);
-const dev_db_url = "mongodb://127.0.0.1:27017/flitterDB"
-const store = new MongoDBStore({
-  uri: process.env.MONGODB_URI || dev_db_url,
-  collection: 'appSessions'
-});
-
-app.use(session({
-    secret: process.env.SECRET,
-    resave: false,
-    saveUninitialized: true,
-    proxy: true, //add this for production
-    store: store, //store to mongodb
-    cookie: {
-      secure: false, // Set to true in production if served over HTTPS, "false" for development
-      sameSite: 'strict' // "none" for production, "strict" for development, "Lax" for twitter oAuth
-  }
-}));
-
+const passport = configurePassport();
 app.use(passport.initialize());
 app.use(passport.session());
 
+//connect to database
+connectToDatabase();
 
+//use routes
+app.use("/", allRoutes);
 
-/* Mount Routes */
+//error handling middleware
+app.use((err, req, res, next) => {
+  console.error("Error:", err);
+  res.status(500).json("An error occurred");
+});
 
-app.use("/", authRoute);
-
-app.listen("5000", () => {
-  console.log("Server is running!");
+//start server
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
 
 
