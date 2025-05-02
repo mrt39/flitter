@@ -18,12 +18,12 @@ function validateEmail(email) {
   
   //validate bio field
   function validateBio(bio, maxLength = 50) {
-    return bio.length <= maxLength;
+    return bio? (bio.length <= maxLength) :null;
   }
   
   //validate email field length
   function validateEmailLength(email, maxLength = 50) {
-    return email.length <= maxLength;
+    return email?(email.length <= maxLength) :null;
   }
   
   

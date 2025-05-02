@@ -15,7 +15,7 @@ const Profile = () => {
   //use context hooks
   const { selectedUser, setSelectedUser } = useUser(); 
   const { setActiveTab, setSearchWord } = usePost(); 
-  const { pressedFollow } = useFollow(); 
+  const { pressedFollow, userRefreshPending } = useFollow(); 
   const { profileUpdated } = useAuth();
 
   
@@ -51,8 +51,8 @@ const Profile = () => {
         });
     };
     getUserData();
-    //when user follows/unfollows, refresh display to have either the follow or unfollow button
-  }, [pressedFollow, profileUpdated]); 
+    //when user follows/unfollows (which changes the state of userRefreshPending), refresh display to have either the follow or unfollow button
+  }, [userRefreshPending, profileUpdated]); 
 
   if (profilePageLoading) {
     return <CircularProgress />;

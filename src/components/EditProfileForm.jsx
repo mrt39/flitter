@@ -4,7 +4,7 @@
 import { useState, useEffect } from 'react';
 import { TextField, Box, Button } from '@mui/material';
 import { useUI } from '../contexts/UIContext.jsx';
-import { validateName, validateBio, validateEmailLength, validateEmail } from '../utilities/formValidationUtils.js';
+import { validateName, validateBio, validateEmailLength, validateEmail, validateRequired } from '../utilities/formValidationUtils.js';
 import '../styles/EditProfileModal.css';
 
 function ProfileForm({ 
@@ -21,6 +21,13 @@ function ProfileForm({
   });
 
   const [errors, setErrors] = useState({
+    name: false,
+    email: false,
+    bio: false
+  });
+
+   //set the touched state for each field, so that validation checks occur for each field only after they're touched by the user (when the user types something in a field)
+  const [touched, setTouched] = useState({
     name: false,
     email: false,
     bio: false
@@ -43,15 +50,29 @@ function ProfileForm({
       email: false,
       bio: false
     });
+
+    //reset touched state when currentUser changes
+    setTouched({
+      name: false,
+      email: false,
+      bio: false
+    });
     
   }, [currentUser]);
 
   //real-time form validation using formValidationUtils, anytime values change
   useEffect(() => {
     const newErrors = {
-      name: !validateName(values.name),
-      bio: !validateBio(values.bio),
-      email: values.email ? (!validateEmailLength(values.email) || !validateEmail(values.email)) : false,
+      name: touched.name && (!validateName(values.name) || !validateRequired(values.name)),
+      bio: touched.bio && !validateBio(values.bio),
+      //if the user registered via email (not with Google account or X account), email is required
+      email: touched.email && (
+        (!currentUser.twitterId && !currentUser.googleId) 
+        ? 
+        (!validateRequired(values.email) || !validateEmail(values.email) || !validateEmailLength(values.email))
+        : 
+        (values.email ? (!validateEmail(values.email) || !validateEmailLength(values.email)) : false)
+      ) 
     };
 
     setErrors(newErrors);
@@ -59,15 +80,53 @@ function ProfileForm({
     //check if any error exists, don't let submit if so
     const hasAnyError = newErrors.name || newErrors.bio || newErrors.email;
     setHasErrors(hasAnyError);
-  }, [values]);
+  }, [values, touched]);
+
+  function getNameHelperText() {
+    if (!values.name) {
+      return "Name field cannot be empty!";
+    } else if (!validateName(values.name)) {
+      return "Name cannot exceed 30 characters";
+    }
+    return " ";
+  }
+  
+  function getEmailHelperText() {
+    if ((!currentUser.twitterId && !currentUser.googleId) && !values.email) {
+      return "Email field cannot be empty!";
+    } else if (values.email && !validateEmail(values.email)) {
+      return "Invalid email address!";
+    } else if (values.email && !validateEmailLength(values.email)) {
+      return "Email cannot exceed 50 characters!";
+    }
+    return " ";
+  }
+  
+  function getBioHelperText() {
+    if (!validateBio(values.bio)) {
+      return "Bio cannot exceed 50 characters!";
+    }
+    return " ";
+  }
 
 
   function handleChange(event) {
+
+    const name = event.target.name
+    const value = event.target.value
+
     setValues({
       ...values,
-      [event.target.name]: event.target.value
+      [name]: value
     });
+
+    //mark field as touched when user types
+    setTouched(prev => ({
+      ...prev,
+      [name]: true
+    }));
   }
+  
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -89,21 +148,21 @@ function ProfileForm({
         required
         value={values.name}
         error={errors.name}
-        helperText={errors.name ? 'Name cannot exceed 30 characters' : ' '}
+        helperText={errors.name ? getNameHelperText() : ' '}
       />
       
       {!currentUser.twitterId && (
         <TextField
           disabled={loading || currentUser.googleId || currentUser.email === "demoacc@demoacc.com"}
           fullWidth
-          error={errors.email}
-          helperText={errors.email ? 'Invalid E-mail address!' : ' '}
           label="E-mail Address"
           name="email"
           type="email"
           required
           onChange={handleChange}
           value={values.email}
+          error={errors.email}
+          helperText={errors.email ? getEmailHelperText() : ' '}
         />
       )}
       
@@ -119,7 +178,7 @@ function ProfileForm({
         onChange={handleChange}
         value={values.bio}
         error={errors.bio}
-        helperText={errors.bio ? 'Bio cannot exceed 50 characters' : ' '}
+        helperText={errors.bio ? getBioHelperText() : ' '}
       />
       
       <Button
