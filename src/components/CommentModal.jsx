@@ -90,7 +90,7 @@ export default function CommentModal({ post }) {
               
               <Box className="commentModalReplyingToTextContainer" >
                 <Typography className="commentModalReplyingText" variant="body2" color="textSecondary">
-                Commenting to <Typography component="span" sx={{ color: '#1da1f2', fontSize: "13px" }}>@{post.from[0].name}</Typography>
+                Commenting to <Typography component="span" sx={{ color: '#1da1f2', fontSize: "13px" }}>@{post.from.name}</Typography>
                 </Typography>
               </Box> 
               <CommentForm post={post} handleClose={handleClose} />

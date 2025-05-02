@@ -56,7 +56,7 @@ const UserCardProfile = () => {
             {selectedUser.name}
           </Typography>
           <Typography variant="body2" color="text.secondary" className="header-postCount">
-            {allPosts.filter((post) => post.from[0].shortId === selectedUser.shortId).length} posts
+            {allPosts.filter((post) => post.from.shortId === selectedUser.shortId).length} posts
           </Typography>    
         </div>  
       </div>

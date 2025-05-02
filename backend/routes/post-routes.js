@@ -9,10 +9,21 @@ const { validatePostSubmission } = require("../utilities/validators");
 const { upload } = require("../configuration/multer-config");
 const { prepareImageForUpload, uploadImageToCloudinary } = require("../utilities/cloudinary-helper");
 
-// get all posts to display 
+//get all posts to display 
 router.get("/getallposts", async (req, res) => {
   try {
-    const allPosts = await Post.find();
+    //populate is a mongoose method that replaces objectId references with the actual referenced document
+    //here we are populating the "from" field in each post so we can get the latest name and profile picture
+    //this design avoids denormalization and keeps a single source of truth, which is the User model
+    const allPosts = await Post.find()
+      .populate("from", "name shortId picture uploadedpic") //only populating selected fields for performance
+      .populate({
+        path: "comments",
+        populate: {
+          path: "from",
+          select: "name shortId picture uploadedpic shortId", //only populating selected fields for performance
+        },
+      });
     res.send(allPosts);
   } catch (err) {
     res.send(err);
@@ -23,7 +34,16 @@ router.get("/getallposts", async (req, res) => {
 router.get("/getsingularpost/:postid", async (req, res) => {
   const postID = req.params.postid // access URL variable
   try {
-    const singularPost = await Post.findOne({_id: postID});
+    //populate the from and comment authors so we always get up-to-date user data
+    const singularPost = await Post.findOne({_id: postID})
+      .populate("from", "name shortId picture uploadedpic")
+      .populate({
+        path: "comments",
+        populate: {
+          path: "from",
+          select: "name shortId picture uploadedpic"
+        },
+      });
     res.send(singularPost);
   } catch (err) {
     res.send(err);
@@ -34,7 +54,7 @@ router.get("/getsingularpost/:postid", async (req, res) => {
 router.post("/submitPost", isAuthenticated, validatePostSubmission, async (req, res) => {
   try {
     const newPost = new Post({
-      from: req.body.from,
+      from: req.body.from._id, //storing id as this is an ObjectId - user in db.
       date: req.body.date,
       message: req.body.message,
     });
@@ -64,7 +84,7 @@ router.patch("/likePost", isAuthenticated, async (req, res) => {
       likedPost.likedby.splice(likingUserIndex, 1)
     } else{
       likedPost.likeCount = likedPost.likeCount+1
-      likedPost.likedby.push(likingUser)
+      likedPost.likedby.push(likingUser._id)
     }
 
     const result = await likedPost.save();
@@ -82,13 +102,16 @@ router.post("/sendCommentonPost", isAuthenticated, async (req, res) => {
     const commentedPost = await Post.findOne({_id: req.body.toPostID});
 
     const newComment = new Comment({
-      from: req.body.from,
+      from: req.body.from._id, //storing id as this is an ObjectId - user in db.
       date: req.body.date,
       toPostID: req.body.toPostID,
       comment: req.body.comment,
     });
+    
+    await newComment.save();
+
     //put the comment in the comments array of the post 
-    commentedPost.comments.push(newComment);
+    commentedPost.comments.push(newComment._id); //storing id as this is an ObjectId - user in db.
     //increase the commentCount property by 1
     commentedPost.commentCount += 1;  
     //save the post
@@ -110,7 +133,7 @@ router.post("/imagesent", upload.single('image'), isAuthenticated, async (req, r
 
   const dataURI = prepareImageForUpload(req);
   const imageName = req.file.filename;
-  const msgFrom = JSON.parse(req.body.from).currentUser;
+  const msgFrom = JSON.parse(req.body.from).currentUser._id; //storing id as this is an ObjectId - user in db.
   const date = JSON.parse(req.body.date);
 
   try {

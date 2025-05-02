@@ -5,8 +5,6 @@ const User = require("../models/user");
 const ShortUniqueId = require('short-unique-id');
 //for generating random data (for the purpose of passport.js, random banners for twitter and google users)
 const { faker } = require('@faker-js/faker');
-const { handleAuthSuccess } = require("../utilities/auth-middleware");
-const { errorResponse } = require("../utilities/error-handler-middleware");
 require('dotenv').config();
 
 const CLIENT_URL = process.env.CLIENT_URL;
@@ -15,6 +13,7 @@ const CLIENT_URL = process.env.CLIENT_URL;
 router.get("/login/success", (req, res) => {
   if (req.isAuthenticated()) {
     //Send user to the frontend
+    //no populate needed here because req.user is already the up-to-date single source of truth
     res.json(req.user);
   } else {
     res.status(401).send('User not authenticated');

@@ -21,6 +21,7 @@ router.get("/getallusers", async (req, res) => {
 router.get("/profile/:userid", async (req, res) => {
   const userID = req.params.userid; // access URL variable
   try {
+    //using find() instead of findOne() to maintain array response format, which is expected by frontend components
     const user = await User.find({_id: userID});
     res.send(user);
   } catch (err) {
@@ -32,6 +33,7 @@ router.get("/profile/:userid", async (req, res) => {
 router.get("/profile-shortId/:shortId", async (req, res) => {
   const shortId = req.params.shortId; // access URL variable
   try {
+    //using find() instead of findOne() to maintain array response format, which is expected by frontend components
     const user = await User.find({shortId: shortId});
     res.send(user);
   } catch (err) {
@@ -39,81 +41,29 @@ router.get("/profile-shortId/:shortId", async (req, res) => {
   }
 });
 
-//Edit user profile
+//edit user profile
 router.patch("/editprofile/:userid", validateUserProfile, async (req, res) => {
   const userid = req.params.userid; // access URL variable
-  const user = await User.findOne({_id: userid});
   const newName = req.body.name;
   const newEmail = req.body.email;
   const bio = req.body.bio;
-
-  console.log(req.body.name + " is the new name for this user: " + user.name);
   
   try {
+    //find the user by id
+    const user = await User.findOne({ _id: userid });
+
+    //update user fields
     user.name = newName;
     user.email = newEmail;
     user.bio = bio;
    
+    //save
     await user.save();
+
+    //since we are using references with populate, related documents will reflect the updated user data dynamically
+    //no need to manually update 'from' fields in Post or Follower models
     
-    //update all Post model instances where "from" field has this user
-    await Post.updateMany({from: {$elemMatch: {_id: userid}}}, 
-      {
-        $set: {
-          "from.$.name": newName,
-          "from.$.email": newEmail,
-          "from.$.bio": bio,
-        }
-      }
-    );
-    
-    //update all Post model instances where "comments" field has this user
-    const postsWithUserComments = await Post.find({
-      "comments.from._id": userid
-    });
-
-    postsWithUserComments.forEach(async (post) => {
-      post.comments.forEach(comment => {
-        comment.from.forEach(user => {
-          if (user._id.toString() === userid.toString()) {
-            // Update the fields
-            user.name = newName;
-            user.email = newEmail;
-            user.bio = bio;
-          }
-        });
-      });
-      await post.save();
-    });
-
-    //update all Follower model instances where "user" field, "following" field or "followed" field has this user
-    const updateFollowers = await Follower.updateMany(
-      {
-        $or: [ // $or condition allows the query to look in all three arrays (user, following, followedby).
-          { "user._id": userid },
-          { "following._id": userid },
-          { "followedby._id": userid }
-        ]
-      },
-      {
-        $set: {
-          "user.$[elem].name": newName,
-          "user.$[elem].email": newEmail,
-          "user.$[elem].bio": bio,
-          "following.$[elem].name": newName,
-          "following.$[elem].email": newEmail,
-          "following.$[elem].bio": bio,
-          "followedby.$[elem].name": newName,
-          "followedby.$[elem].email": newEmail,
-          "followedby.$[elem].bio": bio
-        }
-      },
-      {
-        arrayFilters: [{ "elem._id": userid }] // Update only the elements that match the user id
-      }
-    );
-
-    res.send(updateFollowers);
+    res.send({ message: "User profile updated successfully." });
   } catch (err) {
     res.send(err);
   }
@@ -165,8 +115,8 @@ router.post("/followUser", isAuthenticated, async (req, res) => {
     /* ------------------------HANDLING THE Follower MODEL in db----------------------- */
 
     //get the current user and followed user in the Follower model,
-    const fromUserFollowerModel = await Follower.findOne({user: {$elemMatch: {_id: req.body.fromUser._id}}})
-    const toUserFollowerModel = await Follower.findOne({user: {$elemMatch: {_id: req.body.toUser._id}}})
+    const fromUserFollowerModel = await Follower.findOne({ user: fromUser._id });
+    const toUserFollowerModel = await Follower.findOne({ user: toUser._id });
 
     //if the current user exists in the follower model, update
     if(fromUserFollowerModel)
@@ -181,13 +131,13 @@ router.post("/followUser", isAuthenticated, async (req, res) => {
         //save the user that clicked on follow
         await fromUserFollowerModel.save();
       }else {
-        await fromUserFollowerModel.following.push(toUser) 
+        await fromUserFollowerModel.following.push(toUser._id) 
         await fromUserFollowerModel.save()
       }
     } else { //if the user does not exist, create it
       const newFollower = new Follower({
-        user: fromUser,
-        following: toUser,
+        user: fromUser._id,
+        following: [toUser._id],
       });
       await newFollower.save();
     }
@@ -204,13 +154,13 @@ router.post("/followUser", isAuthenticated, async (req, res) => {
         //save the followed user
         await toUserFollowerModel.save();
       }else {
-        await toUserFollowerModel.followedby.push(fromUser) 
+        await toUserFollowerModel.followedby.push(fromUser._id) 
         await toUserFollowerModel.save()
       }
     } else { //if the followed user does not exist, create it
       const newFollower = new Follower({
-        user: toUser,
-        followedby: fromUser,
+        user: toUser._id,
+        followedby: [fromUser._id],
       });
       await newFollower.save();
     }
@@ -229,7 +179,13 @@ router.post("/followUser", isAuthenticated, async (req, res) => {
 router.get("/followers/:shortid", async (req, res) => {
   const shortId = req.params.shortid; // access URL variable
   try {
-    const followerData = await Follower.find({user: {$elemMatch: {shortId: shortId}}});
+    const user = await User.findOne({ shortId: shortId });
+    const followerData = await Follower.find({ user: user._id })
+      //populate replaces objectIds in the specified path with full documents from the referenced model
+      //we use it instead of embedding entire user data inside other documents to avoid data duplication and sync issues
+      //if future schemas reference other models (like posts, followers), populate will automatically hydrate them
+      .populate('following', 'name shortId picture uploadedpic') //only populating selected fields for performance
+      .populate('followedby', 'name shortId picture uploadedpic'); //only populating selected fields for performance
     res.send(followerData);
   } catch (err) {
     res.send(err);

@@ -9,8 +9,6 @@ const PostContext = createContext();
 function PostProvider({ children }) {
   //all posts
   const [allPosts, setAllPosts] = useState([]);
-  const [postsLoading, setPostsLoading] = useState(true);
-  const [postsError, setPostsError] = useState(null);
   
   //refresh posts in the event of like, comment or sending a new post
   const [refreshPosts, setRefreshPosts] = useState(false);

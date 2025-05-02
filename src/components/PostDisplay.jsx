@@ -102,7 +102,8 @@ function PostDisplay({post, location}) {
 
   return (
     <span className="postDisplayContainer">
-      {location === "singular-post-page" ? (
+      {location === "singular-post-page" ? 
+      (
         <PostContent 
           post={post}
           location={location}

@@ -36,6 +36,7 @@ router.get("/populate", async (req, res) => {
       const { randomUUID } = new ShortUniqueId({ length: 8 });
       const randomShortId= randomUUID();
 
+      //create a new user
       const newUser = new User({
         shortId: randomShortId,
         name: faker.person.fullName(),
@@ -44,10 +45,10 @@ router.get("/populate", async (req, res) => {
         banner: faker.image.urlPicsumPhotos({ height: 200, width: 600, blur: 0, grayscale: false  }),
       });
       await newUser.save();
-      //make 5 posts with this user
+      //create 5 posts with this user
        for (let x=0; x<5; x++){ 
         const newPost = new Post({
-            from: newUser,
+            from: newUser._id, //store the referance instead of the user object
             date: faker.date.between({ from: '2024-08-01T00:00:00.000Z', to: '2024-10-19T00:00:00.000Z' }),
             message: quotes[quoteIndex].quote,
         });

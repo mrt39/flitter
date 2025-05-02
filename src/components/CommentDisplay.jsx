@@ -35,12 +35,12 @@ const CommentDisplay = ({comment}) => {
           onClick={(e) => 
           { 
           e.preventDefault();
-          handleProfileRouting(comment.from[0] //route to profile
+          handleProfileRouting(comment.from //route to profile
           )}}
         >
           <ListItemAvatar>
           <UserAvatar
-                  user={comment.from[0]}
+                  user={comment.from}
                   source="post"
           />
           </ListItemAvatar>
@@ -53,7 +53,7 @@ const CommentDisplay = ({comment}) => {
                 title={
                     <Box sx={{ minWidth: 280 }}> 
                         <HoverUserCard 
-                          user={comment.from[0]} 
+                          user={comment.from} 
                           handleTooltipClose={handleTooltipClose}
                         />
                     </Box>
@@ -85,11 +85,11 @@ const CommentDisplay = ({comment}) => {
                       onClick={(e) => 
                             { 
                             e.preventDefault();
-                            handleProfileRouting(comment.from[0] //route to profile
+                            handleProfileRouting(comment.from //route to profile
                             )}}
                   >
                     <Typography variant="subtitle1" className="comment-name">
-                    {comment.from[0].name}
+                    {comment.from.name}
                     </Typography>
                   </span>
 

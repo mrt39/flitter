@@ -1,9 +1,6 @@
 //image upload routes for profile pictures and post images
 const router = require("express").Router();
 const User = require("../models/user");
-const Post = require("../models/post");
-const Follower = require("../models/follower");
-const { isAuthenticated } = require("../utilities/auth-middleware");
 const { validateImageUpload } = require("../utilities/validators");
 const { upload } = require("../configuration/multer-config");
 const { prepareImageForUpload, uploadImageToCloudinary } = require("../utilities/cloudinary-helper");
@@ -16,6 +13,7 @@ router.post('/uploadprofilepic/:userid', upload.single('image'), validateImageUp
   const dataURI = prepareImageForUpload(req);
   const imageName = req.file.filename;
   const userid = req.params.userid;
+  //find the user by id, this will be the single source of truth for user data
   const user = await User.findOne({ _id: userid });
 
   try {
@@ -29,54 +27,12 @@ router.post('/uploadprofilepic/:userid', upload.single('image'), validateImageUp
     const result = await user.save();
     console.log("image saved! filename: " + req.file.filename);
 
-    //update all Post model instances where "from" field has this user
-    await Post.updateMany({ "from._id": userid },
-      {
-        $set: {
-          "from.$.uploadedpic": uploadResult.secure_url,
-        }
-      }
-    );
+    //not updating Post, Follower or Comment models here to update user's profile picture in those,
+    //in user's already made posts, follows or comments, these models will reference user by id 
+    //they will automatically reflect the updated uploadedpic without manual updates
+    //and use populate() to update all Post model instances where "from" field has this user
 
-    //update all Post model instances where "comments" field has this user
-    const postsWithUserComments = await Post.find({
-      "comments.from._id": userid
-    });
-
-    postsWithUserComments.forEach(async (post) => {
-      post.comments.forEach(comment => {
-        comment.from.forEach(user => {
-          if (user._id.toString() === userid.toString()) {
-            //update the fields
-            user.uploadedpic = uploadResult.secure_url;
-          }
-        });
-      });
-      await post.save();
-    });
-
-    //update all Follower model instances where "user" field, "following" field or "followed" field has this user
-    const updateFollowers = await Follower.updateMany(
-      {
-        $or: [ // $or condition allows the query to look in all three arrays (user, following, followedby).
-          { "user._id": userid },
-          { "following._id": userid },
-          { "followedby._id": userid }
-        ]
-      },
-      {
-        $set: {
-          "user.$[elem].uploadedpic": uploadResult.secure_url,
-          "following.$[elem].uploadedpic": uploadResult.secure_url,
-          "followedby.$[elem].uploadedpic": uploadResult.secure_url
-        }
-      },
-      {
-        arrayFilters: [{ "elem._id": userid }] // update only the elements that match the user id
-      }
-    );
-
-    res.send(updateFollowers);
+    res.send(result);
 
   } catch (err) {
     res.send(err);

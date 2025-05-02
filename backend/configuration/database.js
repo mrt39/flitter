@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 require('dotenv').config();
 
 // Define the database URL to connect to.
-const dev_db_url = "mongodb://127.0.0.1:27017/flitterDB";
+const dev_db_url = "mongodb://127.0.0.1:27017/flitterDB2";
 const mongoDB = process.env.MONGODB_URI || dev_db_url;
 
 //connect to mongodb

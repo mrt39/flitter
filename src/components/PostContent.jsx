@@ -28,11 +28,11 @@ function PostContent({
       <span className="usernameLinkOnPost avatarLink" onClick={(e) => { 
         e.preventDefault();
         e.stopPropagation(); 
-        handleProfileRouting(post.from[0]);
+        handleProfileRouting(post.from);
       }}>
         <ListItemAvatar>
           <UserAvatar
-            user={post.from[0]}
+            user={post.from}
             source="post"
           />
         </ListItemAvatar>
@@ -44,7 +44,7 @@ function PostContent({
               title={
                 <Box sx={{ minWidth: 280 }}> 
                   <HoverUserCard 
-                    user={post.from[0]} 
+                    user={post.from} 
                   />
                 </Box>
               }
@@ -72,11 +72,12 @@ function PostContent({
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation(); 
-                  handleProfileRouting(post.from[0]);
+                  handleProfileRouting(post.from);
                 }}
               >
                 <Typography variant="subtitle1" className="post-name">
-                  {post.from[0].name}
+                  {/* tap into post in different ways based on its an array or not */}
+                  {post.from.name} 
                 </Typography>
               </span>
             </Tooltip>

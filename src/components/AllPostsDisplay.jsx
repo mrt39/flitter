@@ -96,7 +96,7 @@ function AllPostsDisplay({fromThisUser}) {
     if (fromThisUser) {
       //if viewing a profile page, always filter for that user's posts
       allPosts.forEach((post) => {
-        if (post.from && post.from[0] && post.from[0].shortId === fromThisUser.shortId) {
+        if (post.from && post.from && post.from.shortId === fromThisUser.shortId) {
           filteredMessagesinFunc.push(post);
         }
       });
@@ -183,7 +183,7 @@ function AllPostsDisplay({fromThisUser}) {
 
   //filter messages based on activeTab before rendering (if activeTab is 'following', only display messages from users the currentUser is following)
   const messagesToDisplay = activeTab === 'following'
-  ? filteredMessages.filter(post => post && post.from && /* ensure post and post.from is defined before rendering. important after image uploading */ currentUser.followingtheseID.includes(post.from[0]._id))
+  ? filteredMessages.filter(post => post && post.from && /* ensure post and post.from is defined before rendering. important after image uploading */ currentUser.followingtheseID.includes(post.from._id))
   : filteredMessages;
 
   return (
