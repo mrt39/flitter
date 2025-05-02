@@ -50,7 +50,7 @@ const FollowButton = ({ displayedUserOnCard, handleTooltipClose }) => {
         size="small"
         onClick={handleFollow}
         disabled={loadingFollow || userRefreshPending}
-        className="followButton"
+        className={`followButton ${darkModeOn ? 'dark-mode' : ''}`} 
         sx={{
           borderRadius: '9999px', 
           textTransform: 'none',

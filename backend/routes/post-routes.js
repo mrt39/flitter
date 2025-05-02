@@ -17,6 +17,7 @@ router.get("/getallposts", async (req, res) => {
     //this design avoids denormalization and keeps a single source of truth, which is the User model
     const allPosts = await Post.find()
       .populate("from", "name shortId picture uploadedpic") //only populating selected fields for performance
+      .populate("likedby", "_id") //only populating selected fields for performance
       .populate({
         path: "comments",
         populate: {
@@ -37,6 +38,7 @@ router.get("/getsingularpost/:postid", async (req, res) => {
     //populate the from and comment authors so we always get up-to-date user data
     const singularPost = await Post.findOne({_id: postID})
       .populate("from", "name shortId picture uploadedpic")
+      .populate("likedby", "_id") //only populating selected fields for performance
       .populate({
         path: "comments",
         populate: {

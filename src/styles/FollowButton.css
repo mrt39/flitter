@@ -1,5 +1,9 @@
-.followButton{
-    font-size: 15px;
+.followButton:disabled{
+  color: gray !important;
+}
+
+.followButton.dark-mode:disabled{
+  color: darkgrey;
 }
 
 
