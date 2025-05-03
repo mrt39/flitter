@@ -40,12 +40,14 @@
   padding: 16px;
   position: relative;
   border-radius: 0 !important;
+  width: 70%;
 }
 
 .profile-content-and-followButton-container{
   display: flex;
   justify-content: space-between;
   border-radius: 0 !important;
+  flex-wrap: wrap; /* Allow components to wrap when needed */
 }
 
 .follow-button-container{
@@ -58,7 +60,15 @@
   background-color: inherit;
 }
 
-.username {
+.username, .userBio {
+  width: 100%;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.username{
   margin-top: 10px;
   font-weight: bold;
 }
@@ -85,9 +95,8 @@
 
 .follow-info {
   display: flex;
-  justify-content: space-between;
   margin-top: 15px !important;
-  gap:50px;
+  gap:80px
 }
 
 .follow-link {

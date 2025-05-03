@@ -69,9 +69,18 @@
 /*below 400px width */ 
 @media (max-width: 400px){
     .sidebarLeft {
-        padding: 20px 0px 20px 100px;
+        padding: 20px 0px 20px 30px;
     } 
+    #sidebarUserIconBtn {
+        right: -5px !important;
+    }
+}
 
+/*below 350px width */ 
+@media (max-width: 350px){
+    .sidebarLeft {
+        padding: 20px 0px 20px 50px;
+    } 
     #sidebarUserIconBtn {
         right: -5px !important;
     }

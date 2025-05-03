@@ -16,6 +16,7 @@ function PostProvider({ children }) {
   //post submission states
   const [imgSubmittedNavbar, setImgSubmittedNavbar] = useState(false);
   const [imgSubmittedHomePage, setImgSubmittedHomePage] = useState(false);
+  const [imageSubmitted, setImageSubmitted] = useState(false);
   const [pressedSubmitPost, setPressedSubmitPost] = useState(false);
   const [isSubmittingPost, setisSubmittingPost] = useState(false);
   
@@ -119,6 +120,8 @@ function PostProvider({ children }) {
     setPressedSubmitPost,
     isSubmittingPost,
     setisSubmittingPost,
+    imageSubmitted,
+    setImageSubmitted,
     activeTab,
     setActiveTab,
     mostIteratedWords,

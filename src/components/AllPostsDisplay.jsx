@@ -19,6 +19,7 @@ function AllPostsDisplay({fromThisUser}) {
     allPosts, 
     setAllPosts, 
     refreshPosts, 
+    imageSubmitted,
     imgSubmittedNavbar, 
     imgSubmittedHomePage, 
     pressedSubmitPost, 
@@ -61,19 +62,18 @@ function AllPostsDisplay({fromThisUser}) {
     //check if the useEffect has been triggered by any of the pressedSubmitPost, imgSubmittedNavbar, imgSubmittedHomePage dependencies
     if (
       prevDeps.current[0] !== pressedSubmitPost ||
-      prevDeps.current[1] !== imgSubmittedNavbar ||
-      prevDeps.current[2] !== imgSubmittedHomePage
+      prevDeps.current[1] !== imageSubmitted 
     ) {
       setNewPostAdded(true);
       setShouldNotShuffle(true);
     }
   
     //if the useEffect has been triggered by the refreshPosts dependency (like or comment), set the shouldNotShuffle state to true
-    if (prevDeps.current[3] !== refreshPosts) {
+    if (prevDeps.current[2] !== refreshPosts) {
       setShouldNotShuffle(true);
     }
   
-    prevDeps.current = [pressedSubmitPost, imgSubmittedNavbar, imgSubmittedHomePage, refreshPosts];
+    prevDeps.current = [pressedSubmitPost, imageSubmitted, refreshPosts];
   
     //if there is a searchWord (from WhatsHappening.jsx), do not fetch all posts (which will disrupt the search filter), set loading to false
     if (!searchWord) {
@@ -81,7 +81,7 @@ function AllPostsDisplay({fromThisUser}) {
     } else {
       setLoading(false);
     }
-  }, [pressedSubmitPost, imgSubmittedNavbar, imgSubmittedHomePage, refreshPosts, profileUpdated]);
+  }, [pressedSubmitPost, imageSubmitted, refreshPosts, profileUpdated]);
   
   //useEffect for sorting messages (shuffle or sort by date)
   useEffect(() => {

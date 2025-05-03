@@ -109,8 +109,6 @@ const UserCardProfile = () => {
               size="small"
               className="editProfileButton"
               sx={{
-                fontWeight: 'bold',
-                fontSize: '15px',
                 borderRadius: '9999px', 
                 textTransform: 'none',
                 padding: '6px 16px',
@@ -120,6 +118,7 @@ const UserCardProfile = () => {
                 '&:hover': {
                   backgroundColor: darkModeOn ? 'rgb(39, 44, 48);': 'rgb(215, 219, 220)' ,
                 },
+                minWidth: "110px",
                 maxWidth: '100%',
                 width: 'auto',
                 /* whiteSpace: 'nowrap', */

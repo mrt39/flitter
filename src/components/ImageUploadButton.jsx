@@ -22,6 +22,7 @@ export default function ImageUploadButton({
     isSubmittingPost, 
     imgSubmittedNavbar, 
     imgSubmittedHomePage, 
+    setImageSubmitted,
     setisSubmittingPost 
   } = usePost();
   const { setSnackbarOpenCondition, setSnackbarOpen } = useUI();
@@ -86,6 +87,7 @@ export default function ImageUploadButton({
         setError(error);
       } finally {
         setisSubmittingPost(false); //reset submission state
+        setImageSubmitted(prev => !prev); //single state update upon image posting, which will be used to trigger getAllPosts once.
         if (location === "navbar") {
           setImgSubmittedNavbar(false);
           if (handleClose) handleClose();

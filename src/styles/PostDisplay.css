@@ -3,6 +3,9 @@
   color: inherit;
   font-weight: inherit;
   text-decoration: inherit;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  text-overflow: ellipsis;
 }
 
 .usernameLinkOnPost:hover{
