@@ -70,100 +70,94 @@ router.patch("/editprofile/:userid", validateUserProfile, async (req, res) => {
 });
 
 //follow and unfollow a user 
+//optimized followUser route with direct mongodb operations and the usage of Promise.all for faster response times
 router.post("/followUser", isAuthenticated, async (req, res) => {
   try {
-    //find the user that clicked on follow and the one that's being followed
-    const fromUser = await User.findOne({_id: req.body.fromUser._id});
-    const toUser = await User.findOne({_id: req.body.toUser._id});
+    //get the IDs of both users involved
+    const fromUserId = req.body.fromUser._id;
+    const toUserId = req.body.toUser._id;
 
-    //if already followed, unfollow
-    if(fromUser.followingtheseID.includes(toUser._id)){
-      //decrease the followingCount property of the user that clicked on follow by 1
-      fromUser.followingCount -= 1;  
-      //find index via converting id objects to string because querying with id's doesn't work
-      const likingUserIndex = fromUser.followingtheseID.findIndex(u=>u.toString()===toUser._id.toString())
-      //remove it from the likingUserIndex array.
-      fromUser.followingtheseID.splice(likingUserIndex, 1)
-      //save the user that clicked on follow
-      await fromUser.save();
+    //User.exists is a MongoDB method that efficiently checks if a document exists
+    //without retrieving the entire document to check- this only checks the relevant fields,
+    //this is much more efficient than loading whole documents just to check a condition since it transfers much less data from the database
+    const isFollowing = await User.exists({ 
+      _id: fromUserId, 
+      followingtheseID: toUserId 
+    });
 
-      //decrease the followerCount property of the user that clicked on follow by 1
-      toUser.followerCount -= 1;  
-      //find index via converting id objects to string because querying with id's doesn't work
-      const likedUserIndex = toUser.followedbytheseID.findIndex(u=>u.toString()===fromUser._id.toString())
-      //remove it from the likingUserIndex array.
-      toUser.followedbytheseID.splice(likedUserIndex, 1)
-      //save the user that clicked on follow
-      await toUser.save();
-    //if not following, follow
-    }else { 
-      //increase the followingCount property of the user that clicked on follow by 1
-      fromUser.followingCount += 1;  
-      //push the id of the followed user to the followingtheseID property of the user that clicked on follow
-      await fromUser.followingtheseID.push(toUser._id)
-      //save the user that clicked on follow
-      await fromUser.save();
+    //determine if we're following or unfollowing
+    const isUnfollow = isFollowing ? true : false;
+    
+    //calculate the value for incrementing/decrementing follower counts
+    const countChange = isUnfollow ? -1 : 1;
+    
+    //Promise.all is a js feature that allows multiple async operations to execute simultaneously rather than one after another
+    //this dramatically improves performance as operations run in parallel instead of sequentially
+    //in this case, it updates both user documents at the same time instead of waiting for one update to finish first
+    const userUpdates = await Promise.all([
+      //User.updateOne is a mongodb method that updates a document in a single operation
+      //unlike the fetch-modify-save approach, this directly modifies the document in the database
+      //making it much faster as it eliminates multiple round trips between server and database
+      User.updateOne(
+        { _id: fromUserId },
+        {
+          //$inc is a mongodb update operator that increments a field by a specified amount
+          //it's atomic, meaning it's guaranteed to correctly update the value even if multiple users try to modify it simultaneously
+          //much more efficient than reading current value, calculating new value, and saving back
+          $inc: { followingCount: countChange },
+          //$pull removes values from arrays (deletes), while $addToSet adds values only if they don't exist
+          //these operate directly in the database instead of requiring retrieving array, changing them in js and saving them
+          //which is much faster and more efficient than the prior approach of findIndex and splice
+          [isUnfollow ? '$pull' : '$addToSet']: { followingtheseID: toUserId }
+        }
+      ),
 
-      //increase the followerCount property of the followed user 
-      toUser.followerCount += 1;  
-      //push the id of user that clicked on follow to the followedbytheseID property of the followed user
-      await toUser.followedbytheseID.push(fromUser._id)
-      //save the followed user
-      await toUser.save();
-    }
+      //update the user that is being followed/unfollowed (toUser)
+      User.updateOne(
+        { _id: toUserId },
+        {
+          $inc: { followerCount: countChange },
+          [isUnfollow ? '$pull' : '$addToSet']: { followedbytheseID: fromUserId }
+        }
+      )
+    ]);
 
     /* ------------------------HANDLING THE Follower MODEL in db----------------------- */
 
-    //get the current user and followed user in the Follower model,
-    const fromUserFollowerModel = await Follower.findOne({ user: fromUser._id });
-    const toUserFollowerModel = await Follower.findOne({ user: toUser._id });
+    //update operations for Follower model - run in parallel
+    const followerUpdates = await Promise.all([
+      //following list update of the user that initiated the follow
+      Follower.findOneAndUpdate(
+        { user: fromUserId },
+        {
+          user: fromUserId,
+          [isUnfollow ? '$pull' : '$addToSet']: { following: toUserId }
+        },
+        {
+          //upsert: true tells MongoDB to create a new document (it will do so with above dataset) if one doesn't exist
+          //this eliminates the need for separate if/else logic to handle create vs update scenarios
+          //combining what would otherwise be multiple operations into a single database call
+          upsert: true,
+          //new: false configures findOneAndUpdate to return the pre-update version of the document when this function resolves, instead of the updating it and returning the updated version. 
+          //since we don't use this returned data at all here, keeping this as false prevents unnecessary data transfer from db to app
+          //as this operation is only awaiting to ensure the operation completes, not to use the result
+          new: false
+        }
+      ),
 
-    //if the current user exists in the follower model, update
-    if(fromUserFollowerModel)
-    {
-      //find if user is already followed by the user, if user is already in following array
-      //find via converting id objects to string because querying with id's doesn't work
-      const fromUserIndex = fromUserFollowerModel.following.findIndex(u=>u._id.toString()===toUser._id.toString())
-
-      //already following this user, unfollow 
-      if (fromUserIndex > -1){
-        fromUserFollowerModel.following.splice(fromUserIndex, 1)
-        //save the user that clicked on follow
-        await fromUserFollowerModel.save();
-      }else {
-        await fromUserFollowerModel.following.push(toUser._id) 
-        await fromUserFollowerModel.save()
-      }
-    } else { //if the user does not exist, create it
-      const newFollower = new Follower({
-        user: fromUser._id,
-        following: [toUser._id],
-      });
-      await newFollower.save();
-    }
-
-    //if the followed user exists in the follower model, update
-    if(toUserFollowerModel)
-    {
-      //find if user is already followed by the user, if user is already in followedby array
-      //find via converting id objects to string because querying with id's doesn't work
-      const toUserIndex = toUserFollowerModel.followedby.findIndex(u=>u._id.toString()===fromUser._id.toString())
-      //already followed by this user, unfollow 
-      if (toUserIndex > -1){
-        toUserFollowerModel.followedby.splice(toUserIndex, 1)
-        //save the followed user
-        await toUserFollowerModel.save();
-      }else {
-        await toUserFollowerModel.followedby.push(fromUser._id) 
-        await toUserFollowerModel.save()
-      }
-    } else { //if the followed user does not exist, create it
-      const newFollower = new Follower({
-        user: toUser._id,
-        followedby: [fromUser._id],
-      });
-      await newFollower.save();
-    }
+      //follower list update of the user that got followed
+      Follower.findOneAndUpdate(
+        { user: toUserId },
+        {
+          user: toUserId,
+          [isUnfollow ? '$pull' : '$addToSet']: { followedby: fromUserId }
+        },
+        {
+          upsert: true,
+          new: false
+        }
+      )
+    ]);
 
     console.log("Handled follow/unfollow successfully!")
     //send a success response with a message and status code, at the end of the operation

@@ -22,15 +22,15 @@ const SingularPostPage = ({}) => {
 
   //get the last 24 characters of current url (which is the id of the post)
   const location = useLocation();
-  // Get the pathname from the location object
+  //get the pathname from the location object
   const currentPath = location.pathname;
-  // Extract the last 24 characters
+  //extract the last 24 characters
   const last24Chars = currentPath.slice(-24);
 
   const navigate = useNavigate();
 
   const handleBackClick = () => {
-    navigate('/'); // Navigate back to home page
+    navigate('/'); //navigate back to home page
   };
 
   useEffect(() => {
