@@ -12,6 +12,10 @@ function PostProvider({ children }) {
   
   //refresh posts in the event of like, comment or sending a new post
   const [refreshPosts, setRefreshPosts] = useState(false);
+
+  //refresh the post in SingularPostPage.jsx
+  const [refreshSingularPost, setRefreshSingularPost] = useState(false);
+
   
   //post submission states
   const [imgSubmittedNavbar, setImgSubmittedNavbar] = useState(false);
@@ -112,6 +116,8 @@ function PostProvider({ children }) {
     setAllPosts,
     refreshPosts,
     setRefreshPosts,
+    refreshSingularPost, 
+    setRefreshSingularPost,
     imgSubmittedNavbar,
     setImgSubmittedNavbar,
     imgSubmittedHomePage,

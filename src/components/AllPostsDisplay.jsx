@@ -76,7 +76,7 @@ function AllPostsDisplay({fromThisUser}) {
     prevDeps.current = [pressedSubmitPost, imageSubmitted, refreshPosts];
   
     //if there is a searchWord (from WhatsHappening.jsx), do not fetch all posts (which will disrupt the search filter), set loading to false
-    if (!searchWord) {
+    if (!searchWord&& currentUser) {
       getMessages();
     } else {
       setLoading(false);

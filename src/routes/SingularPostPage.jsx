@@ -13,7 +13,7 @@ import '../styles/SingularPostPage.css'
 
 const SingularPostPage = ({}) => {
   //use context hooks
-  const { refreshPosts } = usePost();
+  const { refreshSingularPost } = usePost();
   const { darkModeOn } = useUI();
 
   const [singularPost, setSingularPost] = useState(null)
@@ -47,7 +47,7 @@ const SingularPostPage = ({}) => {
         });
     };
     getSingularPostFromApi();
-  }, [refreshPosts]); 
+  }, [refreshSingularPost]); 
 
   if (loading) {
     return (

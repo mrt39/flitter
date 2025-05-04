@@ -6,6 +6,9 @@
 .comment-name {
     font-weight: 600 !important;
     cursor: pointer;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    text-overflow: ellipsis;
 }
 
 .comment-name:hover {

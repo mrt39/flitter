@@ -22,7 +22,7 @@ const sessionConfig = {
   store: store, //store to mongodb
   cookie: {
     secure: false, //set to true in production if served over HTTPS, "false" for development
-    sameSite: 'strict' // "none" for production, "strict" for development, "Lax" for twitter oAuth
+    sameSite: 'lax' // "none" for production, "strict" for development, "lax" for twitter oAuth
   }
 };
 

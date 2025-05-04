@@ -17,7 +17,7 @@ import '../styles/CommentForm.css';
 const CommentForm = ({ post, handleClose }) => {
   const { currentUser } = useAuth();
   const { darkModeOn } = useUI();
-  const { refreshPosts, setRefreshPosts } = usePost();
+  const { setRefreshPosts, setRefreshSingularPost } = usePost();
 
   const [value, setValue] = useState("")
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
@@ -81,6 +81,8 @@ const CommentForm = ({ post, handleClose }) => {
         console.log("Commented on the post successfully!");
         setValue("");
         setRefreshPosts(prev => !prev);
+        //refresh singular post as well, in the event of commenting on a post while displaying SingularPostPage
+        setRefreshSingularPost(prev => !prev);
       } catch (error) {
         console.error('Error:', error);
       } finally {

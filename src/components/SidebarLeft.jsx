@@ -90,7 +90,7 @@ const SidebarLeft = () => {
                   source="post"
               />
 
-              <p>{currentUser.name}</p>
+              <p className='leftSideBar-username'>{currentUser.name}</p>
               <p id='sidebarUserIconBtn3Dot'>...</p>
           </Button>
 
