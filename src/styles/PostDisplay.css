@@ -8,6 +8,10 @@
   text-overflow: ellipsis;
 }
 
+.whotofollow-listitemtext{
+  width: 70%;
+}
+
 .usernameLinkOnPost:hover{
   text-decoration: underline;
   cursor: pointer;

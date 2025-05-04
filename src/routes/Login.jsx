@@ -139,6 +139,17 @@ export default function Login() {
             </Button>
             
             <Button
+            id="signinWithDemoAcc"
+              type="button"
+              onClick={handleDemoSigninClick}
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Sign In With Demo Account
+            </Button>
+            
+            <Button
               id="googleSignInBtn"
               type="button"
               onClick={handleGoogleClick}
@@ -158,17 +169,6 @@ export default function Login() {
               sx={{ mt: 3, mb: 2, }} 
               startIcon={<img src={XLogo} alt="X logo" style={{ width: 24, height: 24 }} />}>
               Sign In With X
-            </Button>
-
-            <Button
-            id="signinWithDemoAcc"
-              type="button"
-              onClick={handleDemoSigninClick}
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Sign In With Demo Account
             </Button>
 
             <Grid container className="loginSignupLinkContainer">

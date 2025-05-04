@@ -89,6 +89,7 @@ const WhotoFollow = () => {
               
               <div className="whotofollow-list-item-content">
                 <ListItemText 
+                className='whotofollow-listitemtext'
                   primary={
                     <div className="whotofollow-header">
                       {/* MUI tooltip that will display a user card on hover */}
