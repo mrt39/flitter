@@ -32,16 +32,30 @@ router.get("/populate", async (req, res) => {
   
     //create 20 users with 5 posts each
     for (let i=0; i<20; i++){
-      // Generate a short unique ID
+      //generate a short unique ID
       const { randomUUID } = new ShortUniqueId({ length: 8 });
       const randomShortId= randomUUID();
+
+      //fetch a random profile picture from randomuser.me API
+      const profilePicResponse = await fetch("https://randomuser.me/api/?inc=picture&noinfo");
+      let profilePicUrl = '';
+      
+      if (profilePicResponse.ok) {
+        const profilePicData = await profilePicResponse.json();
+        //extract the large profile picture URL from the response
+        profilePicUrl = profilePicData.results[0].picture.large;
+      } else {
+        console.error("Failed to fetch profile picture");
+        //fallback to faker if randomuser.me API fails
+        profilePicUrl = faker.image.urlLoremFlickr({ height: 128, width: 128, category: 'humans' });
+      }
 
       //create a new user
       const newUser = new User({
         shortId: randomShortId,
         name: faker.person.fullName(),
         bio: faker.person.bio(),
-        uploadedpic: faker.image.urlLoremFlickr({ height: 128, width: 128, category: 'humans' }),
+        uploadedpic: profilePicUrl,
         banner: faker.image.urlPicsumPhotos({ height: 200, width: 600, blur: 0, grayscale: false  }),
       });
       await newUser.save();
@@ -49,7 +63,7 @@ router.get("/populate", async (req, res) => {
        for (let x=0; x<5; x++){ 
         const newPost = new Post({
             from: newUser._id, //store the referance instead of the user object
-            date: faker.date.between({ from: '2024-08-01T00:00:00.000Z', to: '2024-10-19T00:00:00.000Z' }),
+            date: faker.date.between({ from: '2025-02-01T00:00:00.000Z', to: '2025-05-10T00:00:00.000Z' }),
             message: quotes[quoteIndex].quote,
         });
         await newPost.save();
