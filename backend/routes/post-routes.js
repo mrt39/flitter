@@ -60,8 +60,17 @@ router.post("/submitPost", isAuthenticated, validatePostSubmission, async (req, 
       date: req.body.date,
       message: req.body.message,
     });
-    const result = newPost.save();
-    res.send(result);
+    const result = await newPost.save();
+
+    //populate the response before sending to frontend
+    //this is critical for the cache system on frontend to work correctly - our db's post model only stores references for "from" field, 
+    //and cache needs complete user data objects, not just IDs
+    //without this population, the cache would store references instead of actual user data
+    //which leads to missing fields like shortId, picture, etc. when rendering from cache
+    const populatedPost = await Post.findById(result._id)
+      .populate("from", "name shortId picture uploadedpic");
+    
+    res.send(populatedPost);
     console.log("Post submitted successfully!");
   } catch (err) {
     res.send(err);
@@ -117,8 +126,25 @@ router.post("/sendCommentonPost", isAuthenticated, async (req, res) => {
     //increase the commentCount property by 1
     commentedPost.commentCount += 1;  
     //save the post
-    const result = commentedPost.save();
-    res.send(result);
+    const result = await commentedPost.save();
+
+    //populate the comment and user data before sending response
+    //since our db's post model only stores references for "comments" field,
+    //this ensures the frontend cache receives a complete object graph with all necessary user data
+    //without this, the cache would store only objectId references that can't be properly displayed
+    //critical for the frontend to render comments with proper user information from cache
+    const populatedPost = await Post.findById(result._id)
+      .populate("from", "name shortId picture uploadedpic")
+      .populate("likedby", "_id")
+      .populate({
+        path: "comments",
+        populate: {
+          path: "from",
+          select: "name shortId picture uploadedpic shortId"
+        },
+      });
+    
+    res.send(populatedPost);
     console.log("Comment submitted successfully!");
   } catch (err) {
     res.send(err);
@@ -149,9 +175,18 @@ router.post("/imagesent", upload.single('image'), isAuthenticated, async (req, r
       date: date,
       image: uploadResult.secure_url,
     });
-    const result = newMessage.save();
+    const result = await newMessage.save();
+
+    //populate the response before sending to frontend
+    //this is critical for the cache system on frontend to work correctly - our db's post model only stores references for "from" field, 
+    //and cache needs complete user data objects, not just IDs
+    //without this population, the cache would store references instead of actual user data
+    //which leads to missing fields like shortId, picture, etc. when rendering from cache
+    const populatedPost = await Post.findById(result._id)
+      .populate("from", "name shortId picture uploadedpic");
+
     console.log("Image uploaded successfully!");
-    res.send(result);
+    res.send(populatedPost);
   } catch (err) {
     res.send(err);
   }

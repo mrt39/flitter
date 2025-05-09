@@ -1,5 +1,11 @@
 //post-related API calls
 import { fetchWithAuth } from './apiService';
+import { 
+  getCachedPosts, 
+  getCachedPostById,
+  addPostToCache,
+  updatePostLikeInCache,
+} from './postCacheService';
 
 /**
  * Promises in js represent the eventual completion or failure of an asynchronous operation 
@@ -34,7 +40,7 @@ let postsPromise = null;
 //this allows to deduplicate requests for each specific call independently
 const singlePostPromises = new Map();
 
-//get all posts
+//get all posts, using cache functionality
 function getAllPosts() {
   //check if a request is already in progress
   //if postsPromise is not null, a request is already happening,
@@ -43,9 +49,9 @@ function getAllPosts() {
     return postsPromise;
   }
   //create and store the new promise in postPromise variable so other calls can reuse it
-  postsPromise = fetchWithAuth('/getallposts', {
-    method: 'GET',
-  }).then(data => {
+  //get posts from cache first, which will call the API to populate if needed
+  postsPromise = getCachedPosts()
+  .then(data => {
     //sort data by dates, descending order
     const sortedData = data.sort((a, b) => new Date(b.date) - new Date(a.date));
     //reset promise after a small delay
@@ -73,9 +79,9 @@ function getSinglePost(postId) {
   }
   
   //create a new promise for this postId
-  const promise = fetchWithAuth(`/getsingularpost/${postId}`, {
-    method: 'GET',
-  }).then(data => {
+  //try getting the post from cache first, which will call the API to populate if needed
+  const promise = getCachedPostById(postId)
+  .then(data => {
     //reset promise after a small delay
     //the delay ensures that any near-simultaneous calls that happen right after
     //this one completes will still use the cached result instead of creating a new request
@@ -104,6 +110,10 @@ function submitPost(user, message) {
       date: new Date().toISOString(), 
       message: message 
     }),
+  }).then(newPost => {
+    //add the response of post request, which is the new post, to cache
+    addPostToCache(newPost);
+    return newPost;
   });
 }
 
@@ -118,21 +128,44 @@ function submitImagePost(formData) {
       throw new Error('Network response was not ok');
     }
     return response.json();
+  }).then(newPost => {
+    //add the response of post request, which is the new post, to cache
+    addPostToCache(newPost);
+    return newPost;
   });
 }
 
-//like a post
+//like a post, update the post state in cache
 function likePost(user, postId) {
+ //find if post is already liked by the current user
+ return getAllPosts().then(posts => {
+  const post = posts.find(p => p._id === postId);
+  if (!post) return null;
+  
+  const isCurrentlyLiked = post.likedby.some(u => u._id === user._id);
+  const newLikeState = !isCurrentlyLiked;
+  
+  //update cache optimistically
+  updatePostLikeInCache(postId, user._id, newLikeState);
+  
+  //make API call to like the post
   return fetchWithAuth('/likePost', {
     method: "PATCH",
     body: JSON.stringify({ 
       postID: postId, 
       likedBy: user
     }),
+  }).then(response => {
+    return response;
+  }).catch(error => {
+    //revert cache on error
+    updatePostLikeInCache(postId, user._id, isCurrentlyLiked);
+    throw error;
   });
+});
 }
 
-//comment on a post
+//comment on a post, update the post state in cache
 function commentOnPost(user, postId, comment) {
   return fetchWithAuth('/sendCommentonPost', {
     method: "POST",
@@ -142,6 +175,18 @@ function commentOnPost(user, postId, comment) {
       date: new Date().toISOString(), 
       comment: comment
     }),
+  }).then(response => {
+    //update cache with new comment
+    if (response && response.comments) {
+
+      //reset promises to ensure fresh data on next fetch
+      postsPromise = null;
+      singlePostPromises.delete(postId);
+
+      //add the populated post to cache 
+      addPostToCache(response);
+    }
+    return response;
   });
 }
 

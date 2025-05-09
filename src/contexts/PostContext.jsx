@@ -3,10 +3,13 @@
 //post context for managing post data, submissions, and interactions
 import { createContext, useState, useContext, useEffect } from 'react';
 import { getAllPosts } from '../utilities/postService';
+import { useCache } from './CacheContext'; // Add this import
 
 const PostContext = createContext();
 
 function PostProvider({ children }) {
+  const { forceRefresh } = useCache(); //get force refresh trigger from cache context
+  
   //all posts
   const [allPosts, setAllPosts] = useState([]);
   
@@ -15,7 +18,6 @@ function PostProvider({ children }) {
 
   //refresh the post in SingularPostPage.jsx
   const [refreshSingularPost, setRefreshSingularPost] = useState(false);
-
   
   //post submission states
   const [imgSubmittedNavbar, setImgSubmittedNavbar] = useState(false);
@@ -31,9 +33,9 @@ function PostProvider({ children }) {
   const [mostIteratedWords, setMostIteratedWords] = useState(null);
   const [searchWord, setSearchWord] = useState(null);
 
-  //fetch posts when refreshPosts changes
+  //fetch posts when refreshPosts changes or when force refresh is triggered by cache context
   useEffect(() => {
-    if (allPosts.length === 0 || refreshPosts) {
+    if (allPosts.length === 0 || refreshPosts || forceRefresh) {
       getAllPosts()
         .then(data => {
           setAllPosts(data);
@@ -43,7 +45,7 @@ function PostProvider({ children }) {
           console.error('Error fetching posts:', error);
         });
     }
-  }, [refreshPosts]);
+  }, [refreshPosts, forceRefresh]); 
 
   //calculate most iterated words when posts change to display in what's happening component
   useEffect(() => {

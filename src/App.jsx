@@ -1,5 +1,4 @@
 /* eslint-disable react/prop-types */
-import { useEffect } from 'react';
 import { Outlet, Navigate } from "react-router-dom";
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -13,6 +12,7 @@ import { UserProvider } from './contexts/UserContext.jsx';
 import { UIProvider, useUI } from './contexts/UIContext.jsx';
 import { PostProvider } from './contexts/PostContext.jsx';
 import { FollowProvider } from './contexts/FollowContext.jsx';
+import { CacheProvider } from './contexts/CacheContext.jsx'; 
 import './styles/App.css'
 
 
@@ -25,14 +25,16 @@ const App = () => {
     //add referance to the app container to determine the scrollable target for the infinite scroll
     <div className='appContainer' ref={appContainerRef}>
       {/* pass the appContainerRef to UI context, to be used in AllPostsDisplay and AllCommentsDisplay components, for infinite scrolling functionality */}
-      <UIProvider  appContainerRef={appContainerRef}>
+      <UIProvider appContainerRef={appContainerRef}>
         <AuthProvider>
           <UserProvider>
-            <PostProvider>
-              <FollowProvider>
-                <AppContent/>
-              </FollowProvider>
-            </PostProvider>
+            <CacheProvider> 
+              <PostProvider>
+                <FollowProvider>
+                  <AppContent/>
+                </FollowProvider>
+              </PostProvider>
+            </CacheProvider>
           </UserProvider>
         </AuthProvider>
       </UIProvider>

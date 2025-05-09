@@ -1,4 +1,5 @@
 //utility functions for optimistic updates to improve UI responsiveness
+import { updatePostLikeInCache } from './postCacheService';
 
 //handle optimistic like update
 function handleOptimisticLike(post, currentUser, setOptimisticLikeCount, setCurrentUserLikedPost, setPreviousLikeState) {
@@ -17,7 +18,7 @@ function handleOptimisticLike(post, currentUser, setOptimisticLikeCount, setCurr
     //optimistically update UI immediately
     setCurrentUserLikedPost(!isCurrentlyLiked);
     setOptimisticLikeCount(isCurrentlyLiked ? post.likeCount - 1 : post.likeCount + 1);
-    
+        
     return !isCurrentlyLiked; // return new like state
   }
   
