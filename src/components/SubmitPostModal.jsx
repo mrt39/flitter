@@ -1,4 +1,5 @@
 /* eslint-disable react/prop-types */
+import { useState } from 'react';
 import Backdrop from '@mui/material/Backdrop';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
@@ -12,9 +13,25 @@ import { useUI } from '../contexts/UIContext.jsx';
 import { useModal } from '../utilities/modalUtils.js';
 import "../styles/SubmitPostModal.css";
 
+
 export default function SubmitPostModal() {
   const { darkModeOn } = useUI();
   const { isOpen, openModal, closeModal } = useModal(false);
+  //track if a post is being submitted, for changing css of the modal
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  function handleClose() {
+    //only close if not submitting
+    if (!isSubmitting) {
+      closeModal();
+    }
+  }
+  
+  //handle submission complete
+  function handleSubmissionComplete() {
+    setIsSubmitting(false);
+    closeModal();
+  }
 
   return (
     <div>
@@ -42,7 +59,7 @@ export default function SubmitPostModal() {
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
         open={isOpen}
-        onClose={closeModal}
+        onClose={handleClose}
         closeAfterTransition
         slots={{ backdrop: Backdrop }}
         slotProps={{
@@ -53,22 +70,26 @@ export default function SubmitPostModal() {
       >
         <Fade in={isOpen}>
           <Box         
-            className={`submitPost-modal ${darkModeOn ? 'dark-mode' : ''}`}
+            className={`submitPost-modal ${darkModeOn ? 'dark-mode' : ''} ${isSubmitting ? 'submitting' : ''}`}
           >
           <IconButton
               aria-label="close"
-              onClick={closeModal}
+              onClick={handleClose}
+              disabled={isSubmitting}
               sx={{
                 position: 'absolute',
                 top: 8,
                 right: 23,
+                zIndex: 12, // higher than overlay
               }}
             >
               <CloseIcon />
             </IconButton>
           <SubmitPostForm
             location="navbar"
-            handleClose={closeModal}
+            handleClose={handleSubmissionComplete}
+            onSubmitStart={() => setIsSubmitting(true)}
+            onSubmitEnd={() => setIsSubmitting(false)}
           />
           </Box>
         </Fade>

@@ -14,7 +14,7 @@ import data from '@emoji-mart/data';
 import Picker from '@emoji-mart/react';
 import '../styles/CommentForm.css';
 
-const CommentForm = ({ post, handleClose }) => {
+const CommentForm = ({ post, handleClose, onSubmitStart }) => {
   const { currentUser } = useAuth();
   const { darkModeOn } = useUI();
   const { setRefreshPosts, setRefreshSingularPost } = usePost();
@@ -60,9 +60,9 @@ const CommentForm = ({ post, handleClose }) => {
     }
     event.preventDefault();
     setClickedPostComment(true)
-    //if form is opened through modal, close the modal
-    if (handleClose){
-      handleClose()
+    //notify parent component about submission start, for changing css during the submission of comment
+    if (onSubmitStart) {
+      onSubmitStart();
     }
   };
 
@@ -79,14 +79,20 @@ const CommentForm = ({ post, handleClose }) => {
         await commentOnPost(currentUser, post._id, filteredCommentMessage);
         
         console.log("Commented on the post successfully!");
-        setValue("");
+        //refresh posts
         setRefreshPosts(prev => !prev);
         //refresh singular post as well, in the event of commenting on a post while displaying SingularPostPage
         setRefreshSingularPost(prev => !prev);
+        //reset form
+        setValue("");
       } catch (error) {
         console.error('Error:', error);
       } finally {
         setClickedPostComment(false);
+        //if form is opened through modal, close the modal
+        if (handleClose){
+          handleClose()
+        }
       }
     }
     //only trigger when comment is posted
@@ -95,7 +101,7 @@ const CommentForm = ({ post, handleClose }) => {
     } 
   }, [clickedPostComment]);
 
-  return (
+ return (
     <Box component="form" className=  
         {`
         comment-form-container 
@@ -132,10 +138,11 @@ const CommentForm = ({ post, handleClose }) => {
         >
           <IconButton
             onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+            disabled={clickedPostComment}
             className="emoji-button"
             type="button" // prevent this button from triggering the form submission
           >
-            <SentimentSatisfiedAltIcon sx={{ color: '#1da1f2' }} />
+            <SentimentSatisfiedAltIcon sx={{ color: clickedPostComment ? "#B0B0B0" : '#1da1f2' }} />
 
           </IconButton>
           <div className="characterCounterAndReplyBtnContainer">
@@ -190,7 +197,7 @@ const CommentForm = ({ post, handleClose }) => {
               type="submit" // make this button the form submission button
               onClick={handleSendClick}
               className="reply-button"
-              disabled={remainingCharacters<0}
+              disabled={remainingCharacters < 0 || clickedPostComment}
               sx={{
                 backgroundColor: '#1da1f2',
                 fontWeight: 'bold',

@@ -16,7 +16,7 @@ import { usePost } from '../contexts/PostContext.jsx';
 import { submitPost } from '../utilities/postService.js';
 import '../styles/SubmitPostForm.css';
 
-export default function SubmitPostForm({location, handleClose}) {
+export default function SubmitPostForm({location, handleClose, onSubmitStart, onSubmitEnd}) {
   const { isSubmittingPost, setisSubmittingPost, pressedSubmitPost, 
     setPressedSubmitPost, setImgSubmittedNavbar, setImgSubmittedHomePage } = usePost();
   const { currentUser } = useAuth();
@@ -78,6 +78,11 @@ export default function SubmitPostForm({location, handleClose}) {
 
     setisSubmittingPost(true); // mark submission as in progress
 
+    //notify parent component that submission has started, for css change during post submission.
+    if (onSubmitStart) {
+      onSubmitStart();
+    }
+
     try {
       //on submit, clean the words with the profanity cleaner package
       //https://www.npmjs.com/package/profanity-cleaner
@@ -90,16 +95,21 @@ export default function SubmitPostForm({location, handleClose}) {
       
       // Set state to trigger a re-fetch in AllPostsDisplay.jsx
       setPressedSubmitPost(prevState => !prevState);
-      
-      // If the post was submitted from the navbar modal, close it
-      if (location === "navbar" && handleClose) {
-        handleClose();
-      }
     } catch (error) {
       console.error('Error:', error);
       setError(error);
     } finally {
-      setisSubmittingPost(false); // Reset submission state
+      setisSubmittingPost(false); //rset submission state
+
+      //notify parent component that submission has ended
+      if (onSubmitEnd) {
+        onSubmitEnd();
+      }
+
+      //if the post was submitted from the navbar modal, close it
+      if (location === "navbar" && handleClose) {
+        handleClose();
+      }
     }
   }
 
@@ -123,6 +133,12 @@ export default function SubmitPostForm({location, handleClose}) {
   //function for sending the image
   function handleImgSendBtn(event) {
     event.preventDefault();
+
+    //notify parent component that submission has started, for css change during post submission
+    if (onSubmitStart) {
+      onSubmitStart();
+    }
+
     //use two different states for posting image from navbar form and homepage form, as otherwise they clash while posting
     if (location === "navbar") {
       setImgSubmittedNavbar(true);
@@ -136,7 +152,7 @@ export default function SubmitPostForm({location, handleClose}) {
     }
   }
 
-  return (
+ return (
     <>
       <Box className="submitPost-form-container">
         <Box component="form" className="submitPost-form">
@@ -146,7 +162,11 @@ export default function SubmitPostForm({location, handleClose}) {
             {selectedImage ? ( //conditionally render the image preview if an image is selected
               <Box className="image-preview-container">
                 <img src={selectedImage} alt="Selected" className="image-preview" />
-                <IconButton className="remove-image-button" onClick={handleRemoveImage}>
+                <IconButton 
+                  className="remove-image-button" 
+                  onClick={handleRemoveImage}
+                  disabled={isSubmittingPost}
+                >
                   <CloseIcon />
                 </IconButton>
               </Box>
@@ -162,6 +182,7 @@ export default function SubmitPostForm({location, handleClose}) {
                 }}
                 onFocus={() => setIsFocused(true)}
                 onBlur={() => setIsFocused(false)}
+                disabled={isSubmittingPost}
               />
             )}
             
@@ -175,12 +196,14 @@ export default function SubmitPostForm({location, handleClose}) {
                   setSelectedImage={setSelectedImage} 
                   imageSelected={imageSelected}
                   setImageSelected={setImageSelected}
+                  disabled={isSubmittingPost}
                 />
                 {!selectedImage && (
                   <IconButton
                     onClick={() => setShowEmojiPicker(!showEmojiPicker)}
                     className="emoji-button"
                     type="button"
+                    disabled={isSubmittingPost}
                   >
                     <SentimentSatisfiedAltIcon sx={{ color: isSubmittingPost ? "#B0B0B0" : '#1da1f2' }} />
                   </IconButton>
@@ -248,7 +271,7 @@ export default function SubmitPostForm({location, handleClose}) {
                 </Button>
               </div>
             </Box>
-            {showEmojiPicker && (
+            {showEmojiPicker && !isSubmittingPost && (
               <Box className="emoji-picker">
                 <Picker data={data} onEmojiSelect={handleEmojiSelect} theme={darkModeOn ? "dark" : "light"} />
               </Box>

@@ -1,4 +1,5 @@
 /* eslint-disable react/prop-types */
+import { useState } from "react";
 import PostDisplay from './PostDisplay.jsx';
 import CommentForm from './CommentForm.jsx';
 import Backdrop from '@mui/material/Backdrop';
@@ -11,8 +12,6 @@ import { ChatBubbleOutline } from '@mui/icons-material';
 import { useUI } from '../contexts/UIContext.jsx';
 import { useModal } from '../utilities/modalUtils.js';
 import "../styles/CommentModal.css";
-
-import "../styles/CommentModal.css"
 
 
 const style = {
@@ -30,20 +29,32 @@ const style = {
 };
 
 export default function CommentModal({ post }) {
-
-
   const { darkModeOn } = useUI();
   const { isOpen, openModal, closeModal } = useModal(false);
+  //track if a comment is being submitted
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   
-  const handleOpen = (e) => {
+  function handleOpen(e) {
     e.stopPropagation();
     e.preventDefault();
     openModal();
-  };
-  const handleClose = () => closeModal();
+  }
+  
+  function handleClose() {
+    //only close if not submitting
+    if (!isSubmitting) {
+      closeModal();
+    }
+  }
+  
+  //handle comment submission completion
+  function handleSubmissionComplete() {
+    setIsSubmitting(false);
+    closeModal();
+  }
 
-  return (
+ return (
     <>
       <IconButton onClick={handleOpen} size="small" className="icon-button comment-button">
         <ChatBubbleOutline fontSize="small" sx={{ color: darkModeOn ? 'rgb(113, 118, 123)' : 'rgb(83, 100, 113)' }} />
@@ -70,15 +81,17 @@ export default function CommentModal({ post }) {
         <Fade in={isOpen}>
             <Box 
             sx={style}
-            className={`comment-modal ${darkModeOn ? 'dark-mode' : ''}`}
+            className={`comment-modal ${darkModeOn ? 'dark-mode' : ''} ${isSubmitting ? 'submitting' : ''}`}
             >
               <IconButton
                 aria-label="close"
                 onClick={handleClose}
+                disabled={isSubmitting}
                 sx={{
                   position: 'absolute',
                   top: 6,
                   right: 23,
+                  zIndex: 12, // higher than overlay
                 }}
               >
                 <CloseIcon />
@@ -93,7 +106,11 @@ export default function CommentModal({ post }) {
                 Commenting to <Typography component="span" sx={{ color: '#1da1f2', fontSize: "13px" }}>@{post.from.name}</Typography>
                 </Typography>
               </Box> 
-              <CommentForm post={post} handleClose={handleClose} />
+              <CommentForm 
+                post={post} 
+                handleClose={handleSubmissionComplete} 
+                onSubmitStart={() => setIsSubmitting(true)}
+              />
           </Box>
         </Fade>
       </Modal>

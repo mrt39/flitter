@@ -14,7 +14,8 @@ export default function ImageUploadButton({
   fileInputRef, 
   setSelectedImage, 
   imageSelected, 
-  setImageSelected 
+  setImageSelected,
+  disabled 
 }) {
   const { 
     setImgSubmittedNavbar, 
@@ -32,7 +33,9 @@ export default function ImageUploadButton({
 
   //when the attachment icon is clicked, click on the hidden input (type=file) element
   function handleAttachmentClick() {
-    fileInputRef.current.click(); // trigger file input
+    if (fileInputRef.current && !disabled && !isSubmittingPost) {
+      fileInputRef.current.click(); // trigger file input
+    }
   }
 
   //when user selects an image and changes the value of the input, change the state 
@@ -116,17 +119,17 @@ export default function ImageUploadButton({
           handleFileInputChange(event); // trigger when user selects an image
         }}
         accept="image/*" 
+        disabled={isSubmittingPost || disabled}
       />
       <IconButton
         id={location === 'navbar' ? 'sendAnImgButtonNavbar' : "sendAnImgButtonHomepage"}
         onClick={handleAttachmentClick}
-        disabled={isSubmittingPost}
+        disabled={isSubmittingPost || disabled}
         aria-label="upload picture"
         sx={{ display: imageSelected ? "none" : "inline-flex" }} // hide the button when an image is selected
       >
-        <ImageOutlinedIcon sx={{ color: isSubmittingPost ? "#B0B0B0" : '#1da1f2' }} />
+        <ImageOutlinedIcon sx={{ color: (isSubmittingPost || disabled) ? "#B0B0B0" : '#1da1f2' }} />
       </IconButton>
     </Box>
   );
 }
-

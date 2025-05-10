@@ -13,6 +13,8 @@ import { UIProvider, useUI } from './contexts/UIContext.jsx';
 import { PostProvider } from './contexts/PostContext.jsx';
 import { FollowProvider } from './contexts/FollowContext.jsx';
 import { CacheProvider } from './contexts/CacheContext.jsx'; 
+import CacheTestButton from './components/CacheTestButton';
+
 import './styles/App.css'
 
 
@@ -71,11 +73,13 @@ function AppContent() {
           <SidebarLeft />
           <div className="outletContainer">
             <Outlet />
+            {/* test button for cache */}
+            {/* <CacheTestButton />  */}
           </div>
           <SidebarRight />
         </>
       ) : (
-        // If not logged in, only render outlet and navigate to /login
+        //if not logged in, only render outlet and navigate to /login
         <>
           <Outlet />
           <Navigate to="/login" />
