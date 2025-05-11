@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Box, Alert, CircularProgress, List, ListItem } from '@mui/material';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import VirtualizedContent from './VirtualizedContent.jsx';
 import PostDisplay from './PostDisplay.jsx';
 import { useAuth } from '../contexts/AuthContext.jsx';
 import { useUI } from '../contexts/UIContext.jsx';
@@ -183,8 +184,24 @@ function AllPostsDisplay({fromThisUser}) {
 
   //filter messages based on activeTab before rendering (if activeTab is 'following', only display messages from users the currentUser is following)
   const messagesToDisplay = activeTab === 'following'
-  ? filteredMessages.filter(post => post && post.from && /* ensure post and post.from is defined before rendering. important after image uploading */ currentUser.followingtheseID.includes(post.from._id))
+  ? filteredMessages.filter(post => post && post.from /* ensure post and post.from is defined before rendering. important after image uploading */ 
+    && 
+    currentUser.followingtheseID.includes(post.from._id))
   : filteredMessages;
+
+  //placeholder component for comments that are not in viewport, for content virtualization strategy
+  function PostPlaceholder() {
+  //a minimal representation of a comment to maintain layout
+    return (
+      <div className={`post-placeholder ${darkModeOn ? 'dark-mode' : ''}`}>
+        <div className="avatar-placeholder"></div>
+        <div className="content-placeholder">
+          <div className="header-placeholder"></div>
+          <div className="text-placeholder"></div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <Box className="post-feed-container" id="post-feed-container">
@@ -192,6 +209,8 @@ function AllPostsDisplay({fromThisUser}) {
         <InfiniteScroll
           dataLength={visiblePosts} // length of the currently visible posts
           next={loadMorePosts} // function to call to be load more posts
+          threshold={1.0}
+          scrollThreshold="95%" //only trigger when user is very close to bottom (95% scrolled)
           hasMore={visiblePosts < messagesToDisplay.length} // check if there's more to load
           scrollableTarget={appContainerRef.current} // set the scrollable target as the appContainerRef (passed from Home.jsx)
           loader={ // display while loading more
@@ -205,7 +224,21 @@ function AllPostsDisplay({fromThisUser}) {
           (messagesToDisplay.slice(0, visiblePosts).map(post => 
             post && ( // ensure post is defined before rendering ListItem and PostDisplay. important when image uploading takes time
               <ListItem key={post._id} className={`post-item ${darkModeOn ? 'dark-mode' : ''}`} alignItems="flex-start">
+                {/* wrap the post in virtualized content component, for virtualized content strategy */}
+              <VirtualizedContent
+                placeholder={<PostPlaceholder />}
+                initiallyVisible={
+                  //first post is always visible
+                  post === messagesToDisplay[0] || 
+                  //newly loaded posts through infinitescroll are initially visible (only the last batch) so content virtualization won't be applied to them(placeholder won't be displayed)
+                  //automatically identifies newly loaded posts (any post with index ≥ current visible count - batch size)
+                  //as user scrolls and visiblePosts increases (15→25→35), this window moves down exactly one batch at a time, ensuring only new batches render immediately
+                  messagesToDisplay.indexOf(post) >= visiblePosts - 10
+                }
+                className="virtualized-post-wrapper"
+              >
                 <PostDisplay post={post} />
+              </VirtualizedContent>
               </ListItem>
             )
           )
