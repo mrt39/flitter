@@ -3,7 +3,7 @@
 /**
  * ObjectId + ref Usage:
  * ---------------------------
- *in Mongoose, instead of embedding full objects (like using type: [userSchema] here for "from" and "likedby" fields),
+ *in mongoose, instead of embedding full objects (like using type: [userSchema] here for "from" and "likedby" fields),
  *it is possible to store a reference to another document using `mongoose.Schema.Types.ObjectId`.
  *this reference is linked to a model via the `ref` property.
  * 
@@ -29,7 +29,7 @@ const postSchema = new mongoose.Schema ({
     /* store current date as miliseconds from epoch:
      https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date */
     type: String,
-    default: Date.now, // Automatically sets the current date if not provided
+    default: Date.now, //automatically sets the current date if not provided
 
   },
   message: {
@@ -46,7 +46,7 @@ const postSchema = new mongoose.Schema ({
     {
       //users who liked the post
       type: mongoose.Schema.Types.ObjectId,
-      ref: "users", //tells Mongoose this ObjectId refers to a document in the 'users' collection
+      ref: "users", //tells mongoose this ObjectId refers to a document in the 'users' collection
       required: false,
     },
   ],
@@ -60,7 +60,7 @@ const postSchema = new mongoose.Schema ({
     {
       //comments on this post
       type: mongoose.Schema.Types.ObjectId,
-      ref: "comments", //tells Mongoose this ObjectId refers to a document in the 'comments' collection
+      ref: "comments", //tells mongoose this ObjectId refers to a document in the 'comments' collection
       required: false,
     },
   ],

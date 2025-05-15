@@ -9,16 +9,15 @@ import { fetchWithAuth } from './apiService';
  * Request deduplication prevents multiple components from 
  * triggering redundant network requests for the same data at the same time.
  * 
- * The technique works by:
- * - Storing the active Promise in a module-level variable (currentUserPromise) or map (userByShortIdPromises)
- * - Returning the existing Promise if one is already in progress
- * - Creating a new Promise only when needed
- * - Clearing the stored Promise once it completes (with a small delay)
+ * the technique works by:
+ * -storing the active Promise in a module-level variable (currentUserPromise) or map (userByShortIdPromises)
+ * -returning the existing Promise if one is already in progress
+ * -creating a new Promise only when needed
+ * -clearing the stored Promise once it completes (with a small delay)
  * 
- * This approach prevents the common React issue of duplicate API calls that can occur (and was occurring in the initial implementation) due to:
- * - Multiple components requesting the same data
- * - React StrictMode causing double-invocation of effects in development
- * - Complex state updates triggering multiple effect runs
+ * this approach prevents:
+ * -multiple components requesting the same data
+ * -react StrictMode causing double-invocation of effects in development
  */
 
 //variable that stores the current promise for the current user request

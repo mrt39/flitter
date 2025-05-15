@@ -57,7 +57,7 @@ function configurePassport() {
       done(null, existingUser);
     //otherwise, create new user
     } else {
-    // Generate a short unique ID
+    //generate a short unique ID
     const { faker } = require('@faker-js/faker');
     const ShortUniqueId = require('short-unique-id');
     const { randomUUID } = new ShortUniqueId({ length: 8 });

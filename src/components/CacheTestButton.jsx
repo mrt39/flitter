@@ -1,4 +1,4 @@
-//adebug component for testing cache functionality
+//debug component for testing cache functionality
  
 //USAGE: de-comment the button component in App.jsx and click to run the tests.
 

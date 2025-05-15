@@ -6,11 +6,7 @@ import WhatsHappening from './WhatsHappening.jsx';
 import { useUI } from '../contexts/UIContext.jsx';
 import '../styles/SidebarRight.css';
 
-
-
-
 const SidebarRight = () => {
-
   const {darkModeOn} = useUI();
   const [loading] = useState(false);
 

@@ -150,7 +150,7 @@ async function fetchLinkPreview(url) {
     const apiUrl = `https://api.linkpreview.net/?key=${apiKey}&q=${encodeURIComponent(url)}`;
     
     try {
-      // Use a direct fetch with CORS headers
+      //use a direct fetch with CORS headers
       const response = await fetch(apiUrl);
 
       if (!response.ok) {

@@ -3,7 +3,7 @@
 /**
  * ObjectId + ref Usage:
  * ---------------------------
- *in Mongoose, instead of embedding full objects (like using type: [userSchema] here for all three fields),
+ *in mongoose, instead of embedding full objects (like using type: [userSchema] here for all three fields),
  *it is possible to store a reference to another document using `mongoose.Schema.Types.ObjectId`.
  *this reference is linked to a model via the `ref` property.
  * 
@@ -25,13 +25,13 @@ const followerSchema = new mongoose.Schema ({
   following: {
     //users this user is following
     type: [mongoose.Schema.Types.ObjectId],
-    ref: "users", //tells Mongoose this ObjectId refers to a document in the 'users' collection
+    ref: "users", //tells mongoose this ObjectId refers to a document in the 'users' collection
     required: false,
   },
   followedby: {
     //users who follow this user
     type: [mongoose.Schema.Types.ObjectId],
-    ref: "users", //tells Mongoose this ObjectId refers to a document in the 'users' collection
+    ref: "users", //tells mongoose this ObjectId refers to a document in the 'users' collection
     required: false,
   },
 });

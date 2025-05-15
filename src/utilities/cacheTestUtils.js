@@ -12,7 +12,6 @@ import {
 } from './postCacheService';
 import { fetchWithAuth } from './apiService';
 
-console.log('Cache test utilities loaded!');
 
 //check if cache is working properly
 function diagnoseCacheHealth() {
@@ -305,27 +304,3 @@ export {
   testCrossTabSync,
   runAllCacheTests
 };
-
-//debug logging for window.cacheTests setup
-console.log('Setting up window.cacheTests...', typeof window);
-
-//expose functions to window for console testing
-//this allows running tests directly from browser console without importing
-if (typeof window !== 'undefined') {
-  try {
-    //create global object with all testing functions
-    window.cacheTests = {
-      diagnoseCacheHealth,
-      testSinglePostCache,
-      testCacheInvalidation,
-      testLikeUpdateInCache,
-      testCrossTabSync,
-      runAllCacheTests
-    };
-    //confirm successful creation of window.cacheTests
-    console.log('window.cacheTests successfully created', window.cacheTests);
-  } catch (error) {
-    //log any errors that occur during setup
-    console.error('Failed to create window.cacheTests:', error);
-  }
-}

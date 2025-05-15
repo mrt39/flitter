@@ -46,7 +46,7 @@ const HoverUserCard = ({ user, handleTooltipClose }) => {
   //handle generating the url path for routing to /profile/:slug/followers
   function handleFollowersRouting(string) {
     const profilePath = createFollowersRoute(displayedUserOnCard, string);
-    // Route to the profile path
+    //route to the profile path
     navigate(profilePath);
   }
 

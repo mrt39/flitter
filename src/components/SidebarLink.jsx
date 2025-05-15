@@ -3,7 +3,6 @@ import { useUI } from '../contexts/UIContext.jsx';
 import '../styles/Sidebarlink.css'
 
 function SidebarLink({ text, Icon }) {
-
   const { darkModeOn } = useUI();
 
   return(

@@ -12,7 +12,7 @@ const CLIENT_URL = process.env.CLIENT_URL;
 //check if user is authenticated
 router.get("/login/success", (req, res) => {
   if (req.isAuthenticated()) {
-    //Send user to the frontend
+    //send user data to the frontend
     //no populate needed here because req.user is already the up-to-date single source of truth
     res.json(req.user);
   } else {

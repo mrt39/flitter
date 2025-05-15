@@ -3,7 +3,6 @@
 //authentication context for managing user login state, session, and authentication
 import { createContext, useState, useContext, useEffect } from 'react';
 import { getCurrentUser, getUserById, logoutUser } from '../utilities/authService';
-import { useNavigate } from 'react-router-dom';
 
 
 
@@ -16,8 +15,6 @@ function AuthProvider({ children }) {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [firstTimeLoading, setFirstTimeLoading] = useState(true);
-
-  const navigate = useNavigate(); 
 
   //get the user data when logged in, also checks if the user is logged in after each refresh
   useEffect(() => {

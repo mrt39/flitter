@@ -30,7 +30,7 @@ router.post('/uploadprofilepic/:userid', upload.single('image'), validateImageUp
     //not updating Post, Follower or Comment models here to update user's profile picture in those,
     //in user's already made posts, follows or comments, these models will reference user by id 
     //they will automatically reflect the updated uploadedpic without manual updates
-    //and use populate() to update all Post model instances where "from" field has this user
+    //and populate() will be used to update all Post model instances where "from" field has this user
 
     res.send(result);
 

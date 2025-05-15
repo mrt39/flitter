@@ -70,7 +70,7 @@
     border-radius: 16px;
     z-index: 10;
     pointer-events: none;
-    animation: shimmer 6s infinite; /* Slowed down to 8s */
+    animation: shimmer 6s infinite; 
 }
 
 .submitPost-modal.dark-mode.submitting::after {
@@ -80,7 +80,7 @@
         rgba(255, 255, 255, 0.05) 33%);
     background-size: 200% 100%;
     z-index: 10;
-    animation: shimmer 6s infinite; /* Slowed down to 8s */
+    animation: shimmer 6s infinite; 
 }
 
 @keyframes shimmer {

@@ -63,7 +63,8 @@ router.post("/submitPost", isAuthenticated, validatePostSubmission, async (req, 
     const result = await newPost.save();
 
     //populate the response before sending to frontend
-    //this is critical for the cache system on frontend to work correctly - our db's post model only stores references for "from" field, 
+    //this is an additional query that increases the response time, 
+    //but it's critical for the cache system on frontend to work correctly - our db's post model only stores references for "from" field, 
     //and cache needs complete user data objects, not just IDs
     //without this population, the cache would store references instead of actual user data
     //which leads to missing fields like shortId, picture, etc. when rendering from cache
