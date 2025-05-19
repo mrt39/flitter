@@ -9,13 +9,13 @@ const postCache = {
   data: null,           //stores all posts
   lastFetchTime: null,  //timestamp for invalidation checking
   isFetching: false,    //prevents concurrent fetch requests
-  maxAge: 5 * 60 * 1000 //5 minutes cache validity to prevent stale data
+  maxAge: 5*60*1000     //5 minutes cache validity (in miliseconds) to prevent stale data
 };
 
 //local storage key for cross-tab synchronization
 const CACHE_TIMESTAMP_KEY = 'flitter_cache_timestamp';
 //min delay in milliseconds when returning cache data (for UX purposes)
-const MIN_CACHE_RESPONSE_TIME = 600; // 800ms feels natural but not too slow
+const MIN_CACHE_RESPONSE_TIME = 600; 
 
 //get all posts with cache support
 async function getCachedPosts() {
@@ -25,7 +25,7 @@ async function getCachedPosts() {
       postCache.lastFetchTime && 
       (Date.now() - postCache.lastFetchTime < postCache.maxAge)) {
     
-      //add artificial delay time for UX purposes when returning from cache, to not to display allposts instant, but with a slight delay 
+      //add artificial delay time for UX purposes when returning from cache, to not to display allposts instantly, but with a slight delay 
       await new Promise(resolve => setTimeout(resolve, MIN_CACHE_RESPONSE_TIME));
 
     //create a new array with the same content and return it, which is a copy of the data, instead of the original

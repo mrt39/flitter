@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 
-//virtualized content component that conditionally renders full or simplified content based on viewport visibility
+//virtualized content component that renders full or simplified content based on viewport visibility (it puts a placeholder instead of contents that are off the viewport)
 //improves performance by only rendering full content when the item is visible or near-visible
 //maintains DOM structure and dimensions to prevent layout shifts during scrolling
 
@@ -11,7 +11,7 @@ function VirtualizedContent({
   children,                  //the full content to render when visible
   placeholder,               //simplified content to render when not visible
   initiallyVisible = false,  //whether to start with content visible
-  cacheTimeout = 30000,      //how long to keep content in memory after scrolling away
+  cacheTimeout = 30000,      //how long to keep content in memory after scrolling away(when should the placeholder replace the content)
   className = '',            //class to apply to container
   style = {},                //additional styles
   id,                        //optional id for container
@@ -24,7 +24,7 @@ function VirtualizedContent({
     cacheTimeout
   });
   
-  //store the element's height to maintain consistent dimensions
+  //store the placeholder element's height to maintain consistent dimensions
   const [height, setHeight] = useState(null);
   const contentRef = useRef(null);
   
