@@ -16,6 +16,15 @@
   text-overflow: ellipsis;
 }
 
+.sidebar-link-container{
+    color: black;
+}
+
+.sidebar-link-container.dark-mode{
+    color: white;
+}
+
+
 /* below 1300px width */
 @media (max-width: 1300px) {
 

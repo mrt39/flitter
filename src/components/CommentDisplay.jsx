@@ -1,9 +1,11 @@
 /* eslint-disable react/prop-types */
-import { useContext, useState} from "react";
+import {useState} from "react";
 import dayjs from 'dayjs';
 import HoverUserCard from './HoverUserCard.jsx';
 import Tooltip from '@mui/material/Tooltip';
 import UserAvatar from './UserAvatar.jsx';
+import LinkWrapper from './LinkWrapper.jsx';
+import { createProfileRoute } from '../utilities/routingUtils.js';
 import { ListItemText,  ListItemAvatar, Box, Typography} from '@mui/material';
 import { useUI } from '../contexts/UIContext.jsx';
 import { useUser } from '../contexts/UserContext.jsx';
@@ -30,13 +32,11 @@ const CommentDisplay = ({comment}) => {
 
     return (
       <>
-        <span 
+        <LinkWrapper
+          to={createProfileRoute(comment.from)}
+          onClick={() => handleProfileRouting(comment.from)}
           className="usernameLinkOnComment" 
-          onClick={(e) => 
-          { 
-          e.preventDefault();
-          handleProfileRouting(comment.from //route to profile
-          )}}
+          style={{ color: 'inherit', textDecoration: 'none' }}
         >
           <ListItemAvatar>
           <UserAvatar
@@ -44,7 +44,7 @@ const CommentDisplay = ({comment}) => {
                   source="post"
           />
           </ListItemAvatar>
-        </span>
+        </LinkWrapper>
         <ListItemText
             primary={
             <div className="comment-header">
@@ -80,18 +80,16 @@ const CommentDisplay = ({comment}) => {
                     },
                   }}        
               > 
-                  <span 
-                      className="usernameLinkOnComment" 
-                      onClick={(e) => 
-                            { 
-                            e.preventDefault();
-                            handleProfileRouting(comment.from //route to profile
-                            )}}
+                  <LinkWrapper
+                    to={createProfileRoute(comment.from)}
+                    onClick={() => handleProfileRouting(comment.from)}
+                    className="usernameLinkOnComment"
+                    style={{ color: 'inherit', textDecoration: 'none' }}
                   >
                     <Typography variant="subtitle1" className="comment-name">
                     {comment.from.name}
                     </Typography>
-                  </span>
+                  </LinkWrapper>
 
               </Tooltip>
 

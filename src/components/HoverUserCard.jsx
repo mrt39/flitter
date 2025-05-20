@@ -1,13 +1,14 @@
 /* eslint-disable react/prop-types */
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent, Typography, Box, useTheme, CircularProgress, Alert } from '@mui/material';
 import { useAuth } from '../contexts/AuthContext.jsx';
 import { useUI } from '../contexts/UIContext.jsx';
 import { useUser } from '../contexts/UserContext.jsx';
 import { useFollow } from '../contexts/FollowContext.jsx';
 import { getUserByShortId } from '../utilities/authService.js';
-import { createFollowersRoute } from '../utilities/routingUtils.js';
+import { createFollowersRoute, createProfileRoute} from '../utilities/routingUtils.js';
+import LinkWrapper from './LinkWrapper.jsx';
 import FollowButton from './FollowButton.jsx';
 import UserAvatar from './UserAvatar.jsx';
 import '../styles/HoverUserCard.css';
@@ -76,13 +77,10 @@ const HoverUserCard = ({ user, handleTooltipClose }) => {
       {/* Flex container for avatar and follow button */}
       <Box display="flex" justifyContent="space-between" alignItems="flex-start" sx={{ mb: 2 }}>
         {/* link to profile */}
-        <span
+        <LinkWrapper
+          to={createProfileRoute(displayedUserOnCard)}
+          onClick={() => handleProfileRouting(displayedUserOnCard)}
           className="usernameLinkOnPost"
-          onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              handleProfileRouting(displayedUserOnCard);
-          }}
         >
           <div className="hoverUserCardAvatarandNameContainer">
             <UserAvatar
@@ -93,7 +91,7 @@ const HoverUserCard = ({ user, handleTooltipClose }) => {
               {displayedUserOnCard.name}
             </Typography>
           </div>
-        </span>
+        </LinkWrapper>
         {/* don't display the follow button when the user hovers on their own name */}
         {currentUser.shortId !== displayedUserOnCard.shortId && 
           <FollowButton
@@ -119,20 +117,34 @@ const HoverUserCard = ({ user, handleTooltipClose }) => {
 
         {/*follower and following Counts */}
         <Box display="flex" justifyContent="flex-start" gap="50px">
-          <Link className="hoverUserCardFollowersLink" onClick={(e) => {e.preventDefault(); e.stopPropagation(); handleFollowersRouting("following")}}>
+          <LinkWrapper 
+            to={createFollowersRoute(displayedUserOnCard, "following")}
+            onClick={(e) => {
+              e.stopPropagation(); 
+              handleFollowersRouting("following");
+            }}
+            className="hoverUserCardFollowersLink"
+          >
             <Typography variant="body2" color="text.secondary">
                 <span className='userCardFollowerNumber' style={{ color: theme.palette.text.primary}}>
                   {displayedUserOnCard.followingCount}
                 </span>&#8203; Following  {/* arrange space between the number and the "Following text" */}
             </Typography>
-          </Link>
-          <Link className="hoverUserCardFollowersLink" onClick={(e) => {e.preventDefault(); e.stopPropagation(); handleFollowersRouting("followers")}}>
+          </LinkWrapper>
+          <LinkWrapper 
+            to={createFollowersRoute(displayedUserOnCard, "followers")}
+            onClick={(e) => {
+              e.stopPropagation(); 
+              handleFollowersRouting("followers");
+            }}
+            className="hoverUserCardFollowersLink"
+          >
             <Typography variant="body2" color="text.secondary">
               <span className='userCardFollowerNumber' style={{ color: theme.palette.text.primary}}>
                 {displayedUserOnCard.followerCount}
               </span>&#8203; Followers
             </Typography>
-          </Link>
+          </LinkWrapper>
         </Box>
       </CardContent>
     </Card>

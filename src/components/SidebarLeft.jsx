@@ -5,7 +5,12 @@ import SidebarLink from './SidebarLink.jsx';
 import EditProfileModal from './EditProfileModal.jsx';
 import UserAvatar from './UserAvatar.jsx';
 import SubmitPostModal from './SubmitPostModal.jsx';
+import LinkWrapper from './LinkWrapper.jsx';
 import { Button, Menu, MenuItem, ListItemIcon } from '@mui/material';
+import { useUI } from '../contexts/UIContext.jsx';
+import { useAuth } from '../contexts/AuthContext.jsx';
+import { useUser } from '../contexts/UserContext.jsx';
+import { createProfileRoute } from '../utilities/routingUtils.js';
 //icons
 import HomeIcon from '@mui/icons-material/Home';
 import PermIdentityIcon from '@mui/icons-material/PermIdentity';
@@ -14,9 +19,7 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import Brightness2Icon from '@mui/icons-material/Brightness2'; 
 import WbSunnyIcon from '@mui/icons-material/WbSunny';
 import LogoImg from '../assets/logo.png';
-import { useUI } from '../contexts/UIContext.jsx';
-import { useAuth } from '../contexts/AuthContext.jsx';
-import { useUser } from '../contexts/UserContext.jsx';
+
 
 import '../styles/SidebarLeft.css';
 
@@ -62,13 +65,22 @@ const SidebarLeft = () => {
           <div className="sidebarLogo">
             <img src={LogoImg} alt="logo" />
           </div>
-          <span onClick={() => navigate("/")}>
-              <SidebarLink text="Home" Icon={HomeIcon} />
-          </span>
+          <LinkWrapper 
+            to="/" 
+            className={`sidebar-link-container ${darkModeOn ? 'dark-mode' : ''}`}
+            style={{textDecoration: 'none' }}
+          >
+            <SidebarLink text="Home" Icon={HomeIcon} />
+          </LinkWrapper>
 
-          <span onClick={() => handleProfileRouting(currentUser)} >
+          <LinkWrapper 
+            to={createProfileRoute(currentUser)}
+            onClick={() => handleProfileRouting(currentUser)}
+            className={`sidebar-link-container ${darkModeOn ? 'dark-mode' : ''}`}
+            style={{textDecoration: 'none' }}
+          >
               <SidebarLink text="Profile" Icon={PermIdentityIcon} />
-          </span>
+          </LinkWrapper>
 
           <span onClick={toggleDarkTheme} >
               <SidebarLink text="Theme" Icon={darkModeOn ? Brightness2Icon : WbSunnyIcon} />

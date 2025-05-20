@@ -3,7 +3,8 @@ import { useState, useEffect } from 'react'
 import FollowButton from './FollowButton.jsx';
 import EditProfileModal from './EditProfileModal.jsx';
 import UserAvatar from './UserAvatar.jsx';
-import { Link, useNavigate } from "react-router-dom";
+import LinkWrapper from './LinkWrapper.jsx';
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent, Typography, useTheme, Button, IconButton } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useAuth } from '../contexts/AuthContext.jsx';
@@ -77,20 +78,28 @@ const UserCardProfile = () => {
               {selectedUser.bio}
             </Typography>
             <div className="follow-info">
-              <Link onClick={() => handleFollowersRouting("following")} className="follow-link">
+              <LinkWrapper 
+                to={createFollowersRoute(selectedUser, "following")}
+                onClick={() => handleFollowersRouting("following")} 
+                className="follow-link"
+              >
                 <Typography className="UserCardFollowersLink" variant="body2" color="text.secondary">
                   <span className='userCardFollowerNumber' style={{ color: theme.palette.text.primary}}>
                     {selectedUser.followingCount}
                   </span>&#8203; Following  {/* arrange space between the number and the "Following text" */}
                 </Typography>
-              </Link>
-              <Link onClick={() => handleFollowersRouting("followers")} className="follow-link">
+              </LinkWrapper>
+              <LinkWrapper 
+                to={createFollowersRoute(selectedUser, "followers")}
+                onClick={() => handleFollowersRouting("followers")} 
+                className="follow-link"
+              >
                 <Typography className="UserCardFollowersLink" variant="body2" color="text.secondary">
                   <span className='userCardFollowerNumber' style={{ color: theme.palette.text.primary}}>
                     {selectedUser.followerCount}
                   </span>&#8203; Followers
                 </Typography>
-              </Link>
+              </LinkWrapper>
             </div>  
           </CardContent>
         </div>

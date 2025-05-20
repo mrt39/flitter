@@ -1,15 +1,15 @@
 /* eslint-disable react/prop-types */
 import { useEffect, useState } from 'react';
-import {Link} from "react-router-dom";
 import HoverUserCard from './HoverUserCard.jsx';
 import { Box, CircularProgress, Card, CardContent, Typography, List, ListItem, ListItemAvatar, ListItemText, Tooltip} from '@mui/material';
 import { useUI } from '../contexts/UIContext.jsx';
 import { useAuth } from '../contexts/AuthContext.jsx';
 import { useUser } from '../contexts/UserContext.jsx';
-import { useFollow } from '../contexts/FollowContext.jsx';
 import { getAllUsers } from '../utilities/userService.js';
 import UserAvatar from './UserAvatar.jsx';
 import FollowButton from './FollowButton.jsx';
+import LinkWrapper from './LinkWrapper.jsx';
+import { createProfileRoute } from '../utilities/routingUtils.js';
 
 import "../styles/WhotoFollow.css";
 
@@ -18,7 +18,6 @@ const WhotoFollow = () => {
   const { darkModeOn } = useUI();
   const { currentUser } = useAuth(); 
   const { handleProfileRouting } = useUser();
-  const { pressedFollow } = useFollow();
 
   const [allUsers, setAllUsers] = useState(null);
   //store the sorted users to display
@@ -81,7 +80,13 @@ const WhotoFollow = () => {
         </Typography>
         <List>
         {sortedUsers.map((user) => (
-          <Link onClick={(e) => {handleProfileRouting(user); e.preventDefault();}} className={`followers-link ${darkModeOn ? 'dark-mode' : ''}`} style={{ textDecoration: 'none', color: 'inherit' }} key={user._id}>
+          <LinkWrapper 
+            to={createProfileRoute(user)}
+            onClick={() => handleProfileRouting(user)} 
+            className={`followers-link ${darkModeOn ? 'dark-mode' : ''}`} 
+            style={{ textDecoration: 'none', color: 'inherit' }} 
+            key={user._id}
+          >
             <ListItem className={`whotoFollowListItem ${darkModeOn ? 'dark-mode' : ''}`} key={user._id}>
               <ListItemAvatar>
                 <UserAvatar user={user} />
@@ -127,7 +132,7 @@ const WhotoFollow = () => {
                 <FollowButton displayedUserOnCard={user}/>
               </div>
             </ListItem>
-          </Link>
+          </LinkWrapper>
         ))}
         {sortedUsers.length === 0 && 
           <Typography variant="body2" className='noUsersToFollow-text' component="div" >

@@ -73,7 +73,7 @@ function AppContent() {
           <SidebarLeft />
           <div className="outletContainer">
             <Outlet />
-            {/* test button for cache */}
+            {/* button for cache testing*/}
             {/* <CacheTestButton />  */}
           </div>
           <SidebarRight />

@@ -5,6 +5,8 @@ import HoverUserCard from '../components/HoverUserCard.jsx';
 import FollowersTopSection from '../components/FollowersTopSection.jsx'; 
 import UserAvatar from '../components/UserAvatar.jsx';
 import FollowButton from '../components/FollowButton.jsx';
+import LinkWrapper from '../components/LinkWrapper.jsx';
+import { createProfileRoute } from '../utilities/routingUtils.js';
 import { ListItem, ListItemAvatar, ListItemText, Typography, Paper, CircularProgress, Alert, Box, Tooltip } from '@mui/material';
 import { useAuth } from '../contexts/AuthContext.jsx';
 import { useUI } from '../contexts/UIContext.jsx';
@@ -21,7 +23,6 @@ const Followers = () => {
   const { darkModeOn } = useUI();
   const { handleProfileRouting } = useUser();
   const { setActiveTab, setSearchWord } = usePost();
-  const { pressedFollow } = useFollow();
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -70,7 +71,13 @@ const Followers = () => {
     function renderUserList(users, emptyStateMessage) {
       return users && users.length > 0 ? (
         users.map((follower) => (
-          <Link onClick={() => handleProfileRouting(follower)} className={`followers-link ${darkModeOn ? 'dark-mode' : ''}`} style={{ textDecoration: 'none', color: 'inherit' }} key={follower._id}>
+          <LinkWrapper 
+            to={createProfileRoute(follower)}
+            onClick={() => handleProfileRouting(follower)} 
+            className={`followers-link ${darkModeOn ? 'dark-mode' : ''}`} 
+            style={{ textDecoration: 'none', color: 'inherit' }} 
+            key={follower._id}
+          >
             <ListItem className={`followers-listitem ${darkModeOn ? 'dark-mode' : ''}`} alignItems="flex-start">
               <ListItemAvatar className='followers-avatar'>
                 <UserAvatar user={follower} />
@@ -120,7 +127,7 @@ const Followers = () => {
               </div>
               }
             </ListItem>
-          </Link>
+          </LinkWrapper>
         ))
       ) : (
         <Typography variant="body1" sx={{marginTop:"10px"}}>{emptyStateMessage}</Typography>

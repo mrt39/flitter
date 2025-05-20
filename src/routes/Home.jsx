@@ -11,13 +11,29 @@ function Home() {
   const { currentUser } = useAuth(); 
   const { darkModeOn } = useUI(); 
 
+
+/*   function populate(){
+    fetch(`${import.meta.env.VITE_BACKEND_URL}`+"/populate")
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      console.log("Successfully populated users!")
+      return response.json();
+    })
+    .catch(error => {
+      console.error('API request failed:', error);
+      throw error;
+    });
+  } */
+
   return (
     <>
     <div className='homeContainer'>
       <div className={`homePageTop-container ${darkModeOn ? 'dark-mode' : ''}`}>
         <HomepageTopSection/>
       </div>
-
+      {/* <button onClick={() => populate()}>Populate Users</button> */}
         {/* use different react components for forms in homepage and navbar in order to seperate concerns and avoid state/post logic clashing */}
         <SubmitPostForm
           currentUser={currentUser}

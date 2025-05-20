@@ -9,6 +9,8 @@ import UserAvatar from './UserAvatar.jsx';
 import MediaEmbed from './MediaEmbed.jsx';
 import HoverUserCard from './HoverUserCard.jsx';
 import CommentModal from './CommentModal.jsx';
+import LinkWrapper from './LinkWrapper.jsx';
+import { createProfileRoute } from '../utilities/routingUtils.js';
 import { useUI } from '../contexts/UIContext.jsx';
 
 function PostContent({ 
@@ -25,18 +27,21 @@ function PostContent({
 
   return (
     <span className={`postContentContainer ${darkModeOn ? 'dark-mode' : ''}`}>
-      <span className="usernameLinkOnPost avatarLink" onClick={(e) => { 
-        e.preventDefault();
-        e.stopPropagation(); 
-        handleProfileRouting(post.from);
-      }}>
+      <LinkWrapper
+        to={createProfileRoute(post.from)}
+        onClick={(e) => {
+          e.stopPropagation(); 
+          handleProfileRouting(post.from);
+        }}
+        className="usernameLinkOnPost avatarLink"
+      >
         <ListItemAvatar>
           <UserAvatar
             user={post.from}
             source="post"
           />
         </ListItemAvatar>
-      </span>
+      </LinkWrapper>
       <ListItemText
         primary={(
           <div className="post-header">
@@ -67,19 +72,19 @@ function PostContent({
                 },
               }}        
             > 
-              <span
-                className="usernameLinkOnPost"
+              <LinkWrapper
+                to={createProfileRoute(post.from)}
                 onClick={(e) => {
-                  e.preventDefault();
                   e.stopPropagation(); 
                   handleProfileRouting(post.from);
                 }}
+                className="usernameLinkOnPost"
               >
                 <Typography variant="subtitle1" className="post-name">
                   {/* tap into post in different ways based on its an array or not */}
                   {post.from.name} 
                 </Typography>
-              </span>
+              </LinkWrapper>
             </Tooltip>
             <Typography variant="body2" color="textSecondary" className={`post-date ${darkModeOn ? 'dark-mode' : ''}`}>
               {dayjs(new Date(post.date)).format('MMM D, H:mm')}

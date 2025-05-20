@@ -1,5 +1,6 @@
 //utility routes including database population
 //this is used for generating random user data (for the purpose of adding users to the app)
+//usage: in Home.jsx component in frontend, de-comment the function and the button element, then press the button on the home page to populate.
 const router = require("express").Router();
 const User = require("../models/user");
 const Post = require("../models/post");

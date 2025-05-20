@@ -9,7 +9,7 @@ const postCache = {
   data: null,           //stores all posts
   lastFetchTime: null,  //timestamp for invalidation checking
   isFetching: false,    //prevents concurrent fetch requests
-  maxAge: 5*60*1000     //5 minutes cache validity (in miliseconds) to prevent stale data
+  maxAge: 15*60*1000     //15 minutes cache validity (in miliseconds) to prevent stale data
 };
 
 //local storage key for cross-tab synchronization

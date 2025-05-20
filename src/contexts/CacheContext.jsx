@@ -14,7 +14,7 @@ function CacheProvider({ children }) {
   const [forceRefresh, setForceRefresh] = useState(false);
   
   //cache invalidation settings fpr how often to refresh cache automatically
-  const [refreshInterval, setRefreshInterval] = useState(5 * 60 * 1000); // 5 minutes
+  const [refreshInterval, setRefreshInterval] = useState(15 * 60 * 1000); // 15 minutes
   
   //manually trigger cache refresh
   function refreshCache() {
