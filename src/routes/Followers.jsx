@@ -148,9 +148,16 @@ const Followers = () => {
         currentPathFollowers={currentPathFollowers}
         setCurrentPathFollowers={setCurrentPathFollowers}
       />
+      {/*check if followerData exists before trying to access its properties. if not, send an empty array so  */}
       {currentPathFollowers === "following" 
-        ? renderUserList(followerData.following, "This user isn't following anyone.")
-        : renderUserList(followerData.followedby, "This user isn't followed by anyone.")
+        ? renderUserList(
+            followerData && followerData.following ? followerData.following : [], 
+            "This user isn't following anyone."
+          )
+        : renderUserList(
+            followerData && followerData.followedby ? followerData.followedby : [], 
+            "This user isn't followed by anyone."
+          )
       }
     </Paper>
   );

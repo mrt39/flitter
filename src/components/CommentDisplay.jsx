@@ -31,7 +31,7 @@ const CommentDisplay = ({comment}) => {
     };
 
     return (
-      <>
+      <div className="commentContentContainer">
         <LinkWrapper
           to={createProfileRoute(comment.from)}
           onClick={() => handleProfileRouting(comment.from)}
@@ -107,7 +107,7 @@ const CommentDisplay = ({comment}) => {
             }
         />
 
-      </>
+      </div>
     );
   };
   
