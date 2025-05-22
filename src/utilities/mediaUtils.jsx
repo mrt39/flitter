@@ -8,6 +8,19 @@ this file implements a link preview caching mechanism that:
 - only stores essential preview data (url, title, description, image) to minimize storage use
 - checks cache before making api calls to improve performance and reduce api usage */
 
+/* security and performance optimization for link previews:
+- moved linkpreview api key from frontend to backend to prevent exposure in browser
+- api keys visible in frontend code can be extracted by users
+- moving the key to backend prevents unauthorized usage and potential billing issues
+- link preview currently works with multi-layer caching strategy:
+  1. frontend localStorage cache: checks local cache first for instant previews
+  2. backend redis cache: persistent cache that works across server instances
+  3. fallback to basic previews when api fails
+- youtube previews still processed directly in browser for speed
+- all external api calls now flow through our backend proxy
+- backend implements rate limiting to prevent abuse
+ */
+
 //extract youtube video id from url
 function extractYouTubeID(url) {
   if (!url) return null;
@@ -124,8 +137,8 @@ function createYouTubePreview(url, youtubeId) {
   }
 }
   
-//fetch link preview data for a url, from the api
-async function fetchLinkPreview(url) {
+//fetch link preview data for a url, from the backend api
+  async function fetchLinkPreview(url) {
   
   //first check if preview is already cached
   const cachedPreview = getPreviewFromCache(url);
@@ -145,41 +158,33 @@ async function fetchLinkPreview(url) {
 
 
   try {
-    //use opengraph.io api to fetch link preview
-    const apiKey = import.meta.env.VITE_LINKPREVIEW_API_KEY;
-    const apiUrl = `https://api.linkpreview.net/?key=${apiKey}&q=${encodeURIComponent(url)}`;
+    //call backend api endpoint instead of external api directly
+    const apiUrl = `${import.meta.env.VITE_BACKEND_URL}/api/link-preview?url=${encodeURIComponent(url)}`;
     
-    try {
-      //use a direct fetch with CORS headers
-      const response = await fetch(apiUrl);
+    const response = await fetch(apiUrl);
 
-      if (!response.ok) {
-        throw new Error(`API error: ${response.status}`);
-      }
-      const data = await response.json();
-      
-      //check for hybridGraph instead of success property - due to how opengraph api works
-      if (!data.title) {
-        throw new Error('API response missing required data');
-      }
-
-      //extract rich metadata from API response
-      const previewData = {
-        url: url,
-        title: data.title || new URL(url).hostname,
-        description: data.description || '',
-        images: data.image ? [data.image] : [],
-        success: true
-      };
-      
-      //cache the preview data for future use
-      savePreviewToCache(url, previewData);
-      
-      return previewData;
-    } catch (fetchError) {
-      console.error('UTILS: Fetch error details:', fetchError.message);
-      throw fetchError; //throw to be handled by outer try/catch
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status}`);
     }
+    const data = await response.json();
+    
+    if (!data.title) {
+      throw new Error('API response missing required data');
+    }
+
+    //extract rich metadata from API response (keeping the same structure)
+    const previewData = {
+      url: url,
+      title: data.title || new URL(url).hostname,
+      description: data.description || '',
+      images: data.images || [],
+      success: true
+    };
+    
+    //cache the preview data for future use
+    savePreviewToCache(url, previewData);
+    
+    return previewData;
   } catch (error) {
     console.error('UTILS: Error in fetchLinkPreview:', error.message);
     //if api call fails, try to create a basic preview

@@ -28,16 +28,34 @@ export default function Login() {
   const [loginData, setLoginData] = useState({ });
 
   function handleGoogleClick () {
-      window.open(import.meta.env.VITE_BACKEND_URL+"/auth/google", "_self");
+    window.open(import.meta.env.VITE_BACKEND_URL+"/auth/google", "_self");
   }
 
   function handleTwitterClick () {
     window.open(import.meta.env.VITE_BACKEND_URL+"/auth/twitter", "_self");
-}
+  }
 
   function handleDemoSigninClick(){
-    setLoginData({email:"demoacc@demoacc.com" , password: import.meta.env.VITE_DEMOACC_PW})
-    setClickedLogin(true)
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/demo-login`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    })
+    .then(response => {
+      if (response.ok) {
+        // Successful login
+        window.location.reload();
+      } else {
+        throw new Error('Demo login failed');
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      setSnackbarOpenCondition("wrongLoginDeets");
+      setSnackbarOpen(true);
+    });
   }
 
   function handleChange (event) {

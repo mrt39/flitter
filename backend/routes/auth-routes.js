@@ -79,6 +79,31 @@ router.post("/login", function(req, res){
   })
 });
 
+//demo account login route
+router.post("/demo-login", function(req, res, next){
+  //use passport to authenticate with hardcoded demo credentials
+  passport.authenticate("local", (err, user, info) => {
+    if (err) {
+      return res.status(500).json({ error: 'Authentication error' });
+    }
+    
+    if (!user) {
+      return res.status(401).json({ error: 'Demo authentication failed' });
+    }
+    
+    req.login(user, (err) => {
+      if (err) {
+        return res.status(500).json({ error: 'Session error' });
+      }
+      console.log("Successfully logged in with demo account!");
+      return res.json(user);
+    });
+  })({ body: { 
+    email: process.env.DEMO_EMAIL, 
+    password: process.env.DEMO_PASSWORD 
+  }}, res, next);
+});
+
 //logout route
 router.post('/logout', (req, res) => {
   console.log("Logging out user:", req.user);

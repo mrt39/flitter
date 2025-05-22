@@ -108,9 +108,6 @@ function uploadProfileImage(userId, formData) {
   return fetch(`${import.meta.env.VITE_BACKEND_URL}/uploadprofilepic/${userId}`, {
     method: "POST",
     body: formData,
-    headers: {
-      "Access-Control-Allow-Origin": "*",
-    }
   }).then(response => {
     if (!response.ok) {
       throw new Error('Network response was not ok');
