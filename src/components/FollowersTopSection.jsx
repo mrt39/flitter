@@ -27,19 +27,11 @@ const FollowersTopSection = ({currentPathFollowers, setCurrentPathFollowers}) =>
         navigate(followersPath); 
     }
 
-    //handle generating the url path when the user clicks on the back button (/profile/:slug-shortid/)
-    function handleProfileRouting(){
-        const profilePath = `${urlWithoutCurrentpath}`
-        // Route to the profile path
-        navigate(profilePath); 
-    }
-
-
     return (
         <>
         <div className="top-header-followersTopSection">
             <div className="top-header-backButton">
-                <IconButton onClick={() => {handleProfileRouting()}} className="back-button-followersTopSection">
+                <IconButton onClick={() => navigate(-1)} className="back-button-followersTopSection">
                     <ArrowBackIcon />
                 </IconButton>
             </div>

@@ -52,7 +52,8 @@ const Profile = () => {
     };
     getUserData();
     //when user follows/unfollows (which changes the state of userRefreshPending), refresh display to have either the follow or unfollow button
-  }, [userRefreshPending, profileUpdated]); 
+    //when the URL (location.pathname) changes through user clicking on the "back" button at top while displaying another profile, refresh display
+  }, [userRefreshPending, profileUpdated, location.pathname]); 
 
   if (profilePageLoading) {
     return <CircularProgress />;
