@@ -21,8 +21,8 @@ const sessionConfig = {
   proxy: true, //for production
   store: store, //store to mongodb
   cookie: {
-    secure: false, //set to true in production if served over HTTPS, "false" for development
-    sameSite: 'lax' // "none" for production, "strict" for development, "lax" for twitter oAuth
+    secure: process.env.NODE_ENV === 'production', //set to true in production if served over HTTPS, "false" for development
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', // "none" for production, "strict" for development, "lax" for twitter oAuth
   }
 };
 

@@ -16,7 +16,6 @@
 
 const express = require('express');
 const router = express.Router();
-const fetch = require('node-fetch');
 const redis = require('../utilities/redis-client');
 const rateLimit = require('express-rate-limit');
 
@@ -133,3 +132,4 @@ router.get('/link-preview', previewLimiter, async (req, res) => {
 });
 
 module.exports = router;
+
