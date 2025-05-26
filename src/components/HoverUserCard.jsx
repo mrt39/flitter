@@ -17,7 +17,7 @@ const HoverUserCard = ({ user, handleTooltipClose }) => {
   const { currentUser } = useAuth();
   const { darkModeOn } = useUI();
   const { handleProfileRouting } = useUser();
-  const { pressedFollow } = useFollow();
+  const { userRefreshPending } = useFollow();
   
   const [displayedUserOnCard, setDisplayedUserOnCard] = useState(user);
   const [loading, setLoading] = useState(true);
@@ -42,7 +42,7 @@ const HoverUserCard = ({ user, handleTooltipClose }) => {
     };
     getUserData();
     //when user follows/unfollows, re-populate the displayedUserOnCard state
-  }, [pressedFollow]);
+  }, [userRefreshPending]);
 
   //handle generating the url path for routing to /profile/:slug/followers
   function handleFollowersRouting(string) {
