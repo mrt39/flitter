@@ -19,9 +19,14 @@ function fetchWithAuth(url, options = {}) {
   };
   
   return fetch(`${import.meta.env.VITE_BACKEND_URL}${url}`, mergedOptions)
-    .then(response => {
+    .then(async response => {
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        //get specific error details from response
+        const errorData = await response.json().catch(() => ({}));
+        const error = new Error(errorData.error || 'Network response was not ok');
+        error.status = response.status;
+        error.data = errorData;
+        throw error;
       }
       return response.json();
     })

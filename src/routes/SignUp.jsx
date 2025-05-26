@@ -115,8 +115,8 @@ export default function SignUp() {
         })
         .catch(error => {
           console.error('Error:', error);
-          // Check if user already exists
-          if (error.message.includes('already registered')) {
+          //check if user already exists
+          if (error.status === 409 || error.message.includes('409') || error.message.includes('already registered')) {
             setSnackbarOpenCondition("alreadyRegistered");
           } else {
             setSnackbarOpenCondition("failure");

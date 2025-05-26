@@ -61,7 +61,12 @@ router.post("/signup", function(req, res){
   User.register({name: req.body.name, email:req.body.email, shortId:randomShortId, banner: faker.image.urlPicsumPhotos({ height: 200, width: 600, blur: 0, grayscale: false }) /* add a random banner to registered user */}, req.body.password, function(err){
     if(err){
         console.log(err);
-        res.send(JSON.stringify(err))
+        //check if this is a duplicate email error
+        if (err.name === 'UserExistsError') {
+            return res.status(409).json({ error: "Email address is already registered" });
+        }
+        //handle other errors
+        return res.status(400).json({ error: err.message || "Registration failed" });
     } else {
         passport.authenticate("local")(req, res, function(){
           console.log("Successfully signed up!")
